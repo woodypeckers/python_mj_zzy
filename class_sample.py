@@ -3,6 +3,7 @@
 
 
 # class Animal(object):
+#
 #     def __init__(self, name, colour):
 #         self.name = name
 #         self.colour = colour
@@ -29,6 +30,7 @@
 
 print"~" * 50
 class Animal(object):
+
     def __init__(self,name,colour):
         self.name = name
         self.colour = colour
