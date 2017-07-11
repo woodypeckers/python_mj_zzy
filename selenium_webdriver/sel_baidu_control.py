@@ -34,7 +34,6 @@ class Sel_Web_baidu(unittest.TestCase):
         time.sleep(2)
         # driver.find_element_by_link_text(u"搜索设置").click()
         driver.find_element_by_class_name("setpref").click()
-
         time.sleep(2)
         # driver.find_element_by_partial_link_text(u"是否希望在搜索时显示")
         """检查点1：部分匹配"""
@@ -53,18 +52,41 @@ class Sel_Web_baidu(unittest.TestCase):
         driver.find_elements_by_partial_link_text(u"百度新闻搜索")
         """检查title1：百度新闻搜索——全球最大的中文新闻平台"""
         driver.find_element_by_id("ww").clear()
-        driver.find_element_by_id("ww").send_keys(u"论测试的重要性与背锅比")
+        driver.find_element_by_id("ww").send_keys(u"论测试的重要性与背锅侠")
         time.sleep(2)
         driver.find_element_by_id("ww").send_keys(Keys.BACK_SPACE * 4)
-        """59行"""
-        driver.find_element_by_xpath("input.btn.s_btn_h").click()
+        driver.find_element_by_class_name("btn").click()
         time.sleep(2)
-        driver.find_element_by_xpath(".//*[@id='nav-hot-link']")
-        driver.switch_to.window(driver.window_handles[1])# 切换到新打开的窗口
-        driver.find_elements_by_partial_link_text(u"百家号")
-        """检查title2：首页-百家号"""
+        # driver.find_element_by_partial_link_text(u"找到相关新闻")
+        """检查2：页面是否部分匹配"""
+        # driver.find_element_by_id("nav-hot-link").click()
+        driver.find_element_by_id("help").click()
+        time.sleep(2)
+        driver.back()
+        """????????????????"""
+        # driver.find_element_by_class_name("qafeedback").click()#给百度提意见
+        # driver.switch_to.iframe("iframeu2398766_0")
+        # driver.find_element_by_xpath("html/body/div[1]/div/div/a[2]").click()
+        # driver.find_element_by_class_name("fb-textarea fb-content-block").send_keys(u"百度很难看")
+        # driver.find_element_by_class_name("fb-phone-txt").send_keys(u"18000001111")
+        # driver.find_element_by_id("fb_right_canvas_save").click()
+        # driver.switch_to.window(driver.window_handles[1])# 切换到新打开的窗口
         # driver.close()#关闭当前窗口
 
+    def test_baidu_login(self):
+        driver = self.driver
+        driver.get(self.base_url + "/")
+        driver.find_element_by_css_selector("#u1 > a[name=\"tj_login\"]").click()
+        driver.find_element_by_link_text(u"QQ帐号").click()
+        driver.switch_to.window(driver.window_handles[1])
+        """????"""
+        # driver.find_element_by_id("switcher_plogin").click()
+        # time.sleep(2)
+        # driver.find_element_by_id("u").clear()
+        # driver.find_element_by_id("u").send_keys("171012089")
+        # driver.find_element_by_id("p").clear()
+        # driver.find_element_by_id("p").send_keys("liuniancongmang")
+        # driver.find_element_by_id("login_button").click()
 
 if __name__ == '__main__':
     suit = unittest.TestSuite()
