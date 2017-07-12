@@ -98,6 +98,5 @@ if __name__ == "__main__":
         stream=fp,
         title=u'百度搜索测试报告',
         description=u"测试用例执行情况：")
-
     runner.run(suit)
     fp.close()
