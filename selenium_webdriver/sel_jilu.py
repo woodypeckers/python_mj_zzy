@@ -89,5 +89,5 @@ class Bf(unittest.TestCase):
 
 
     """接口测试Pastman(chrome的插件)，RESTclient(firefox插件)思路和数据"""
-   # git log --graph --pretty==oneline
+   # git log --graph --pretty== oneline
 
