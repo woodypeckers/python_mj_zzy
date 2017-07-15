@@ -11,4 +11,4 @@ git merge mj #首先切换到master上进行合并 git merge mj，合并之后�
 
 分支clone
 git branch  -r
-
+分支clone理解上可能存在错误，并未验证
