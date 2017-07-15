@@ -7,13 +7,13 @@ def user():
     print type(user)
 
 def user_int():
-    user_int = int(raw_input("please input:"))
+    user_int = int(raw_input("please input1:"))
     print user_int,"#被转换为int"
     print type(user_int)
 
 def for_01():
     # h_name = "hello,xiaojia"
-    h_name = (raw_input("please input:"))
+    h_name = (raw_input("please input2:"))
     for i in h_name:
         print i
 
@@ -38,10 +38,10 @@ def if_else():
 
 
 if __name__ == "__main__":
-    # user()
-    # user_int()
-    # for_01()
-    # range_01()
-    # if_else()
+    user()
+    user_int()
+    for_01()
+    range_01()
+    if_else()
 
 

@@ -4,9 +4,9 @@
 
 class DictTest(object):
 
-    def dict1(self):
+    def dict1a(self):
         dictmj = {"name": 'mj', "age": 18, "adr": 'sz'}
-        self.dictmj =dictmj
+        self.dictmj = dictmj
         for i in dictmj:
             print "**第一种** the key is %s, the values is %s" % (i, dictmj[i])
 
@@ -22,7 +22,13 @@ class DictTest(object):
     @staticmethod
     def dict4a(self):
         dict4 = dict(m=1, n=2)
-        dict5 =dict(**dict4)
+        dict5 = dict(**dict4)
         dict6 = dict4.copy()
-        print dict4,dict5,dict6,  len(dict4)
+        print dict4, dict5, dict6,  len(dict4)
 if __name__ == '__main__':
+    # DictTest().dict1a()#直接写，或者用句柄
+    obj = DictTest()
+    obj.dict1a()
+    obj.dict2a()
+    obj.dict3a()
+    # obj.dict4a()
