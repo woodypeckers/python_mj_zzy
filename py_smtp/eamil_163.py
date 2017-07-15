@@ -10,7 +10,7 @@ import unittest, time, re
 
 class Eamil163(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Ie(r"C:\Program Files (x86)\Internet Explorer\IEDriverServer.exe")
+        self.driver = webdriver.Ie(r"C:\Program Files (x86)\Internet Explorer\iexplore.exe")
         self.driver.implicitly_wait(30)
         self.base_url = "http://mail.163.com"
         self.verificationErrors = []

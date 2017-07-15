@@ -15,7 +15,7 @@ def send_eamil():
     from_addr = u"zhangzhanyong88@163.com"   #发件人
     password = u"zhang001"  # 163设置的第三方授权码"
     to_addr = u"zhangzhanyong88@163.com" #收件人
-    test_res =u"test_result_2017-02-22 22-03-55.html" #内容
+    test_res =u"test_result_2017-07-12 20-15-14.html" #内容
 
     # fp = open(test_res,'r')  #原来的读写方式
     # data = fp.read()
@@ -27,7 +27,7 @@ def send_eamil():
         msg["From"]=format_addr(u'发件人昵称 <%s>'% from_addr)
         msg["To"]= format_addr(u'开发昵称 <%s>' % to_addr)
         # msg['To'] = _format_addr(u'开发人员 <%s>' % to_addr)
-        msg['Subject']=Header(u'自动化测试报告2017-02-22','utf-8').encode()
+        msg['Subject']=Header(u'自动化测试报告2017-07-12','utf-8').encode()
 
     server = smtplib.SMTP(smtp_driver)#通过smtp协议调用邮箱服务器
     server.set_debuglevel(1) #调试等级
