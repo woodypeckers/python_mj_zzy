@@ -30,11 +30,11 @@ def range_01():
 def if_else():
     num = int(raw_input("please input number:"))
     if num == 0:
-        print "this is num :" ,num
+        print "this is num :", num
     elif num > 0:
-        print num ,"is positive integer（正整数）"
+        print num, "is positive integer（正整数）"
     else:
-        print num ,"is negative number（负数）"
+        print num, "is negative number（负数）"
 
 
 if __name__ == "__main__":

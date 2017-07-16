@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
-from bussiness_common_steps import Bugfree_Login
+from bussiness_common_steps.bussiness_common_steps import *
 
 class BugFree_Test1(unittest.TestCase):
 
@@ -19,7 +19,7 @@ class BugFree_Test1(unittest.TestCase):
         driver = self.driver
         driver.get(self.base_url + "/bugfree/index.php/site/login")
         self.assertEqual(u"登录 - BugFree", driver.title)
-        driver.Bugfree_Login(driver, "admin", "123456")
+        driver.BugfreeClass(self.driver, "admin", "123456")
 
     def tearDown(self):
         self.driver.quit()
