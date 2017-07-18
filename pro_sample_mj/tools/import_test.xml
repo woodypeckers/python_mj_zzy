@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="gb2312"?>
+<?xml:stylesheet type="text/css" href="Flowers.css"?>
+<Flowers>
+<Flower>
+       <Vendor>shop1</Vendor>
+       <Name>iris</Name>
+       <Price>$4.00</Price>
+</Flower>
+<Flower>
+       <Vendor>shop2</Vendor>
+       <Name>iris</Name>
+       <Price>$4.30</Price>
+</Flower>
+
+<Flower>
+       <Vendor>shop3</Vendor>
+       <Name>iris</Name>
+       <Price>$3.50</Price>
+</Flower>
+</Flowers>
