@@ -8,8 +8,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import random
-from bussiness_common_steps.bussiness_common_steps import *
-from tools.config import *
+from testcases.bussiness_common_steps.bussiness_common_steps import *
+from config import *
 
 
 class ProductManagement(unittest.TestCase):

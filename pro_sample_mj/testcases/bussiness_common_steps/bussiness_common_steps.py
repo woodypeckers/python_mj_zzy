@@ -31,7 +31,7 @@ def input_filename_click():
     """
     cur = os.getcwd()
     print cur
-    os.system("%s/tools/import_test.xml" % cur)
+    os.system("%s/tools/upload_file_x64.exe" % cur)
 
 
 def open_url(driver, url):
