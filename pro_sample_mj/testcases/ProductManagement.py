@@ -32,7 +32,7 @@ class ProductManagement(unittest.TestCase):
     def test_product_management(self):
         """后台管理中产品的查询"""
         driver = self.driver
-        Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"自定义字段")
+        # Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"自定义字段")
         Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"产品管理")
         driver.find_element_by_id("name").clear()
         driver.find_element_by_id("name").send_keys("123")
@@ -51,24 +51,11 @@ class ProductManagement(unittest.TestCase):
         driver.find_element_by_link_text(u"编辑").click()
         driver.find_element_by_id("TestOption_option_value").clear()
         driver.find_element_by_id("TestOption_option_value").send_keys("%s" % random.randrange(1,33,2))
-        driver.find_element_by_id("name").clear()
+        # driver.find_element_by_id("name").clear()
         driver.find_element_by_id("name").send_keys("2")
         #指定截图位置
         get_screenshot_immediately(path=r"C:\\cap\\bugfree_%s.jpg" % time.strftime("%Y-%m-%d %H-%M-%S"))
 
-# class BugFreeControl(ProductManagement):
-#     def test_bf_kz01(self):
-#         driver = self.driver
-#         driver.find_element_by_xpath(".//*[@id='top']/div[3]/a[2]").click()
-#         driver.switch_to.window(driver.window_handles[1])
-#         driver.find_element_by_xpath(".//*[@id='group_management']/a").click()
-#         driver.find_element_by_xpath("html/body/div[1]/div[2]/div[2]/form/a").click()
-#         driver.find_element_by_class_name("row").send_keys(u"乘风破浪小队")
-#         time.sleep(2)
-#         driver.find_element_by_class_name("row").send_keys(Keys.BACK_SPACE * 2)
-#         driver.back()
-#         time.sleep(2)
-#         driver.forward()
     """
     Select(driver.find_element_by_class_name("required")).select_by_value("internal")
     Select 可以换成下面的

@@ -29,9 +29,15 @@ def input_filename_click():
     os.getcwd  #使用os.getcwd()可以获得当前的工作目录（current working directory），
     注意：getcwd函数不需要参数，它返回的是当前地址
     """
+    import os
     cur = os.getcwd()
     print cur
-    os.system("%s/tools/upload_file_x64.exe" % cur)
+    os.system("%s/tools/upload_filexml.exe" % cur)
+def input_filename_click_ok():
+    import os
+    cur_dir = os.getcwd()
+    print cur_dir
+    os.system("%s/tools/upload_file.exe" % cur_dir)
 
 
 def open_url(driver, url):

@@ -189,9 +189,9 @@ function showOutput(id, name) {
 
 <div class='heading'>
 <h1>BugFree的测试报告</h1>
-<p class='attribute'><strong>Start Time:</strong> 2017-07-18 22:05:08</p>
-<p class='attribute'><strong>Duration:</strong> 0:00:18.852000</p>
-<p class='attribute'><strong>Status:</strong> Error 1</p>
+<p class='attribute'><strong>Start Time:</strong> 2017-07-23 18:37:46</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:31.887000</p>
+<p class='attribute'><strong>Status:</strong> Error 2</p>
 
 <p class='description'>测试用例执行情况：</p>
 </div>
@@ -222,16 +222,16 @@ function showOutput(id, name) {
 </tr>
 
 <tr class='errorClass'>
-    <td>testcases.BugFree_testsuite.BugFreeTest1</td>
-    <td>1</td>
+    <td>testcases.ProductManagement.ProductManagement</td>
+    <td>2</td>
     <td>0</td>
     <td>0</td>
-    <td>1</td>
-    <td><a href="javascript:showClassDetail('c1',1)">Detail</a></td>
+    <td>2</td>
+    <td><a href="javascript:showClassDetail('c1',2)">Detail</a></td>
 </tr>
 
 <tr id='ft1.1' class='none'>
-    <td class='errorCase'><div class='testcase'>test_bf_houtai02</div></td>
+    <td class='errorCase'><div class='testcase'>test_back_stage_management: 后台管理中系统设置的操作</div></td>
     <td colspan='5' align='center'>
 
     <!--css div popup start-->
@@ -246,17 +246,56 @@ function showOutput(id, name) {
         <pre>
         
 ft1.1: Traceback (most recent call last):
-  File "D:\Github_erqi\python_zhanyong\pro_sample_mj\testcases\BugFree_testsuite.py", line 60, in test_bf_houtai02
-    driver.find_element_by_link_text(u"ä¿®æ¹è").click()
-  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 314, in find_element_by_link_text
-    return self.find_element(by=By.LINK_TEXT, value=link_text)
+  File "D:\Github_erqi\python_zhanyong\pro_sample_mj\testcases\ProductManagement.py", line 54, in test_back_stage_management
+    driver.find_element_by_id("name").clear()
+  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 266, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
   File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
     {'using': by, 'value': value})['value']
   File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
     self.error_handler.check_response(response)
   File "C:\Python27\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
     raise exception_class(message, screen, stacktrace)
-NoSuchElementException: Message: no such element: Unable to locate element: {"method":"link text","selector":"\u4fee\u6539\u8005"}
+NoSuchElementException: Message: no such element: Unable to locate element: {"method":"id","selector":"name"}
+  (Session info: chrome=55.0.2883.87)
+  (Driver info: chromedriver=2.25.426923 (0390b88869384d6eb0d5d09729679f934aab9eed),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.2' class='none'>
+    <td class='errorCase'><div class='testcase'>test_product_management: 后台管理中产品的查询</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.2')" >
+        error</a>
+
+    <div id='div_ft1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.2: Traceback (most recent call last):
+  File "D:\Github_erqi\python_zhanyong\pro_sample_mj\testcases\ProductManagement.py", line 35, in test_product_management
+    Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"èªå®ä¹å­æ®µ")
+  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 266, in find_element_by_id
+    return self.find_element(by=By.ID, value=id_)
+  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Python27\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+NoSuchElementException: Message: no such element: Unable to locate element: {"method":"id","selector":"target_table"}
   (Session info: chrome=55.0.2883.87)
   (Driver info: chromedriver=2.25.426923 (0390b88869384d6eb0d5d09729679f934aab9eed),platform=Windows NT 6.1.7601 SP1 x86_64)
 
@@ -271,10 +310,10 @@ NoSuchElementException: Message: no such element: Unable to locate element: {"me
 
 <tr id='total_row'>
     <td>Total</td>
-    <td>1</td>
+    <td>2</td>
     <td>0</td>
     <td>0</td>
-    <td>1</td>
+    <td>2</td>
     <td>&nbsp;</td>
 </tr>
 </table>

@@ -37,6 +37,9 @@ class BugfreeImport(unittest.TestCase):
         #浏览按钮，显示输入文件名
         click_element_id_with_sleep(driver,"casefilename",0)#上面写法也正确
         input_filename_click()
+        # import os
+        # cur = os.getcwd()
+        # os.system("%s/tools/upload_filexml.exe" % cur)
         get_screenshot_immediately(driver)
         #导入
         click_element_id_with_sleep(driver,"uploadbutton",0)
