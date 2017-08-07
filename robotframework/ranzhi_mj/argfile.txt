@@ -1,5 +1,5 @@
 --outputdir
-robotframework\ranzhi_mj
+ranzhi_mj
 -C
 off
 -W
