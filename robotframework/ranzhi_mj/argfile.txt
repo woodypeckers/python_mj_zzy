@@ -1,0 +1,10 @@
+--outputdir
+robotframework\ranzhi_mj
+-C
+off
+-W
+107
+--suite
+Ranzhi Mj.客户 订单 合同
+--test
+Ranzhi Mj.客户 订单 合同.添加客户
