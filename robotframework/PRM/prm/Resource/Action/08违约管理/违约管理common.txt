@@ -1,0 +1,25 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+删除新增同步成功违约信息
+    Exec Sql    DELETE FROM prm_if_foul_phenomena t WHERE t.foul_info_id IN(SELECT g.foul_info_id FROM prm_foul_info g WHERE g.foul_code='YD_WY_001');    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_if_punish t WHERE t.foul_info_id IN(SELECT g.foul_info_id FROM prm_foul_info g WHERE g.foul_code='YD_WY_001');    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_foul_info t WHERE t.foul_code='YD_WY_001';    ${prm_oracle_tns}
+
+删除新增同步成功的违约最大值记录
+    Exec Sql    DELETE FROM prm_if_foul_phenomena t WHERE t.foul_info_id IN(SELECT g.foul_info_id FROM prm_foul_info g WHERE g.foul_code='1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890');    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_if_punish t WHERE t.foul_info_id IN(SELECT g.foul_info_id FROM prm_foul_info g WHERE g.foul_code='1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890');    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_foul_info t WHERE t.foul_code='1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';    ${prm_oracle_tns}
+
+填写违约信息，只填写必填项
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    文本输入_通过id定位    foulScore    19

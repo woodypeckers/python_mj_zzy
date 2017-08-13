@@ -1,0 +1,12 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+保存草稿，检查提示信息
+    点击元素    jquery=a:contains('保存草稿')
+    校验弹出框信息并点击按钮    账号申请及公司资料已经保存为草稿，可以继续填写；或者\n后续通过系统首页登录继续填写申请。    确认
+
+查询数据库是否有保存的账号草稿记录
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_account_apply t WHERE t.account_name='${account_name}' AND t.status='T';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1

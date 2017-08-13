@@ -1,0 +1,300 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+第二步_公司信息_全部
+    [Documentation]    20140915:公司办公地址：屏蔽；邮政编码：屏蔽；营业执照注册地址：屏蔽；营业执照发证日期：屏蔽；营业执照年检
+    ...    年度：屏蔽；营业执照经营范围描述：屏蔽
+    Comment    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO1}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${SHAREHOLDER_NO1}    获取sequence的nextval    seq_apply_company_shareholding
+    ${SHAREHOLDER_NO2}    获取sequence的nextval    seq_apply_company_shareholding
+    ${TELECOM_LICENSE_NO1}    获取sequence的nextval    seq_apply_company_aptitude
+    ${TELECOM_LICENSE_NO2}    获取sequence的nextval    seq_apply_company_aptitude
+    ${SMS_LICENSE_NO1}    获取sequence的nextval    seq_apply_company_aptitude
+    ${SMS_LICENSE_NO2}    获取sequence的nextval    seq_apply_company_aptitude
+    Comment    文本框通过文字    公司中文名称    自动化有限公司${COMPANY_ID}
+    文本框通过文字    组织机构代码    zj${zj_id}
+    Comment    文本框通过文字    邮政编码    100001
+    下拉框通过文字    是否是分公司    是
+    文本框通过文字    总公司名称    总公司名称总公司名称
+    下拉框通过文字    是否是子公司    是
+    文本框通过文字    母公司名称    母公司名称母公司
+    文本框通过文字    法人代表姓名    法人代表姓名法人代表姓名法
+    下拉框通过文字    法人证件类型    其他
+    文本框通过文字    法人代表证件号    123456789012345678
+    文本框通过文字    法人其他证件类型    法人其他证件类型
+    下拉框通过文字    注册资金币种    其他
+    文本框通过文字    注册资金其它币种    注册资金其他币种币种
+    文本框通过文字    注册资金(万)    99999999
+    下拉框通过文字    公司性质    外商投资
+    文本框通过文字    外资比例    100
+    下拉框通过文字    公司上市情况    其他地区上市
+    Comment    文本域    公司办公地址    公司办公地址公
+    文本域    公司上市的其他地区    公司上市的其
+    文本域    公司简介    公司简介公司办公司
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    附件上传_通过id定位    ruleAttach    prm\\temp\\公司章程信息附件.jpg
+    Comment    上传附件_组织机构代码附件    c:\\1.gif
+    Comment    上传附件_公司章程信息附件    c:\\1.gif
+    Comment    公司营业执照信息
+    文本框通过文字    注册号    ${OPERATING_NO}
+    Comment    下拉框通过文字    年检年度    2014
+    Comment    输入日期    licenseDate    2014-01-01
+    下拉框通过文字    注册省/市：    广东
+    Comment    文本框通过文字    注册地址：    深圳市高新区南区深港产学研基地大楼西座六楼A-01C
+    输入日期    startDate    2014-01-01
+    连续两次日期输入之间sleep0.2s
+    输入日期    endDate    2020-01-01
+    Comment    文本域    经营范围描述    公司经营范围描述2公ab12公司经营范围描述ab12公司范围描述ab12公司经营范围描述
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    公司股权结构，两条记录
+    点击新增一条记录    公司股权结构    #增加一条股权结构的记录
+    文本输入_通过id定位    shareholderName0    股东名称张三
+    下拉框_通过id定位    shareholderNature0    境内法人
+    文本输入_通过id定位    shareholderLicenseId0    ${SHAREHOLDER_NO1}
+    下拉框_通过id定位    listed0    是
+    下拉框_通过id定位    captialForm0    货币
+    文本输入_通过id定位    subscribeCapital0    999999
+    文本输入_通过id定位    shareholderRatio0    90
+    点击新增一条记录    公司股权结构    #增加一条股权结构的记录
+    文本输入_通过id定位    shareholderName1    股东名称李四
+    下拉框_通过id定位    shareholderNature1    其他
+    文本输入_通过id定位    shareholderLicenseId1    ${SHAREHOLDER_NO2}
+    下拉框_通过id定位    listed1    否
+    下拉框_通过id定位    captialForm1    其他
+    文本输入_通过id定位    subscribeCapital1    999999
+    文本输入_通过id定位    shareholderRatio1    10
+    Comment    税务登记证
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO1}
+    下拉框_通过id定位    taxType0    国税
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    文本输入_通过id定位    bizScopeDesc0    国税经营范围描述
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\税务登记证国税.jpg
+    点击新增一条记录    税务登记证 (必填)    #增加一条税务记录
+    文本输入_通过id定位    taxRegNo1    ${TAX_REG_NO2}
+    下拉框_通过id定位    taxType1    地税
+    下拉框_通过id定位    taxQualification1    小规模纳税人
+    输入日期    licenseDate1    2014-01-01
+    文本输入_通过id定位    bizScopeDesc1    地税经营范围描述
+    附件上传_通过id定位    taxReg1attach    prm\\temp\\税务登记证地税.jpg
+    Comment    电信增值服务许可证信息,两条记录
+    点击新增一条记录    电信增值服务许可证信息    #增加一条电信增值服务许可证信息
+    文本输入_通过id定位    valuelicenseNo0    ${TELECOM_LICENSE_NO1}
+    下拉框_通过id定位    valuecheckDate0    2013
+    输入日期    valuelicenseDate0    2014-01-01
+    下拉框_通过id定位    valuecoverProvinceId0    全网
+    输入日期    valueendDate0    2020-01-01
+    附件上传_通过id定位    valueAdd0attach    prm\\temp\\电信增值服务许可证1.jpg
+    点击新增一条记录    电信增值服务许可证信息    #增加一条电信增值服务许可证信息
+    文本输入_通过id定位    valuelicenseNo1    ${TELECOM_LICENSE_NO2}
+    下拉框_通过id定位    valuecheckDate1    2013
+    输入日期    valuelicenseDate1    2014-01-01
+    下拉框_通过id定位    valuecoverProvinceId1    新疆
+    连续两次日期输入之间sleep0.2s
+    输入日期    valueendDate1    2020-01-01
+    附件上传_通过id定位    valueAdd1attach    prm\\temp\\电信增值服务许可证2.jpg
+    Comment    短消息类服务接入代码使用证
+    点击新增一条记录    短消息类服务接入代码使用证    #增加一条短消息类服务接入代码使用证信息
+    文本输入_通过id定位    smslicenseNo0    ${SMS_LICENSE_NO1}
+    文本输入_通过id定位    smsaccessCode0    ${SMS_LICENSE_NO1}
+    输入日期    smslicenseDate0    2014-01-01
+    连续两次日期输入之间sleep0.2s    #ie浏览器，连续两次日期输入之间sleep 0.2s
+    输入日期    smsendDate0    2020-01-01
+    下拉框_通过id定位    smscoverProvinceId0    重庆
+    下拉框_通过id定位    smscheckDate0    2013
+    附件上传_通过id定位    smsUse0attach    prm\\temp\\短消息类服务接入代码使用证书1.jpg
+    点击新增一条记录    短消息类服务接入代码使用证    #增加一条短消息类服务接入代码使用证信息
+    文本输入_通过id定位    smslicenseNo1    ${SMS_LICENSE_NO2}
+    文本输入_通过id定位    smsaccessCode1    ${SMS_LICENSE_NO2}
+    输入日期    smslicenseDate1    2014-01-01
+    连续两次日期输入之间sleep0.2s    #ie浏览器，连续两次日期输入之间sleep 0.2s
+    输入日期    smsendDate1    2020-01-01
+    下拉框_通过id定位    smscoverProvinceId1    海南
+    下拉框_通过id定位    smscheckDate1    2013
+    附件上传_通过id定位    smsUse1attach    prm\\temp\\短消息类服务接入代码使用证书2.jpg
+    Comment    其他资质-两个资质文件
+    点击新增一条记录    其他资质    #增加一条其他资质记录
+    文本输入_通过id定位    fileRemark0    其他资质说明文档0011
+    附件上传_通过id定位    business0attach    prm\\temp\\其他资质文件1.jpg
+    点击新增一条记录    其他资质    #增加一条其他资质记录
+    文本输入_通过id定位    fileRemark1    其他资质说明文档0022
+    附件上传_通过id定位    business1attach    prm\\temp\\其他资质文件2.jpg
+
+第二步_公司信息_全部且最大值
+    Comment    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO1}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${SHAREHOLDER_NO1}    获取sequence的nextval    seq_apply_company_shareholding
+    ${SHAREHOLDER_NO2}    获取sequence的nextval    seq_apply_company_shareholding
+    ${TELECOM_LICENSE_NO1}    获取sequence的nextval    seq_apply_company_aptitude
+    ${TELECOM_LICENSE_NO2}    获取sequence的nextval    seq_apply_company_aptitude
+    ${SMS_LICENSE_NO1}    获取sequence的nextval    seq_apply_company_aptitude
+    ${SMS_LICENSE_NO2}    获取sequence的nextval    seq_apply_company_aptitude
+    Comment    文本框通过文字    公司中文名称    自动化有限公司${COMPANY_ID}
+    文本框通过文字    组织机构代码    zj${zj_id}
+    Comment    文本框通过文字    邮政编码    100001
+    下拉框通过文字    是否是分公司    是
+    文本框通过文字    总公司名称    总公司名称总公司名称
+    下拉框通过文字    是否是子公司    是
+    文本框通过文字    母公司名称    母公司名称母公司
+    文本框通过文字    法人代表姓名    法人代表姓名法人代表姓名法
+    下拉框通过文字    法人证件类型    其他
+    文本框通过文字    法人代表证件号    123456789012345678
+    文本框通过文字    法人其他证件类型    法人其他证件类型
+    下拉框通过文字    注册资金币种    其他
+    文本框通过文字    注册资金其它币种    注册资金其他币种币种
+    文本框通过文字    注册资金(万)    99999999
+    下拉框通过文字    公司性质    外商投资
+    文本框通过文字    外资比例    100
+    下拉框通过文字    公司上市情况    其他地区上市
+    Comment    文本域    公司办公地址    公司办公地址公
+    文本域    公司上市的其他地区    公司上市的其
+    文本域    公司简介    公司简介公司办公司
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    附件上传_通过id定位    ruleAttach    prm\\temp\\公司章程信息附件.jpg
+    Comment    上传附件_组织机构代码附件    c:\\1.gif
+    Comment    上传附件_公司章程信息附件    c:\\1.gif
+    Comment    公司营业执照信息
+    文本框通过文字    注册号    ${OPERATING_NO}
+    Comment    下拉框通过文字    年检年度    2014
+    Comment    输入日期    licenseDate    2014-01-01
+    下拉框通过文字    注册省/市：    广东
+    Comment    文本框通过文字    注册地址：    深圳市高新区南区深港产学研基地大楼西座六楼A-01C
+    输入日期    startDate    2014-01-01
+    连续两次日期输入之间sleep0.2s
+    输入日期    endDate    2020-01-01
+    Comment    文本域    经营范围描述    公司经营范围描述2公ab12公司经营范围描述ab12公司范围描述ab12公司经营范围描述
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    公司股权结构，两条记录
+    点击新增一条记录    公司股权结构    #增加一条股权结构的记录
+    文本输入_通过id定位    shareholderName0    股东名称张三
+    下拉框_通过id定位    shareholderNature0    境内法人
+    文本输入_通过id定位    shareholderLicenseId0    ${SHAREHOLDER_NO1}
+    下拉框_通过id定位    listed0    是
+    下拉框_通过id定位    captialForm0    货币
+    文本输入_通过id定位    subscribeCapital0    999999
+    文本输入_通过id定位    shareholderRatio0    90
+    点击新增一条记录    公司股权结构    #增加一条股权结构的记录
+    文本输入_通过id定位    shareholderName1    股东名称李四
+    下拉框_通过id定位    shareholderNature1    其他
+    文本输入_通过id定位    shareholderLicenseId1    ${SHAREHOLDER_NO2}
+    下拉框_通过id定位    listed1    否
+    下拉框_通过id定位    captialForm1    其他
+    文本输入_通过id定位    subscribeCapital1    999999
+    文本输入_通过id定位    shareholderRatio1    10
+    Comment    税务登记证
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO1}
+    下拉框_通过id定位    taxType0    国税
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    文本输入_通过id定位    bizScopeDesc0    国税经营范围描述
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\税务登记证国税.jpg
+    点击新增一条记录    税务登记证 (必填)    #增加一条税务记录
+    文本输入_通过id定位    taxRegNo1    ${TAX_REG_NO2}
+    下拉框_通过id定位    taxType1    地税
+    下拉框_通过id定位    taxQualification1    小规模纳税人
+    输入日期    licenseDate1    2014-01-01
+    文本输入_通过id定位    bizScopeDesc1    地税经营范围描述
+    附件上传_通过id定位    taxReg1attach    prm\\temp\\税务登记证地税.jpg
+    Comment    电信增值服务许可证信息,两条记录
+    点击新增一条记录    电信增值服务许可证信息    #增加一条电信增值服务许可证信息
+    文本输入_通过id定位    valuelicenseNo0    ${TELECOM_LICENSE_NO1}
+    下拉框_通过id定位    valuecheckDate0    2013
+    输入日期    valuelicenseDate0    2014-01-01
+    下拉框_通过id定位    valuecoverProvinceId0    全网
+    输入日期    valueendDate0    2020-01-01
+    附件上传_通过id定位    valueAdd0attach    prm\\temp\\电信增值服务许可证1.jpg
+    点击新增一条记录    电信增值服务许可证信息    #增加一条电信增值服务许可证信息
+    文本输入_通过id定位    valuelicenseNo1    ${TELECOM_LICENSE_NO2}
+    下拉框_通过id定位    valuecheckDate1    2013
+    输入日期    valuelicenseDate1    2014-01-01
+    下拉框_通过id定位    valuecoverProvinceId1    新疆
+    输入日期    valueendDate1    2020-01-01
+    附件上传_通过id定位    valueAdd1attach    prm\\temp\\电信增值服务许可证2.jpg
+    Comment    短消息类服务接入代码使用证
+    点击新增一条记录    短消息类服务接入代码使用证    #增加一条短消息类服务接入代码使用证信息
+    文本输入_通过id定位    smslicenseNo0    ${SMS_LICENSE_NO1}
+    文本输入_通过id定位    smsaccessCode0    ${SMS_LICENSE_NO1}
+    输入日期    smslicenseDate0    2014-01-01
+    连续两次日期输入之间sleep0.2s
+    输入日期    smsendDate0    2020-01-01
+    下拉框_通过id定位    smscoverProvinceId0    重庆
+    下拉框_通过id定位    smscheckDate0    2013
+    附件上传_通过id定位    smsUse0attach    prm\\temp\\短消息类服务接入代码使用证书1.jpg
+    点击新增一条记录    短消息类服务接入代码使用证    #增加一条短消息类服务接入代码使用证信息
+    文本输入_通过id定位    smslicenseNo1    ${SMS_LICENSE_NO2}
+    文本输入_通过id定位    smsaccessCode1    ${SMS_LICENSE_NO2}
+    输入日期    smslicenseDate1    2014-01-01
+    连续两次日期输入之间sleep0.2s
+    输入日期    smsendDate1    2020-01-01
+    下拉框_通过id定位    smscoverProvinceId1    湖北
+    下拉框_通过id定位    smscheckDate1    2013
+    附件上传_通过id定位    smsUse1attach    prm\\temp\\短消息类服务接入代码使用证书2.jpg
+    Comment    其他资质-两个资质文件
+    点击新增一条记录    其他资质    #增加一条其他资质记录
+    文本输入_通过id定位    fileRemark0    其他资质说明文档0011
+    附件上传_通过id定位    business0attach    prm\\temp\\其他资质文件1.jpg
+    点击新增一条记录    其他资质    #增加一条其他资质记录
+    文本输入_通过id定位    fileRemark1    其他资质说明文档0022
+    附件上传_通过id定位    business1attach    prm\\temp\\其他资质文件2.jpg
+
+第一步_账号信息，公司已经存在系统中
+    [Arguments]    ${business_name}
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${ACCOUNT_APPLY_ID},'00000000')) AS Id FROM dual;
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    ${company_name}
+    文本框通过文字    申请帐号名    账号${ACCOUNT_APPLY_ID}
+    文本框通过文字    请输入密码    aaa111
+    文本框通过文字    请重新输入密码    aaa111
+    文本框通过文字    申请人姓名    自动化测试账号姓名
+    文本框通过文字    EMAIL    phk${ACCOUNT_APPLY_ID}@163.com
+    文本框通过文字    手机号码    139${mobile_phone}
+    Set Test Variable    ${account_name}    账号${ACCOUNT_APPLY_ID}
+    Comment    Set Test Variable    ${zj_id}    ${COMPANY_ID}
+    链接    下一步
+    Sleep    0.5s
+    直到页面某个元素可见    jquery=td:contains("公司中文名称")
+
+第二步_公司信息，公司存在于系统中且商用
+    [Documentation]    当公司存在系统中且是商用是，注册账号时，公司资料只需上传“组织机构代码附件”和“营业执照附件”
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    附件上传_通过id定位    lawManAttach    prm\\temp\\营业执照.jpg
+
+第一步_账号信息，公司中文名称包含数字
+    [Arguments]    ${business_name}
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${ACCOUNT_APPLY_ID},'00000000')) AS Id FROM dual;
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    自动化有限公司${COMPANY_ID}
+
+第一步_账号信息，公司中文名称包含小写字母
+    [Arguments]    ${business_name}
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${ACCOUNT_APPLY_ID},'00000000')) AS Id FROM dual;
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${CHINESE_COMPANY_ID}    Arabic Numerals Str Transform Chinese Str    ${COMPANY_ID}
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    自动化有限公司${CHINESE_COMPANY_ID}aa
+    文本框通过文字    申请帐号名    账号${ACCOUNT_APPLY_ID}
+
+第一步_账号信息，公司中文名称包含大写字母
+    [Arguments]    ${business_name}
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${ACCOUNT_APPLY_ID},'00000000')) AS Id FROM dual;
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${CHINESE_COMPANY_ID}    Arabic Numerals Str Transform Chinese Str    ${COMPANY_ID}
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    自动化有限公司${CHINESE_COMPANY_ID}AZ
+    文本框通过文字    申请帐号名    账号${ACCOUNT_APPLY_ID}

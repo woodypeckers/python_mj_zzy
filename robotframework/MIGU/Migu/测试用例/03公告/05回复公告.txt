@@ -1,0 +1,30 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/03公告/05回复公告.txt
+
+*** Test Cases ***
+01回复公告，公告不需要审批
+    [Tags]    smoke
+    插入正式的partner端账号    3
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕音乐    非常紧急    是    否    否
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象    渠道
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    退出admin端且清除cookie
+    登录partner端    ${account_name}
+    partner端登录后进入正式页面
+    partner端进入公告列表界面
+    partner端查询结果校验    ${announce_title}    ${announce_title}
+    partner端进入公告详情界面
+    文本域输入    id=flowInfoDealComment    知道了
+    填写公告回复信息    知道这个公告了    true
+    点击按钮    提交
+    校验弹出框信息并点击按钮    回复成功
+    partner端查询结果校验    ${announce_title}    ${announce_title}
+    直到元素可见    jquery=td:contains('已回复')
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,120 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01合作伙伴引入/01账号分配.txt
+
+*** Test Cases ***
+01分配CP账号
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配CP账号
+    Comment    进入账号分配资料填写页面
+    设置账号信息
+    填写CP账号信息    一点公司    一点账号    张    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02分配自有渠道账号
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    Comment    进入账号分配资料填写页面
+    Comment    账号类型选择    接入类型    统谈统签（渠道）
+    设置账号信息
+    填写分配渠道账号信息    自有    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03补发CP账号通知
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配CP账号
+    Comment    进入账号分配资料填写页面
+    设置账号信息
+    填写CP账号信息    一点公司    一点账号    张    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验
+    select window
+    sleep    1s
+    进入左侧二级菜单    账号管理    CP账号管理
+    展开查询框
+    查询出补发邮件的账号    ${account_name}
+    点击查询列表操作列链接    补发账号通知
+    补发账号提交
+    账号补发成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04补发自有渠道账号通知
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    设置账号信息
+    填写分配渠道账号信息    自有    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    select window
+    sleep    1s
+    进入左侧二级菜单    账号管理    渠道账号管理
+    展开查询框
+    查询出补发邮件的账号    ${account_name}
+    点击查询列表操作列链接    补发账号通知
+    补发账号提交
+    账号补发成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05分配省公司渠道账号
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    设置账号信息
+    填写分配渠道账号信息    省公司    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06分配社会渠道账号
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    设置账号信息
+    填写分配渠道账号信息    社会    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+07补发省公司渠道账号通知
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    设置账号信息
+    填写分配渠道账号信息    省公司    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    select window
+    sleep    1s
+    进入左侧二级菜单    账号管理    渠道账号管理
+    展开查询框
+    查询出补发邮件的账号    ${account_name}
+    点击查询列表操作列链接    补发账号通知
+    补发账号提交
+    账号补发成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08补发社会渠道账号通知
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    账号管理    分配渠道账号
+    设置账号信息
+    填写分配渠道账号信息    社会    统谈公司    统签账号    王    ${email}    ${mobile}
+    账号分配提交
+    账号分配成功后数据校验    3
+    select window
+    sleep    1s
+    进入左侧二级菜单    账号管理    渠道账号管理
+    展开查询框
+    查询出补发邮件的账号    ${account_name}
+    点击查询列表操作列链接    补发账号通知
+    补发账号提交
+    账号补发成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器

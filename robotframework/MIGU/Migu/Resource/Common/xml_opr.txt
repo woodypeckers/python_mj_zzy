@@ -1,0 +1,47 @@
+*** Settings ***
+Library           ../../MyLibrary/ChangeXml.py
+Library           ../../MyLibrary/PostXml.py
+Resource          公用.txt
+
+*** Keywords ***
+读取xml文件
+    [Arguments]    ${file_Path}
+    [Documentation]    读取xml文件，将xml文件的内容存储到内存变量${interface_xml_content}中
+    Read Interface File    ${file_Path}
+
+修改xml节点的值
+    [Arguments]    ${node_content}    ${node_path}
+    [Documentation]    1、修改内存变量${interface_xml_content}节点的值，所以这个关键字需要和“读取xml文件”这个关键字组合使用。先读取xml文件的内容到内存变量${interface_xml_content}中，然后才修改内存变量${interface_xml_content}节点的值
+    ...    2、xml文件中节点的定位使用xpath定位。如：/Msg/Header/Version
+    Change Node Text    ${node_content}    ${node_path}
+
+删除xml节点
+    [Arguments]    ${node_path}
+    [Documentation]    1、删除内存变量${interface_xml_content}的某个节点，所以这个关键字需要和“读取xml文件”这个关键字组合使用。先读取xml文件的内容到内存变量${interface_xml_content}中，然后才删除内存变量${interface_xml_content}的节点
+    ...    2、xml文件中节点的定位使用xpath定位。如：/Msg/Header/Version
+    Remove Interface Node    ${node_path}
+
+发送xml报文到指定url
+    [Arguments]    ${url_base_simulator}
+    [Documentation]    1、发送内存中的变量${interface_xml_content}到指定的url，获取返回码。这个关键字需要和“读取xml文件”这个关键字组合使用。先读取xml文件的内容到内存变量${interface_xml_content}中，然后才将变量${interface_xml_content}的内容发送给指定url
+    ...    2、用于接口方面的测试。发送一个xml报文给url，获取返回码
+    ${response_code}    Post Interface Xml    ${url_base_simulator}
+    Should Be Equal As Strings    ${res}    ${res_code}
+
+发送子公司确认消息给MIGU
+    [Arguments]    ${req_sys}    ${coop_type}    ${coop_code}    ${sub_coop_code}    ${res_code}=000000    ${coop_content}=${EMPTY}
+    [Documentation]    ${req_sys} :请求的系统ID ---------- ${coop_type}：合作类型，CP为1，渠道为2---------- \ ${coop_code}：合作编码 ---------- ${sub_coop_code} ：子公司确认编码 \ \ ${res_code}:返回码，默认为000000，成功---------- ${coop_content}=${EMPTY}：阅读必填
+    读取xml文件    Migu\\xml\\SyncSubConfirmToMigu.xml
+    ${REQ_TRANS_ID}    获取sequence的nextval    seq_message_receive_next_id
+    Run Keyword If    '${req_sys}'=='02101'    Set Test Variable    ${sign}    a10f46acf9c1f553f185ad8830b55d07
+    Run Keyword If    '${req_sys}'=='05101'    Set Test Variable    ${sign}    83bfa5928c6dc92ef324de2ce04520cf
+    Run Keyword If    '${req_sys}'=='06101'    Set Test Variable    ${sign}    d1b7ee870f48b37e6475959565d46d22
+    修改xml节点的值    ${req_sys}    /Msg/Header/ReqSys
+    修改xml节点的值    ${req_sys}${REQ_TRANS_ID}    /Msg/Header/ReqTransID
+    修改xml节点的值    ${sign}    /Msg/Header/Sign
+    修改xml节点的值    ${coop_type}    /Msg/Body/CoopType
+    修改xml节点的值    ${coop_code}    /Msg/Body/CoopCode
+    修改xml节点的值    ${sub_coop_code}    /Msg/Body/SubCoppCodes/SubCoopCode
+    修改xml节点的值    ${coop_content}    /Msg/Body/SubCoppCodes/CoopContent
+    ${res}    Post Interface Xml    ${url_migu_base_simulator}
+    Should Be Equal As Strings    ${res_code}    ${res}

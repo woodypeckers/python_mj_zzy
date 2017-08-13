@@ -1,0 +1,86 @@
+*** Settings ***
+Resource          test.txt
+Library           ../MyLibrary/MyTimeLibrary.py
+Library           Selenium2Library
+Library           Collections
+Library           Remote    http://10.12.12.157:18001
+Resource          ../Resource/Common/公用.txt
+
+*** Test Cases ***
+获取sequence的nextval
+    ${sequence_next_value}    获取sequence的nextval    seq_exam_id
+    log    账号${sequence_next_value}
+
+1
+    ${result}    Exec Sql    SELECT t.status FROM prm_account_apply t WHERE t.company_id IN(SELECT g.company_id FROM prm_apply_company g WHERE g.cn_name='自动化有限公司49');    ${prm_oracle_tns}
+    ${record}    Collections.Get From List    ${result}    0
+    ${value}    Collections.Get From List    ${record}    0
+    Should Be Equal As Strings    ${value}    P
+
+2
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${OPERATING_ID}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_ID}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${apply_audit_cn_name}    Evaluate    '自动化有限公司${COMPANY_ID}'
+    log
+
+3
+    Open Browser    ${url_admin}    ${browser_type}
+    Title Should Be    ${title}
+    Maximize Browser Window
+    Click Element    id=loginName
+    Input Text    id=loginName    sims_admin
+    Click Element    id=artiPwd
+    Input Text    id=password    aaa111
+    Click Button    id=loginButton
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')
+    Execute Javascript    jQuery("div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')").parent().attr('class','sfHover');
+    Click Element    jquery=div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+    Click Element    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+    Mouse Out    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+
+4
+    Open Browser    ${url_admin}    ${browser_type}
+    Title Should Be    ${title}
+    Maximize Browser Window
+    Click Element    id=loginName
+    Input Text    id=loginName    sims_admin
+    Click Element    id=artiPwd
+    Input Text    id=password    aaa111
+    Click Button    id=loginButton
+    点击右上角菜单    合作伙伴资料查询->公司资料查询
+
+百度的登录和退出
+    open browser    http://www.baidu.com    ie
+    Maximize Browser Window
+    Wait Until Element Is Visible    jquery=div#u1>a.lb    15
+    click element    jquery=div#u1>a.lb
+    Wait Until Element Is Visible    id=TANGRAM__PSP_8__userName
+    input text    id=TANGRAM__PSP_8__userName    phkxiazai
+    Input Password    id=TANGRAM__PSP_8__password    phkxiazai282
+    click element    id=TANGRAM__PSP_8__memberPass
+    click element    id=TANGRAM__PSP_8__submit
+    Wait Until Element Is Visible    id=s_username_top
+    mouse over    id=s_username_top
+    Wait Until Element Is Visible    jquery=a.quit
+    click element    jquery=a.quit
+
+5
+    Open Browser    http://www.126.com
+    Maximize Browser Window
+    Wait Until Element Is Visible    id=idInput
+    Input Text    id=idInput    penghk1986@126.com
+    Input Password    id=pwdInput    Phk1262821211_
+    Click Element    id=loginBtn
+    Wait Until Element Is Visible    id=_mail_component_43_43
+    Click Element    id=_mail_component_43_43
+    log source
+    Wait Until Element Is Visible    xpath=//a[text()='收件人']    15
+    Input Text    xpath=//input[@class='nui-editableAddr-ipt']    111
+
+6
+    excel表格中插入多行记录    a,b,c,d,888    8
+
+*** Keywords ***

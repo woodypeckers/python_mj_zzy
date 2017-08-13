@@ -1,0 +1,31 @@
+*** Settings ***
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/公用.txt
+Resource          ../../Common/附件上传.txt
+
+*** Keywords ***
+删除未使用的结算单模板
+    [Arguments]    ${提示信息}=删除结算考核模板成功
+    Comment    select Frame    content
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    点击元素    queryBtn
+    Comment    ajax加载完毕
+    点击元素    xpath=//a[text()="删除"]
+    校验二次确认框提示信息并点击按钮    是否删除该模板?    确认
+    校验弹出框信息并点击按钮    ${提示信息}
+    go to    http://10.12.12.157:18080/prm_admin/
+
+删除已使用的结算单模板给出提示
+    [Arguments]    ${提示信息}=模板已经被用于结算考核，不能删除！
+    Comment    select Frame    content
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    点击元素    queryBtn
+    Comment    ajax加载完毕
+    点击元素    xpath=//a[text()="删除"]
+    校验二次确认框提示信息并点击按钮    是否删除该模板?    确认
+    校验弹出框信息并点击按钮    ${提示信息}
+    go to    http://10.12.12.157:18080/prm_admin/
+
+检查结算考核模板是否被删除
+    [Arguments]    ${check_VALID_FLAG}
+    数据库记录数    select count(1) from prm_exam_template a where a.template_name = '自动化测试结算考核模板' and base_id='001';    ${check_VALID_FLAG}

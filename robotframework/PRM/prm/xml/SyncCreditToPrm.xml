@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="GBK"?>
+<Msg>
+	<Header>
+		<Version>0001</Version>
+		<TestFlag>1</TestFlag>
+		<ActivityCode>110016</ActivityCode>
+		<ReqSys>999</ReqSys>
+		<ReqDateTime>20140612112715677</ReqDateTime>
+		<ReqTransID>20140612112715678</ReqTransID>
+		<ActionCode>0</ActionCode>
+        <Sign>11</Sign>
+		<RcvSys>2001</RcvSys>
+		<RcvDateTime></RcvDateTime>
+		<RcvTransID></RcvTransID>
+		<RspCode></RspCode>
+		<RspDesc></RspDesc>
+	</Header>
+	<Body>
+        <Credit>
+            <ProcessID>110016</ProcessID>
+            <OperCode>1</OperCode>
+            <BaseId>041</BaseId>
+            <CoopCode>QD20140730001</CoopCode>
+            <CheckMonth>201401</CheckMonth>
+            <LastScore>63.11</LastScore>
+            <EncourageScore>10.99</EncourageScore>
+            <IncreaseScore>15.78</IncreaseScore>
+            <SatisfyScore>5.78</SatisfyScore>
+            <FoulScore>10.99</FoulScore>
+            <CreditScore>73.11</CreditScore>
+            <ProvinceCredit>
+                <ProvinceId>1</ProvinceId>
+                <LastScore>75.83</LastScore>
+                <EncourageScore>11.99</EncourageScore>
+                <IncreaseScore>10.78</IncreaseScore>
+                <SatisfyScore>5.78</SatisfyScore>
+                <FoulScore>6.99</FoulScore>
+                <CreditScore>85.83</CreditScore>
+            </ProvinceCredit>
+        </Credit>
+	</Body>
+</Msg>

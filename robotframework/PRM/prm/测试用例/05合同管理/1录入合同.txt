@@ -1,0 +1,43 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/05合同管理/1录入合同.txt
+
+*** Test Cases ***
+01录入单方合同-只输入必填项
+    [Tags]    smoke
+    [Template]
+    使用sims_admin登录系统,并进入合同管理页面
+    清理相关合同信息    HT-878877
+    进入合同录入页面只输入必填字段
+    检查合同状态    1    #状态：1-正常，2-待续签，3-到期，4-终止
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02录入单方合同-输入所有字段
+    [Tags]    smoke
+    [Template]
+    使用sims_admin登录系统,并进入合同管理页面
+    清理相关合同信息    HT-878877
+    进入合同录入页面输入所有字段
+    检查合同状态    1    #状态：1-正常，2-待续签，3-到期，4-终止
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03录入三方合同-只输入必填项
+    [Tags]    smoke
+    [Template]
+    使用sims_admin登录系统,并进入合同管理页面
+    清理相关合同信息    HT-878877
+    初始化相关合同数据
+    进入合同录入页面输入三方合同填写必填字段
+    检查合同总数    2
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04录入三方合同-输入所有字段
+    [Tags]    smoke
+    [Template]
+    使用sims_admin登录系统,并进入合同管理页面
+    清理相关合同信息    HT-878877
+    初始化相关合同数据
+    进入合同录入页面输入三方合同填写所有字段
+    检查合同总数    2
+    [Teardown]    teardown_案例运行失败时关闭浏览器

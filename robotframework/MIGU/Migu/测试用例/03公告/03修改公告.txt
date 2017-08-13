@@ -1,0 +1,45 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/03公告/03修改公告.txt
+
+*** Test Cases ***
+01修改公告，未修改直接提交
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕动漫    \    \    \    是
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    点击查询列表操作列链接    修改
+    直到元素可见    jquery=input[value='提交'][type='button']
+    点击按钮    提交
+    校验弹出框信息并点击按钮    修改成功
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02修改公告，修改公告内容
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕动漫    \    \    \    是
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    点击查询列表操作列链接    修改
+    直到元素可见    jquery=input[value='提交'][type='button']
+    填写公告正文    修改后的公告内容
+    点击按钮    提交
+    校验弹出框信息并点击按钮    修改成功
+    管理员端进入公告详情界面
+    直到元素可见    jquery=td:contains('修改公告')
+    [Teardown]    teardown_案例运行失败时关闭浏览器

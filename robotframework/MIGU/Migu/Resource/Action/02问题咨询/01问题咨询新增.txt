@@ -1,0 +1,17 @@
+*** Settings ***
+Resource          问题咨询common.txt
+
+*** Keywords ***
+未登录问题咨询提交后数据校验
+    [Arguments]    ${problem_title}    ${status}
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_problem_consult t WHERE t.title='${problem_title}';    #查询数据库里面是否有该条记录
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT t.DEAL_TYPE FROM prm_problem_consult_flow_info t WHERE t.owner_id IN(SELECT g.id FROM prm_problem_consult g WHERE g.title='${problem_title}');
+    Should Be Equal As Strings    ${status}    ${res2}
+
+已登录问题咨询提交后数据校验
+    [Arguments]    ${problem_title}    ${status}
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_problem_consult t WHERE t.title='${problem_title}' AND t.account_name='${account_name}' AND t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}');    #查询数据库里面是否有该条记录
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT t.DEAL_TYPE FROM prm_problem_consult_flow_info t WHERE t.owner_id IN(SELECT g.id FROM prm_problem_consult g WHERE g.title='${problem_title}');
+    Should Be Equal As Strings    ${status}    ${res2}

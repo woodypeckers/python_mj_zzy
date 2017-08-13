@@ -1,0 +1,28 @@
+*** Settings ***
+Documentation     基础的数据库操作关键字写入此文件
+Library           ../../MyLibrary/OracleLibrary.py
+Resource          ../../变量.txt
+
+*** Keywords ***
+获取sequence的nextval
+    [Arguments]    ${sequence_name}
+    ${result}    Exec Sql    select ${sequence_name}.nextval from dual    ${prm_oracle_tns}
+    Comment    ${value}    Evaluate    ${result}[0][0]
+    [Return]    ${result}
+
+数据库记录数
+    [Arguments]    ${sql}    ${count}
+    [Documentation]    输入查询语句和预期记录数。如果数据库里面查询出的记录数和用户输入的记录数相等，则验证通过。 \ 适用于界面执行新增操作后，查看数据库中是否有该记录
+    ${result}    Exec Sql    ${sql}    ${prm_oracle_tns}
+    Comment    ${value}    Evaluate    ${result}[0][0]
+    Should Be Equal    ${result}    ${count}
+
+删除数据库记录
+    [Arguments]    ${sql}
+    Exec Sql    ${sql}    ${prm_oracle_tns}
+
+数据库查询
+    [Arguments]    ${sql}
+    [Documentation]    输入查询语句，返回查询结果
+    ${result}    Exec Sql     ${sql}    ${prm_oracle_tns}
+    [Return]    ${result}

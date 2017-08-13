@@ -1,0 +1,10 @@
+*** Settings ***
+Resource          ../../Resource/Action/12合作伙伴资料查询/合作情况查询.txt
+
+*** Test Cases ***
+查询合作伙伴资料详情
+    [Tags]    smoke
+    使用sims_admin登录系统
+    进入合作情况查询页面
+    查看合作的详情页面
+    [Teardown]    teardown_案例运行失败时关闭浏览器

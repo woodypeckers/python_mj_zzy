@@ -1,0 +1,56 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Teardown
+Resource          ../../Resource/Action/02公司/1资质变更.txt
+
+*** Test Cases ***
+01资质变更_未变更任何资质
+    [Tags]    smoke
+    [Template]
+    插入商用的公司信息
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/portal/login.jsp",登陆名"${account_name}",密码"aaa111"
+    进入资质变更页面
+    提交资质变更申请
+    查看公司状态    ${company_name}    alter_audit
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02资质变更_变更公司中文名称
+    [Tags]    smoke
+    插入商用的公司信息
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/portal/login.jsp",登陆名"${account_name}",密码"aaa111"
+    进入资质变更页面
+    变更公司中文名称
+    提交资质变更申请
+    查看公司状态    ${company_name}变更公司中文名称    alter_audit
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03资质变更审批_审批通过
+    [Tags]    smoke
+    插入变更待审批的公司信息
+    使用sims_admin登录系统
+    进入资质变更审批页面
+    查询待审批的资质信息
+    审批结果，审批通过    ${company_name}
+    提交资质变更审批结果
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04资质变更审批_审批拒绝
+    [Tags]    smoke
+    插入变更待审批的公司信息
+    使用sims_admin登录系统
+    进入资质变更审批页面
+    查询待审批的资质信息
+    审批结果，审批拒绝    ${company_name}
+    提交资质变更审批结果
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05同时变更公司中文名称和组织机构代码
+    [Tags]
+    [Template]
+    插入商用的公司信息
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/portal/login.jsp",登陆名"${account_name}",密码"aaa111"
+    进入资质变更页面
+    变更公司中文名称
+    变更组织机构代码
+    提交检查提示信息    同一次变更中公司中文名称和组织机构代码只能变其中一个，\n不能两个信息同时变更。如确需变更，请分开两次操作
+    [Teardown]    teardown_案例运行失败时关闭浏览器

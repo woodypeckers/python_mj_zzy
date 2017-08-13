@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Request>
+<apkInfo>
+    <contentId>$${contentId}$$</contentId>
+    <contentName>$${contentName}$$</contentName>
+    <cpId>$${cpId}$$</cpId>
+    <cpName>$${cpName}$$</cpName>
+    <contentType>01</contentType>
+    <filePath>FTP://192.168.0.1/XXX.apk</filePath>
+    <notifyURL>http://ip:port/webservice/interfaces/XXX</notifyURL>
+    <priorityLevel>1</priorityLevel>
+</apkInfo>
+</Request>

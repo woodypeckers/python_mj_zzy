@@ -1,0 +1,15 @@
+{
+    "Response": {
+        "ErrorInfo": {
+            "Code": "$${Code}$$",
+            "Message": "$${Message}$$",
+            "TransactionId": "##{TransactionId}##",
+            "TransactionTime": "##{TransactionTime}##",
+            "TransIDH": "T##{TransactionId}##",
+            "TransAccount": "中文",
+            "BusiCode": "OI_PrepayOrReleasePayOrder"
+        },
+        "RetInfo": {            
+        }
+    }
+}

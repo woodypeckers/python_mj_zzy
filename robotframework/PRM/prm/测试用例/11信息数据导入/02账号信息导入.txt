@@ -1,0 +1,27 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/03合作管理.txt
+Resource          ../../Resource/Action/11信息数据导入/02账号信息导入.txt
+
+*** Test Cases ***
+导入记录全部正确的阅读基地的账号信息
+    [Tags]    smoke    noff
+    新增商用合作    李红军有限公司    CP20150311    A    其他
+    删除相关的账号信息    李红军02
+    登录PRM管理员端"${url_admin}",登陆名"admin_12580",密码"aaa111"
+    进入账号信息导入页面并上传附件    prm\\template\\账号信息导入模板.xls
+    发布账号信息并检查提示信息    导入成功
+    检查数据库中账号的状态    李红军02    INITIAL
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+导入记录部分正确的阅读基地的账号信息
+    [Tags]    smoke    noff
+    Comment    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    新增商用合作    李红军有限公司    CP20150311    A    其他
+    删除相关的账号信息    李红军02
+    登录PRM管理员端"${url_admin}",登陆名"admin_12580",密码"aaa111"
+    进入账号信息导入页面并上传附件    prm\\template\\账号信息导入模板有错误.xls
+    进入账号导入错误页面并点击忽略错误
+    发布账号信息并检查提示信息    导入成功
+    检查数据库中账号的状态    李红军02    INITIAL
+    [Teardown]    teardown_案例运行失败时关闭浏览器

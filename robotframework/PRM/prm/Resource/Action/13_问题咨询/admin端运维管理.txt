@@ -1,0 +1,158 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+初始化问题咨询数据
+    数据库操作.删除数据库记录    delete from prm_problem_consult a where a.consult_no='140511001';
+    数据库操作.删除数据库记录    delete from PEND_TASK_REMIND \ a where a.businessid='1010242' and a.remark='9000000021';
+    数据库操作.删除数据库记录    delete from prm_problem_consult_flow_info a where a.owner_id='9000000021';
+    数据库操作.删除数据库记录    insert into prm_problem_consult_flow_info (FLOW_INFO_ID, OWNER_ID, DEAL_MAN, DEAL_MAN_ID, DEAL_TYPE, TRANSFERRED_OBJECT, DEAL_COMMENT, BUSINESE_STYLE, DOMAIN, DEAL_DATE) values ('9000000017', '9000000021', '彭亨康','1010242', 'consult_req', null, null, '1', 'sp', to_date('08-05-2015 16:26:59', 'dd-mm-yyyy hh24:mi:ss'));
+    数据库操作.删除数据库记录    insert into prm_problem_consult \ \ (ID, \ \ \ CONSULT_NO, \ \ \ STATUS, \ \ \ BUSINESE_STYLE, \ \ \ RELATE_BUSINESS, \ \ \ TITLE, \ \ \ PROBLEM_DESC, \ \ \ RELATE_SP_CODE, \ \ \ ACCOUNT_NAME, \ \ \ STAFF_ID, \ \ \ SUBMITER, \ \ \ CN_NAME, \ \ \ MOBILE, \ \ \ EMAIL, \ \ \ FILE_GROUP_ID, \ \ \ TRANSFERRED, \ \ \ SOURCE_RESPONSIBLE_PERSON, \ \ \ RESPONSIBLE_PERSON, \ \ \ DOMAIN, \ \ \ BROWSER, \ \ \ OS_NAME, \ \ \ CREATE_DATE, \ \ \ LAST_UPDATE) values \ \ ('9000000021', \ \ \ '140511001', \ \ \ '0', \ \ \ '2', \ \ \ '001', \ \ \ '新增系统问题', \ \ \ '新增系统问题详细描述', \ \ \ null, \ \ \ '李红军2', \ \ \ '1010242', \ \ \ '李红军', \ \ \ '李红军有限公司', \ \ \ '13988888888', \ \ \ 'lhj@163.com', \ \ \ null, \ \ \ '0', \ \ \ '001', \ \ \ '901', \ \ \ 'sp', \ \ \ 'Internet Explorer:8.0', \ \ \ 'Win7', \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'));
+
+进入运维管理页面
+    点击一级菜单    运维管理
+
+转派系统问题给基地
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    转派+发送转派邮件
+    sleep    1s
+    下拉框_通过id定位    transferredObject    12582基地
+    文本输入_通过id定位    dealComment    转派给游戏基地
+    点击元素    jquery=a:contains("提交")
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+系统问题处理完成并发送邮件
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    处理完成+发送回复邮件
+    sleep    1s
+    下拉框_通过id定位    relateBusiness    12582基地
+    文本输入_通过id定位    dealComment    转派给游戏基地
+    点击元素    jquery=a:contains("提交")
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+系统问题处理完成不发送邮件
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    处理完成
+    sleep    1s
+    下拉框_通过id定位    relateBusiness    12582基地
+    文本输入_通过id定位    dealComment    转派给游戏基地
+    点击元素    jquery=a:contains("提交")
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+检查问题咨询的状态
+    [Arguments]    ${check_status}
+    数据库记录数    select a.status from prm_problem_consult a where a.consult_no='140511001';    ${check_status}
+
+初始化状态为已处理的问题咨询数据
+    数据库操作.删除数据库记录    delete from prm_problem_consult a where a.consult_no='140511001';
+    数据库操作.删除数据库记录    delete from PEND_TASK_REMIND \ a where a.businessid='1010242' and a.remark='9000000021';
+    数据库操作.删除数据库记录    delete from prm_problem_consult_flow_info a where a.owner_id='9000000021';
+    数据库操作.删除数据库记录    insert into prm_problem_consult_flow_info (FLOW_INFO_ID, OWNER_ID, DEAL_MAN, DEAL_MAN_ID, DEAL_TYPE, TRANSFERRED_OBJECT, DEAL_COMMENT, BUSINESE_STYLE, DOMAIN, DEAL_DATE) values ('9000000017', '9000000021', '彭亨康','1010242', 'consult_req', null, null, '1', 'sp', to_date('08-05-2015 16:26:59', 'dd-mm-yyyy hh24:mi:ss'));
+    数据库操作.删除数据库记录    insert into prm_problem_consult \ \ (ID, \ \ \ CONSULT_NO, \ \ \ STATUS, \ \ \ BUSINESE_STYLE, \ \ \ RELATE_BUSINESS, \ \ \ TITLE, \ \ \ PROBLEM_DESC, \ \ \ RELATE_SP_CODE, \ \ \ ACCOUNT_NAME, \ \ \ STAFF_ID, \ \ \ SUBMITER, \ \ \ CN_NAME, \ \ \ MOBILE, \ \ \ EMAIL, \ \ \ FILE_GROUP_ID, \ \ \ TRANSFERRED, \ \ \ SOURCE_RESPONSIBLE_PERSON, \ \ \ RESPONSIBLE_PERSON, \ \ \ DOMAIN, \ \ \ BROWSER, \ \ \ OS_NAME, \ \ \ CREATE_DATE, \ \ \ LAST_UPDATE) values \ \ ('9000000021', \ \ \ '140511001', \ \ \ '1', \ \ \ '2', \ \ \ '001', \ \ \ '新增系统问题', \ \ \ '新增系统问题详细描述', \ \ \ null, \ \ \ '李红军2', \ \ \ '1010242', \ \ \ '李红军', \ \ \ '李红军有限公司', \ \ \ '13988888888', \ \ \ 'lhj@163.com', \ \ \ null, \ \ \ '0', \ \ \ '001', \ \ \ '901', \ \ \ 'sp', \ \ \ 'Internet Explorer:8.0', \ \ \ 'Win7', \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'));
+
+系统问题处理只发送邮件
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    发送回复邮件
+    sleep    1s
+    下拉框_通过id定位    relateBusiness    12582基地
+    文本输入_通过id定位    dealComment    转派给游戏基地
+    点击元素    jquery=a:contains("提交")
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+系统问题处理完成并填写改进建议部分
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    处理完成+发送回复邮件
+    sleep    1s
+    下拉框_通过id定位    relateBusiness    12582基地
+    文本输入_通过id定位    dealComment    转派给游戏基地
+    下拉框_通过id定位    problemNature    系统缺陷
+    点击元素    jquery=input[value=1]
+    点击元素    jquery=input[value=3]
+    点击元素    jquery=input[value=001]
+    点击元素    jquery=input[value=011]
+    点击元素    jquery=input[value=021]
+    点击元素    jquery=a:contains("提交")
+    文本输入_通过id定位    improvementSuggestion    填写改进建议
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+待处理的系统问题处理时只发送邮件
+    Select Frame    content
+    文本输入_通过id定位    problemConsultConsultNo    140511001
+    点击元素    jquery=a:contains("查询")
+    sleep    2s
+    直到页面某个元素可见    jquery=span:contains("查询结果")
+    直到页面某个元素可见    jquery=a:contains("处理")
+    Click Link    jquery=a:contains("处理")
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    dealType    发送回复邮件
+    sleep    1s
+    下拉框_通过id定位    relateBusiness    12582基地
+    文本输入_通过id定位    dealComment    发送回复邮件
+    点击元素    jquery=a:contains("提交")
+    校验二次确认框提示信息并点击按钮    确认提交吗？
+    校验弹出框信息并点击按钮    处理成功
+
+点击新增问题咨询按钮
+    unselect frame
+    select frame    content
+    点击元素    jquery=a:contains("新增问题咨询")
+
+新增业务咨询问题
+    unselect frame
+    select frame    content
+    下拉框_通过id定位    busineseStyle    系统问题
+    下拉框_通过id定位    relateBusiness    12582基地
+    Input Text    xpath=//input[@nullmsg="请输入问题咨询名称"]    admin端新增问题咨询
+    input text    xpath=//textarea[@nullmsg="请输入详细描述"]    admin新增问题咨询
+    Input Text    xpath=//input[@nullmsg="请输入提交人邮箱"]    11@sina.com
+    点击元素    submitButton
+
+提交问题成功
+    校验二次确认框提示信息并点击按钮

@@ -1,0 +1,12 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+撤回
+    [Arguments]    ${msg}
+    选择frame    id=loginPage
+    点击元素    jquery=a:contains('撤回申请')
+    校验弹出框信息并点击按钮    撤回申请后可以修改后重新提交，但会因此延长审批时间。请确认是否撤回申请？    确认
+    校验弹出框信息并点击按钮    ${msg}    确认
+    等待一段时间    2

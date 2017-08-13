@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section><section id="简单说明" class="titleslide slide level3"><h1>简单说明</h1></section><section class="slide level4">
+
+<ul>
+<li>用于“Mock V2”完成后的测试工作</li>
+<li>目前主要测试: custom encoding, custom header, xpath校验</li>
+<li>也可用于未来使用Mock V2的参考实现(但需要考虑的是，不需要实现得这么复杂，例如加头信息是很简单的事)</li>
+</ul>
+</section></section>
+<section><section id="安装部署" class="titleslide slide level3"><h1>安装部署</h1></section><section id="python的安装" class="slide level4">
+<h1>1. Python的安装</h1>
+<ul>
+<li>下载并安装Python
+<ul>
+<li><a href="http://10.1.3.252:10000/python/ActivePython-2.7.10.12-win32-x86.msi" class="uri">http://10.1.3.252:10000/python/ActivePython-2.7.10.12-win32-x86.msi</a></li>
+</ul></li>
+<li>设置path变量
+<ul>
+<li>用户变量<strong>PYTHON_HOME</strong>设置为Python的安装目录，例如:<strong>C:\Python27</strong></li>
+<li>用户变量<strong>PATH</strong>的最后加入:　<strong>;%PYTHON_HOME%;%PYTHON_HOME%\Scripts</strong>
+<p>
+<img src="./media/python_install_path_env.png" alt="python_install_path_env.png" title="用户环境变量配置">
+</p></li>
+</ul></li>
+<li>设置pip采用国内镜像
+<ul>
+<li><p>编辑%HOMEPATH%\pip\pip.ini,　内容如下:</p>
+<div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[global]</span>
+<span class="dt">index-url</span><span class="ot">=</span><span class="st">http://mirrors.aliyun.com/pypi/simple/</span>
+<span class="dt">index-url2</span><span class="ot">=</span><span class="st">https://pypi.mirrors.ustc.edu.cn/simple/</span>
+<span class="kw">[install]</span>
+<span class="dt">trusted-host</span><span class="ot">=</span><span class="st">mirrors.aliyun.com</span></code></pre></div></li>
+</ul></li>
+<li><p>手工更新一下pip的版本 命令行模式下</p>
+<pre class="shell"><code>&gt; pip install http://10.1.3.252:10000/python/pypi/pip-8.1.2-py2.py3-none-any.whl --upgrade </code></pre>
+<h4 id="wxpython的安装">2. wxpython的安装</h4></li>
+<li>下载并安装wxpython2.8
+<ul>
+<li><a href="http://10.1.3.252:10000/python/wxPython2.8-win32-unicode-2.8.12.1-py27.exe" class="uri">http://10.1.3.252:10000/python/wxPython2.8-win32-unicode-2.8.12.1-py27.exe</a></li>
+</ul></li>
+</ul>
+</section><section id="第三方库的安装采用virtualenv的模式" class="slide level4">
+<h1>3. 第三方库的安装，采用virtualenv的模式</h1>
+<h5 id="下载并执行安装脚本">下载并执行安装脚本</h5>
+<ul>
+<li>下载安装脚本－－ <a href="http://10.1.3.252:10000/python/pypi/new_rf_vpython.py" class="uri">http://10.1.3.252:10000/python/pypi/new_rf_vpython.py</a></li>
+<li>执行脚本－－资源管理器中双击运行：new_rf_vpython.py，直到脚本安装完成（约2分钟）</li>
+<li>涉及到的主要库有:
+<ul>
+<li>robotframework</li>
+<li>wxpython</li>
+<li>robotframework-ride</li>
+<li>httplibrary</li>
+<li>lxml</li>
+<li>xmltodict</li>
+<li>chardet</li>
+<li>twisted</li>
+</ul></li>
+<li><p>命令行模式, 激活virtualenv，并启动虚拟环境下的ride</p>
+<pre class="shell"><code>&gt; cmd /K cd c:\vpython\scripts
+&gt; activate.bat
+&gt; python ride.py</code></pre></li>
+</ul>
+</section></section>
+<section><section id="使用说明" class="titleslide slide level3"><h1>使用说明</h1></section><section id="ide方式运行" class="slide level4">
+<h1>IDE方式运行</h1>
+<ul>
+<li>Ride.py装载Demo目录</li>
+<li>配置Mock Server中的模拟服务器,　然后运行起来</li>
+<li>按需要运行Demo中json和xml两个目录下的，自定义头和自定义编码的案例</li>
+</ul>
+</section><section id="自测式cmd运行" class="slide level4">
+<h1>自测式cmd运行</h1>
+<ul>
+<li><p>先激活virtualenv, 然后在cmd窗口下，进入Demo目录，运行 SimServer_test.cmd, 其过程如下:</p>
+<pre class="shell"><code> &gt; 立即启动SimServer.py
+ &gt; 5秒后, 通过pybot.cmd运行测试, 报告生成在SimServer\docs\Demo\report目录
+ &gt; 10秒后, 浏览器打开log.html,可以查看运行报告
+ &gt; 通过taskkill /IM python.exe 清除所有的python进程</code></pre></li>
+</ul>
+</section></section>
+<section><section id="详细说明" class="titleslide slide level3"><h1>详细说明</h1></section><section id="自定义头" class="slide level4">
+<h1>自定义头</h1>
+<ol type="1">
+<li>需求概述
+<ul>
+<li>自定义头通常在真实系统中有两种情况:</li>
+<li>Client发起请求中带了custom header, SimServer只需要在返回中带上同样的custom header, 其值与请求包相同</li>
+<li>Client发起请求中没有带头, 但该请求是请求一个新的Custom header, 此时SimServer需要在返回包中给一个随机数</li>
+</ul></li>
+<li>配置说明
+<ul>
+<li>RF的Resource层关键字中,新增custom_header</li>
+<li>配置为{&quot;key1&quot;:&quot;value1&quot;,&quot;key2&quot;:value2&quot;}</li>
+<li>如果value的配置为&quot;REPLY&quot;,则按请求包的原值返回</li>
+<li>如果value的配置不是&quot;REPLAY&quot;,则按指定值返回 &gt; 也就是说, 随机数可以通过在RF的Client封装中完成指定值; 例如md5或者java加密,分别可以通过RF的python自定义lib和jython+RemoteLibrary来分别实现</li>
+<li><p>如果不配置custom_header, 则缺省传入的参数值为${EMPTY}, 则保持Mock V1中不带Custom Header时的兼容</p>
+keyword图（ride）:
+<p>
+<img src="./media/custom_header_1.png" alt="custom_header_1" title="自定义头-底层关键字封装" width="640" height="200">
+</p>
+testcase图（ride）:
+<p>
+<img src="./media/custom_header_2.png" alt="custom_header_2" title="自定义头-调用底层关键字例子" width="640" height="200">
+</p></li>
+</ul></li>
+<li>实现详解
+<ul>
+<li>自定义头是通过RF的关键字来实现的</li>
+<li>SimClient.py中新增header</li>
+<li>利用SimClient.py中的dict2xml,如果header不为空,则把header放在simSet接口XML包中去
+<p>
+<img src="./media/custom_header_SimClient_py.png" alt="custom_header_SimClient_py" title="自定义头-SimClient.py文件" width="640" height="260">
+</p></li>
+<li>SimServer中对SimSet接口的处理,如果存在header的内容,则把header相关的内容放在expMessage的实体中去
+<p>
+<img src="./media/custom_header_expectMessage_py.png" alt="custom_header_expectMessage_py" title="自定义头-expectMessage.py文件"  width="640" height="260">
+</p></li>
+<li>SimServer在返回包时判断,如果expMsg中存在header的定义,且value为<strong>REPLY</strong>,则取请求包中的值原样返回; 否则按expMsg中的header指定值加头返回
+<p>
+<img src="./media/custom_header_httpHandler_py.png" alt="custom_header_httpHandler_py" title="自定义头-httpHandler.py文件" width="640" height="260">
+</p></li>
+</ul></li>
+</ol>
+</section><section id="自定义编码" class="slide level4">
+<h1>自定义编码</h1>
+<ol type="1">
+<li>需求概述
+<ul>
+<li>TBD</li>
+</ul></li>
+<li>配置说明
+<ul>
+<li>通过conf/system.xml中的配置实现
+<ul>
+<li>配置当前只针对http server实现, 也就是说,一个端口的配置是定死的(大部分场景下, 一类接口的编码是一样的)</li>
+<li><p>如果不配置,缺省的encoding为UTF-8, 保持向Mock V1的兼容</p>
+<p>
+<img src="./media/custom_encoding_system_xml.png" alt="system_xml" title="在system.xml中进行encoding的配置" width="640" height="260">
+</p></li>
+</ul></li>
+</ul></li>
+<li>实现详解
+<ul>
+<li>自定义编码的实现如下
+<ul>
+<li>system.xml中http server中配置的encoding是最主要的判断因素, 返回包完全按此encoding返回</li>
+<li>保持template中实际的req和rsp模板在磁盘保存的编码,与上述一致</li>
+<li>Http包体的编码检测,使用了第三方库chardet, 大部分情况下可以准确检测出来编码, 少量情况加入了一些判断,见utils/encoding.py文件中的detectEncoding()功能</li>
+<li>实现逻辑如下:
+<ul>
+<li>SimServer收到包, 按system.xml中的指定的编码进行转码, 在消息队列中匹配前面预置的expMsg实例,并根据expMsg实例设置返回包中的参数</li>
+<li>返回包体时,也是先检测包体的encoding</li>
+<li>对于XML包体的处理,通过转为UNICODE之后,再按system.xml中指定的编码转换后发出(注意,此时未显式指定http包头中的charset)</li>
+<li>Json包体的处理和XML的处理还有一点不同,在于json.Loads()时,处理不了UNICODE多字节的情况,所以是Json包转XML时多了一步,即先转UTF-8</li>
+<li>Json包体的处理, 由于是先转XML再处理,所以各种转码的工作需要考虑把第一行去除,否则第一行中的encoding声明会与包体的实际不一致</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>其它
+<ul>
+<li>根据http协议, 包头声明的encoding应与包体的encoding一致; 但现实世界中各系统的实现差异度较大, 所以SimServer目前基本上只考虑包体的实际encoding</li>
+<li>由于多编码的输出,都需要写日志,所以日志会打印包体的encoding,但写日志文件时全部转为UTF-8写文件,这一点在查看日志时需要注意.</li>
+<li>所谓的http的encoding支持, 实际上主要还是考虑UTF-8和GBK两种, UTF-8是UNICODE的一种编码实现, UTF-16LE也是UNICODE的一种编码实现,UTF-8占用的网络带宽少,所以UTF-16LE在网络上使用少</li>
+<li>根据RFC4627的定义, JSON的String缺省UTF-8, 也可以使用<code>\uxxxx</code>, 如果是后者,则有rspMsg.decode(&quot;<strong>unicode-escape</strong>&quot;).encode(encoding)</li>
+</ul></li>
+</ol>
+</section><section id="xpath校验" class="slide level4">
+<h1>xpath校验</h1>
+<ol type="1">
+<li>需求概述
+<ul>
+<li>对于某些接口，被测系统会向第三方发出group模式的xml包，例如NDMP项目；需要校验中间的某个节点值，因此增加xpath校验</li>
+</ul></li>
+<li>配置说明
+<ul>
+<li>主要配置在于NNN接口.txt中，与接口相关的部分的KW</li>
+<li>KW：“模拟器调用请求包构造”的最后二个参数“校验模式”和“应答模式”，缺省均为“NORMAL”, 需要进行XPATH校验时，需要设“校验模式”为“XPATH”</li>
+<li>传变量的参数，例如{&quot;/Request/apkInfo/contentId&quot;:&quot;<img style="vertical-align:middle" src="http://chart.apis.google.com/chart?cht=tx&amp;chl=%7BcontentId%7D%22%2C%22%2FRequest%2FapkInfo%2FcontentName%22%3A%22" alt="{contentId}&quot;,&quot;/Request/apkInfo/contentName&quot;:&quot;" title="{contentId}&quot;,&quot;/Request/apkInfo/contentName&quot;:&quot;" />{contentName}&quot;}</li>
+</ul></li>
+<li>实现详解
+<ul>
+<li>Demo例子，见：<strong>Demo/接口案例/XML/01.HTTP简单请求测试.robot</strong> 文件中的案例 “xpath验证模式”</li>
+</ul></li>
+</ol>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Vertical centering of slides
+        center: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

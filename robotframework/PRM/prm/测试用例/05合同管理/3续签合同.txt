@@ -1,0 +1,14 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/05合同管理/3续签合同.txt
+
+*** Test Cases ***
+01合同续签
+    [Tags]    smoke
+    使用sims_admin登录系统,并进入合同管理页面
+    清理相关合同信息    HT-878877
+    初始化相关合同数据
+    选择待处理的合同记录
+    续签通知该合作记录    操作成功
+    检查合同状态    1    #状态：1-正常，2-待续签，3-到期，4-终止
+    [Teardown]    teardown_案例运行失败时关闭浏览器

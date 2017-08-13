@@ -1,0 +1,44 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+修改SIMS新增公司同步给PRM的xml文件
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${OPERATING_ID}    获取sequence的nextval    seq_apply_company_operating
+    ${org_code}    数据库查询    SELECT ltrim(to_char(${COMPANY_ID},'00000000')) AS Id FROM dual;
+    修改xml节点的值    SIMS同步公司${COMPANY_ID}    //Body/CompanyName
+    修改xml节点的值    1No.${COMPANY_ID}    CompanyNo
+    修改xml节点的值    z${org_code}-    OrgCode
+    修改xml节点的值    001199001${OPERATING_ID}    //CompanyOperating/LicenseNo
+    Set Test Variable    ${CN_NAME}    SIMS同步公司${COMPANY_ID}
+
+判断新增是否同步成功
+    ${res}    Post Xml    prm\\xml\\AddCnSimsToPrm.xml    http://10.12.12.157:9002
+    Should Be Equal As Strings    ${res}    000000
+
+查看数据库是否有SIMS同步给PRM的公司记录
+    ${result}    Exec Sql    SELECT count(*) FROM prm_company t WHERE t.cn_name='${CN_NAME}';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+修改SIMS变更公司同步给PRM的xml文件
+    ${CURRENT_TIME}    获取当前时间年月日时分秒
+    修改xml节点的值    SIMS修改公司信息同步给PRM的公司简介${CURRENT_TIME}    /Msg/Body/About
+    Set Test Variable    ${CN_ABOUT}    SIMS修改公司信息同步给PRM的公司简介${CURRENT_TIME}
+
+判断变更是否同步成功
+    ${res}    Post Xml    prm\\xml\\AlterCnSimsToPrm.xml    http://10.12.12.157:9002
+    Should Be Equal As Strings    ${res}    000000
+
+查看数据库是否有SIMS同步给PRM的变更的公司记录
+    ${result}    Exec Sql    SELECT count(*) FROM prm_company t WHERE t.cn_name='彭亨康有限公司' AND t.company_desc='${CN_ABOUT}';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+SIMS新增公司同步给PRM的报文中缺少节点
+    ${COMPANY_ID}    获取sequence的nextval    seq_apply_company
+    ${OPERATING_ID}    获取sequence的nextval    seq_apply_company_operating
+    修改xml节点的值    SIMS同步公司${COMPANY_ID}    CompanyName
+    修改xml节点的值    No.${COMPANY_ID}    CompanyNo
+    修改xml节点的值    001199001${OPERATING_ID}    //CompanyOperating/LicenseNo
+    删除xml节点    CompanyNo
+    删除xml节点    OrgCode
+    Set Test Variable    ${CN_NAME}    SIMS同步公司${COMPANY_ID}

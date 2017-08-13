@@ -1,0 +1,18 @@
+*** Settings ***
+Resource          合作伙伴引入common.txt
+
+*** Keywords ***
+点击注册按钮
+    Run Keyword If Element Visible    id=headFrame    选择frame    headFrame
+    点击元素    jquery=a.btn_reg
+    直到元素可见    jquery=td:contains('意向合作')
+
+检查是否已进入注册页面
+    直到元素可见    jquery=p:contains('注册账号')
+    直到元素可见    jquery=td:contains('密码')
+
+检查是否已进入partner端登录页面
+    直到元素可见    id=loginName
+    直到元素可见    id=artiPwd
+    直到元素可见    id=loginButton
+    直到元素可见    jquery=a:contains('注册帐号')

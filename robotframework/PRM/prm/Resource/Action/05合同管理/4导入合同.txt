@@ -1,0 +1,19 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          合同管理common.txt
+
+*** Keywords ***
+上传待导入合同文件
+    [Arguments]    ${file_name}    ${check_content}
+    点击元素    jquery=a:contains("导入合同信息")
+    ajax加载完毕
+    选择附件    file    prm\\template\\${file_name}
+    链接    导入文件
+    Click Link    confirm
+    ajax加载完毕
+    校验二次确认框提示信息并点击按钮    ${check_content}    确认
+
+检查导入合同状态
+    [Arguments]    ${check_status}
+    ${result}    数据库查询    select a.status from prm_sp_contract a where a.contract_no='HT-878878' and a.sp_id='0000000002';
+    Should Be Equal    ${result}    ${check_status}

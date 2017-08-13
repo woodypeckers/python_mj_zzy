@@ -1,0 +1,46 @@
+*** Settings ***
+Resource          结算对账common.txt
+
+*** Keywords ***
+进入发布及对账页面
+    进入左侧二级菜单    结算对账    发布及对账
+
+进入结算单发布基本信息填写页面
+    点击元素    jquery=div.top_div>span.buttonbig>a:contains('发布')
+
+填写结算单基本信息
+    [Arguments]    ${type}    ${month}    ${file_name}
+    下拉框通过文字    结算单类型    阅读基地通用结算单模板
+    下拉框通过文字    账期类型    ${type}
+    结算单发布账期月份选择    ${month}    #xxxx年xx月
+    选择附件    settlementFile    prm\\template\\${file_name}
+
+结算单发布账期月份选择
+    [Arguments]    ${month}
+    点击元素    id=accountPeriod
+    Input Text    id=accountPeriod    ${month}
+
+上载结算单
+    链接    上载
+
+未上传结算单明细附件，确认上载
+    [Arguments]    ${dialog_msg}
+    校验二次确认框提示信息并点击按钮    ${dialog_msg}
+
+通知方式为邮件和短信，提交
+    链接    提交
+    校验二次确认框提示信息并点击按钮    您选择结算单通知方式为短信、邮件，系统将以短信、邮件方式通知合作伙伴，请确认！
+    校验二次确认框提示信息并点击按钮    发布成功
+
+删除发布成功的结算单
+    [Arguments]    ${sql}
+    Exec Sql    ${sql}    ${prm_oracle_tns}
+
+查询发布成功的结算单
+    [Arguments]    ${sql}
+    ${result}    Exec Sql    ${sql}    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+上传结算单明细附件
+    [Arguments]    ${file_name}
+    选择附件    settlementAttach    prm\\template\\${file_name}

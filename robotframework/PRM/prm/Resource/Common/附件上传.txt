@@ -1,0 +1,251 @@
+*** Settings ***
+Library           AutoItLibrary
+Library           Selenium2Library
+Library           ../../MyLibrary/OracleLibrary.py
+Library           ../../MyLibrary/PhkLibrary.py
+
+*** Keywords ***
+IE附件上传
+    [Arguments]    ${upload_name}    ${fullpath}    ${win_title}='选择要上载的附件'
+    Wait Until Page Contains Element    ${upload_name}
+    Mouse Over    ${upload_name}
+    Click Element    ${upload_name}
+    ${upload_window_exist}    Win Exists    ${win_title}
+    log    ${upload_window_exist}
+    Run Keyword If    '${upload_window_exist}'=='0'    Send    ${SPACE}
+    Run Keyword If    '${upload_window_exist}'=='0'    sleep    0.2s
+    Win Wait    ${win_title}    \    10
+    Win Activate    ${win_title}
+    ControlSetText    ${win_title}    \    [CLASS:Edit; INSTANCE:1]    ${fullpath}
+    Control Focus    ${win_title}    \    [CLASS:Button; INSTANCE:1]
+    Send    !O
+    sleep    0.2s
+
+上传附件_开户银行许可证
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_开户银行许可证    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_开户银行许可证    ${upload_file}
+
+上传附件_IE_开户银行许可证
+    [Arguments]    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    IE附件上传    id=uploadBtn_spBankAccountAttach    ${fullpath}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_开户银行许可证
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#spBankAccountAttach input[type='file']    ${upload_file}
+
+上传附件_信息安全保障措施
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_信息安全保障措施    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_信息安全保障措施    ${upload_file}
+
+上传附件_IE_信息安全保障措施
+    [Arguments]    ${upload_file}
+    IE附件上传    id=infoAttach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_信息安全保障措施
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#infoAttach input[type='file']    ${upload_file}
+
+上传附件_信息安全承诺书
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_信息安全承诺书    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_信息安全承诺书    ${upload_file}
+
+上传附件_IE_信息安全承诺书
+    [Arguments]    ${upload_file}
+    IE附件上传    id=infoCommitAttach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_信息安全承诺书
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#infoCommitAttach input[type='file']    ${upload_file}
+
+上传附件_合作申请附件1
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_合作申请附件1    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_合作申请附件1    ${upload_file}
+
+上传附件_IE_合作申请附件1
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_business0attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_合作申请附件1
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#business0attach input[type='file']    ${upload_file}
+
+上传附件_合作申请附件2
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_合作申请附件2    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_合作申请附件2    ${upload_file}
+
+上传附件_IE_合作申请附件2
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_business1attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_合作申请附件2
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#business1attach input[type='file']    ${upload_file}
+
+上传附件_营业执照
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_营业执照    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_营业执照    ${upload_file}
+
+上传附件_IE_营业执照
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_lawManAttach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_营业执照
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#lawManAttach input[type='file']    ${upload_file}
+
+上传附件_组织机构代码附件
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_组织机构代码附件    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_组织机构代码附件    ${upload_file}
+
+上传附件_IE_组织机构代码附件
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_orgCodeAttach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_组织机构代码附件
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#orgCodeAttach input[type='file']    ${upload_file}
+
+上传附件_公司章程信息附件
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_公司章程信息附件    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_公司章程信息附件    ${upload_file}
+
+上传附件_IE_公司章程信息附件
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_ruleAttach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_公司章程信息附件
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#ruleAttach input[type='file']    ${upload_file}
+
+上传附件_税务登记证国税
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_税务登记证国税    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_税务登记证国税    ${upload_file}
+
+上传附件_IE_税务登记证国税
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_taxReg0attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_税务登记证国税
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#taxReg0attach input[type='file']    ${upload_file}
+
+上传附件_税务登记证地税
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_税务登记证地税    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_税务登记证地税    ${upload_file}
+
+上传附件_IE_税务登记证地税
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_taxReg1attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_税务登记证地税
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#taxReg1attach input[type='file']    ${upload_file}
+
+上传附件_电信增值服务许可证1
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_电信增值服务许可证1    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_电信增值服务许可证1    ${upload_file}
+
+上传附件_IE_电信增值服务许可证1
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_valueAdd0attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_电信增值服务许可证1
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#valueAdd0attach input[type='file']    ${upload_file}
+
+上传附件_电信增值服务许可证2
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_电信增值服务许可证2    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_电信增值服务许可证2    ${upload_file}
+
+上传附件_IE_电信增值服务许可证2
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_valueAdd1attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_电信增值服务许可证2
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#valueAdd1attach input[type='file']    ${upload_file}
+
+上传附件_短消息类服务接入代码使用证书1
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_短消息类服务接入代码使用证书1    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_短消息类服务接入代码使用证书1    ${upload_file}
+
+上传附件_IE_短消息类服务接入代码使用证书1
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_smsUse0attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_短消息类服务接入代码使用证书1
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#smsUse0attach input[type='file']    ${upload_file}
+
+上传附件_短消息类服务接入代码使用证书2
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_短消息类服务接入代码使用证书2    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_短消息类服务接入代码使用证书2    ${upload_file}
+
+上传附件_IE_短消息类服务接入代码使用证书2
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_smsUse1attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_短消息类服务接入代码使用证书2
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#smsUse1attach input[type='file']    ${upload_file}
+
+上传附件_其他资质文件1
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_其他资质文件1    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_其他资质文件1    ${upload_file}
+
+上传附件_IE_其他资质文件1
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_business0attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_其他资质文件1
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#business0attach input[type='file']    ${upload_file}
+
+上传附件_其他资质文件2
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}' == 'ie'    上传附件_IE_其他资质文件2    ${upload_file}
+    Run Keyword If    '${browser_type}' != 'ie'    上传附件_非IE_其他资质文件2    ${upload_file}
+
+上传附件_IE_其他资质文件2
+    [Arguments]    ${upload_file}
+    IE附件上传    id=uploadBtn_business1attach    ${upload_file}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_其他资质文件2
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#business1attach input[type='file']    ${upload_file}
+
+附件上传_通过id定位
+    [Arguments]    ${id}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    Run Keyword If    '${browser_type}'=='ie'    Execute Javascript    jQuery("#${id} input[type='file']").attr('style','');
+    Judge File Exist    ${fullpath}
+    Choose File    jquery=#${id} input[type='file']    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s
+
+附件上传_通过xpath定位
+    [Arguments]    ${text_content}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    ${input_id}=    Get Element Attribute    xpath=//td[contains(text(),("${text_content}"))]//following-sibling::td//input[@type='file']@id
+    Run Keyword If    '${browser_type}'=='ie'    Execute Javascript    window.document.getElementById( "${input_id}").style.cssText = "";return 0;
+    Judge File Exist    ${fullpath}
+    Choose File    xpath=//td[contains(text(),("${text_content}"))]//following-sibling::td//input[@type='file']    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s

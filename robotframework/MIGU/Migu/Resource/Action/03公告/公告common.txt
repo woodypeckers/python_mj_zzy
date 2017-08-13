@@ -1,0 +1,92 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入公告信息填写界面
+    直到元素可见    jquery=a:contains('起草公告')
+    点击元素    jquery=a:contains('起草公告')
+    直到元素可见    jquery=div:contains('公告管理->公告管理->起草公告')
+
+填写公告基本信息
+    [Arguments]    ${issuer}    ${emergencyDegree}=${EMPTY}    ${reply}=${EMPTY}    ${smsInform}=${EMPTY}    ${audit}=${EMPTY}
+    下拉框输入文字    发布方    ${issuer}
+    Run Keyword If    '${emergencyDegree}'!=''    下拉框输入文字    紧急程度    ${emergencyDegree}
+    Run Keyword If    '${reply}'!=''    单选框    是否需回复    ${reply}
+    Run Keyword If    '${smsInform}'!=''    单选框    短信通知    ${smsInform}
+    Run Keyword If    '${audit}'!=''    单选框    需要审核    ${audit}
+
+选择短信通知对象
+    [Arguments]    ${text}
+    单选框    短信通知对象    ${text}
+
+填写公告标题
+    [Arguments]    ${noticeTitle}=标题
+    ${anouncement}    获取sequence的nextval    SEQ_ANNOUNCEMENT_ID
+    ${anouncement_id}    数据库查询    SELECT ltrim(to_char(${anouncement},'00000000')) AS Id FROM dual;
+    文本框输入文字    公告标题    ${noticeTitle}${anouncement_id}
+    Set Test Variable    ${announce_title}    ${noticeTitle}${anouncement_id}
+
+填写公告正文
+    [Arguments]    ${noticeContent}=告知123
+    执行JavaScript    jQuery("iframe.ke-edit-iframe").attr('id','noticeContent')
+    选择frame    noticeContent
+    Comment    Mouse Over    //body
+    点击元素    //body
+    Input Text    //body    ${noticeContent}
+    Comment    Press Key    //body    ${noticeContent}
+    不选择frame
+    选择frame    content
+
+上传公告附件
+    [Arguments]    ${file_path}=Migu\\attachment\\公告附件.jpg
+    上传附件，输入id    uploadfile    ${file_path}
+
+按合作类型选择发布对象
+    [Arguments]    ${coop_type}=全部
+    [Documentation]    传入的参数可以为：全部、一点接入(CP)、分谈分签(渠道)、统谈统签(渠道)。 默认为全部
+    点击元素    jquery=td>label:contains('按合作类型选择')
+    点击元素    jquery=td>label:contains('${coop_type}')
+
+按合作编码或公司名称选择发布对象
+    [Arguments]    ${text}
+    [Documentation]    传入的参数可以为：全部、一点接入(CP)、分谈分签(渠道)、统谈统签(渠道)。 默认为全部
+    点击元素    jquery=td>label:contains('按合作编码，公司名称选择')
+    直到元素可见    jquery=input#querySp
+    Press Key By Character    jquery=input#querySp    ${text}
+    直到元素可见    jquery=li:contains('${text}')
+    点击元素    jquery=li:contains('${text}')
+
+管理员端公告输入查询条件
+    [Arguments]    ${noticetitle}    ${publisher}=${EMPTY}    ${status_container}=${EMPTY}    ${simsId_container}=${EMPTY}    ${startdate}=${EMPTY}    ${enddate}=${EMPTY}
+    点击按钮    清空
+    文本框输入文字    公告主题    ${noticetitle}
+    Run Keyword If    '${publisher}'!=''    文本框输入文字    发布人    ${publisher}
+    Run Keyword If    '${status_container}'!=''    下拉框    status_container    ${status_container}
+    Run Keyword If    '${simsId_container}'!=''    下拉框    simsId_container    ${simsId_container}
+    Run Keyword If    '${startdate}'!=''    输入日期    beginLastUpdate    ${startdate}
+    Run Keyword If    '${enddate}'!=''    输入日期    endLastUpdate    ${enddate}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${noticetitle}')
+
+管理员端进入公告详情界面
+    点击元素    jquery=td:contains('${announce_title}')
+    直到元素可见    jquery=div:contains('公告详情')
+    直到元素可见    jquery=div:contains('公告内容')
+    直到元素可见    jquery=div:contains('公告发布对象显示')
+    点击元素    jquery=span:contains('点击收展')
+    直到元素可见    jquery=div:contains('审批记录')
+    直到元素可见    jquery=td:contains('新建公告')
+
+partner端进入公告列表界面
+    点击元素    id=gonggaoid
+    直到元素可见    jquery=span:contains('公告列表')
+
+partner端进入公告详情界面
+    点击元素    jquery=td:contains('${announce_title}')
+    直到元素可见    jquery=span:contains('公告详情')
+
+填写公告回复信息
+    [Arguments]    ${reply}=知道了    ${uploadfile}=${EMPTY}
+    文本域输入    id=flowInfoDealComment    ${reply}
+    Run Keyword If    '${uploadfile}'=='true'    上传附件，输入id    uploadfile    Migu\\attachment\\公告回复.jpg

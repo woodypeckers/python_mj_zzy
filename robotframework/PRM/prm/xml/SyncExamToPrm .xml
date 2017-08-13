@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="GBK"?>
+<Msg>
+	<Header>
+		<Version>0001</Version>
+		<TestFlag>1</TestFlag>
+		<ActivityCode>110019</ActivityCode>
+		<ReqSys>999</ReqSys>
+		<ReqDateTime>20140612112715677</ReqDateTime>
+		<ReqTransID>20140612112715678</ReqTransID>
+		<ActionCode>0</ActionCode>
+        <Sign>111</Sign>
+		<RcvSys>2001</RcvSys>
+		<RcvDateTime></RcvDateTime>
+		<RcvTransID></RcvTransID>
+		<RspCode></RspCode>
+		<RspDesc></RspDesc>
+	</Header>
+	<Body>
+        <OperCode>1</OperCode>
+        <BaseId>041</BaseId>
+        <CoopCode>QD20140730001</CoopCode>
+        <CheckMonth>201410</CheckMonth>
+        <FinalScore>78.99</FinalScore>
+        <Comment>结算考核结果说明：考核结果一般</Comment>
+        <ScoreAttach>
+            <FileName>结算考核附件.docx</FileName>
+            <FileSaveName>140611/899902249815</FileSaveName>
+            <FileSize>15735</FileSize>
+            <FileType>docx</FileType>
+        </ScoreAttach>
+	</Body>
+</Msg>

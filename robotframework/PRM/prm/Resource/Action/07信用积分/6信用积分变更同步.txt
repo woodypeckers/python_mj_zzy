@@ -1,0 +1,14 @@
+*** Settings ***
+Resource          信用积分common.txt
+
+*** Keywords ***
+插入基地同步信用积分信息
+    Exec Sql    insert into prm_credit (CREDIT_ID, SP_ID, CHECK_MONTH, BASE_ID, CREDIT_SCORE, CREDIT_ORDER, CREDIT_OPERATION_ID, LAST_SCORE, IS_PROVINCE_CREDIT, SOURCEFLAG) values ('999999999999', '0000000001', '201401', '041', 90.88, 1, '999999999999', 90.88, '0', '1');    ${prm_oracle_tns}
+    Exec Sql    insert into prm_credit_operation (CREDIT_OPERATION_ID, PRODUCT_ID, CHECK_MONTH, BASE_ID, STATUS, PUNISH_START_TIME, PUNISH_END_TIME, REMARK, CREATE_DATE, LAST_UPDATE, COOP_TYPE) values ('999999999999', '0410051', '201401', '041', 3, to_date('01-05-2014', 'dd-mm-yyyy'), to_date('31-05-2014', 'dd-mm-yyyy'), '', to_date('29-09-2014 15:52:19', 'dd-mm-yyyy hh24:mi:ss'), to_date('29-09-2014 15:52:19', 'dd-mm-yyyy hh24:mi:ss'), '5');    ${prm_oracle_tns}
+
+修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    2    /Msg/Body/Credit/OperCode
+
+删除插入的基地同步信用积分信息
+    Exec Sql    DELETE FROM prm_credit t WHERE t.credit_id='999999999999';     ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_operation t WHERE t.credit_operation_id='999999999999';    ${prm_oracle_tns}

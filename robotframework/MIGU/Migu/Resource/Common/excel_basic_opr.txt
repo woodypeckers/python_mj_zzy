@@ -1,0 +1,38 @@
+*** Settings ***
+Documentation     excel文件操作的关键字
+Library           ../../MyLibrary/ExcelOprPhk.py
+
+*** Keywords ***
+创建excel文件
+    [Arguments]    ${fileName}=Migu\\temp\\test.xls    ${sheetName}=Sheet1
+    [Documentation]    1、创建一个excel文件
+    ...    2、输入要创建的excel文件名及创建的excel文件里面的sheet名称
+    ...    3、默认创建的excel文件名为Migu\\temp\\test.xls ，sheet名为sheet1
+    Create Excel    ${fileName}    ${sheetName}
+
+删除excel文件
+    [Arguments]    ${fileName}=Migu\\temp\\test.xls
+    [Documentation]    1、删除一个excel文件
+    ...    2、默认删除的excel文件名为Migu\\temp\\test.xls
+    Del Excel    ${fileName}
+
+excel表格中一个单元格插入值
+    [Arguments]    ${value}    ${row}    ${col}    ${fileName}=temp\\test.xls    ${sheetIndex}=0
+    [Documentation]    1、需要输入插入的值、行号、列号、文件名及sheet名
+    ...    2、默认往Migu\\temp\\test.xls 里面第一个sheet插入值
+    Change Excel Cell Value    ${value}    ${row}    ${col}    ${fileName}    ${sheetIndex}
+
+excel表中插入一行记录
+    [Arguments]    ${value}    ${row}=1    ${col}=0    ${fileName}=Migu\\temp\\test.xls    ${sheetName}=0
+    [Documentation]    1、需要传入的参数为需要该行里面单元格输入的值
+    ...    2、默认从A2开始写，也就是从第二行第一个单元格开始输入 \ \ 如果传入的value= aaa,1,33,111 ;那么第二行第一个单元格（A2）的值为aaa，第二行第二个单元格（B2）的值为1，第二行第三个（C2）单元格的值为33，第二行第四个单元格的值为111
+    ...    3、默认书写Migu\\temp\\test.xls文件第一个sheet
+    Change Excel Value By Row    ${value}    ${row}    ${col}    ${fileName}    ${sheetName}
+
+excel表格中插入多行记录
+    [Arguments]    ${value}    ${rows}    ${startRow}=1    ${fileName}=Migu\\temp\\test.xls    ${sheetName}=0
+    [Documentation]    1、往excel插入多行记录。可以用来测试支持导入的最大记录数
+    ...    2、value:插入excel文件中每一行的值。每个单元格的值用英文逗号分隔
+    ...    3、rows:总共插入多少行记录
+    ...    4、默认从第二行开始
+    Change Excel Value By Col    ${value}    ${rows}    ${startRow}    ${fileName}    ${sheetName}

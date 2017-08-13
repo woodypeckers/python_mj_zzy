@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='GBK'?>
+<Msg>
+	<Header>
+		<Version>0001</Version>
+		<TestFlag>0</TestFlag>
+		<ActivityCode>020009</ActivityCode>
+		<ReqSys>999</ReqSys>
+		<ReqDateTime>20150910040709198</ReqDateTime>
+		<ReqTransID>20150910040709199</ReqTransID>
+		<ActionCode>1</ActionCode>
+		<RcvSys>888</RcvSys>
+		<RcvDateTime>20150910160418</RcvDateTime>
+		<RcvTransID>99920150910160418</RcvTransID>
+		<Sign>486b1da8d76837d05379b5878368623c</Sign>
+		<RspCode>000000</RspCode>
+		<RspDesc>成功</RspDesc>
+	</Header>
+	<Body>
+		<TimeStamp>20150910160418</TimeStamp>
+	</Body>
+</Msg>

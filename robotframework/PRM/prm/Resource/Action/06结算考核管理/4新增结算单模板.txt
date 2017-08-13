@@ -1,0 +1,50 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/附件上传.txt
+Resource          结算考核common.txt
+
+*** Keywords ***
+新增结算单模板
+    Comment    select Frame    content
+    点击元素    xpath=//a[text()="新增"]
+    直到页面某个元素可见    jquery=div:contains('配置项目')
+    Comment    ajax加载完毕
+    comment    基本信息
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    comment    项目打分    \    11
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.templateItemName"]    自动化测试年度考评项
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.childrenList[0].templateItemName"]    第一季度考核
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.childrenList[0].templateScoreLimit"]    20
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItem0.childrenList[0].templateItemDesc"]    等级为A，得20；等级为B，得10;等级为C，等5.
+    点击元素    submitBtn
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    新增结算考核模板成功
+    go to    http://10.12.12.157:18080/prm_admin/
+
+新增有加减分项的结算单模板
+    Comment    select Frame    content
+    点击元素    xpath=//a[text()="新增"]
+    直到页面某个元素可见    jquery=div:contains('配置项目')
+    Comment    ajax加载完毕
+    comment    基本信息
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    comment    项目打分    \    11
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.templateItemName"]    自动化测试年度考评项
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.childrenList[0].templateItemName"]    第一季度考核
+    input text    xpath=//input[@name="examTemplate.examTemplateItem0.childrenList[0].templateScoreLimit"]    20
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItem0.childrenList[0].templateItemDesc"]    等级为A，得20；等级为B，得10;等级为C，等5.
+    comment    添加加分项
+    增加一条加分项
+    input text    xpath=//input[@name="examTemplate.examTemplateItemAdd.examTemplateItemAddList[0].templateItemName"]    加分细项目1
+    input text    xpath=//input[@name="examTemplate.examTemplateItemAdd.examTemplateItemAddList[0].templateScoreLimit"]    10
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItemAdd.examTemplateItemAddList[0].templateItemDesc"]    加10分
+    comment    添加减分项
+    增加一条减分项
+    input text    xpath=//input[@name="examTemplate.examTemplateItemSubtract.examTemplateItemSubtractList[0].templateItemName"]    减分细项目1
+    input text    xpath=//input[@name="examTemplate.examTemplateItemSubtract.examTemplateItemSubtractList[0].templateScoreLimit"]    5
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItemSubtract.examTemplateItemSubtractList[0].templateItemDesc"]    减5分
+    点击元素    submitBtn
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    新增结算考核模板成功
+    go to    http://10.12.12.157:18080/prm_admin/

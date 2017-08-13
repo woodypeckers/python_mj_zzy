@@ -1,0 +1,51 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+未登录点击问题咨询链接
+    直到元素可见    jquery=a:contains('问题咨询')
+    点击元素    jquery=a:contains('问题咨询')
+
+未登录填写问题咨询信息
+    [Arguments]    ${businessStyle}    ${businessTitle}    ${problemDesc}    ${problemConsultCnName}    ${problemEmail}    ${problemMobile}
+    ...    ${problemSubmiter}    ${problemRelateSpCode}=${EMPTY}    ${problemAccount}=${EMPTY}    ${problemOs}=${EMPTY}    ${problemBrowser}=${EMPTY}    ${problemConsultAttach}=false
+    ${problem_id}    获取sequence的nextval    seq_prm_problem_consult
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${problem_id}
+    下拉框    busineseStyle_container    ${businessStyle}
+    文本框输入文字    问题咨询名称    ${businessTitle}${problem_id}
+    文本域输入文字    详细描述    ${problemDesc}
+    文本框输入文字    提交人所属公司    ${problemConsultCnName}${cn_suffix}
+    文本框输入文字    提交人邮箱    ${problemEmail}
+    文本框输入文字    提交人手机号    ${problemMobile}
+    文本框输入文字    提交人姓名    ${problemSubmiter}
+    Run Keyword If    '${problemConsultAttach}'=='true'    上传附件，输入id    problemConsultAttach    Migu\\attachment\\问题咨询.jpg
+    Run Keyword If    '${problemRelateSpCode}'!=''    文本框输入文字    关联合作编码    ${problemRelateSpCode}
+    Run Keyword If    '${problemAccount}'!=''    文本框输入文字    提交人账号    ${problemAccount}
+    Run Keyword If    '${problemOs}'!=''    文本框输入文字    操作系统信息    ${problemOs}
+    Run Keyword If    '${problemBrowser}'!=''    文本框输入文字    浏览器信息    ${problemBrowser}
+    Set Test Variable    ${problem_id}
+    Set Test Variable    ${cn_name}    ${problemConsultCnName}${cn_suffix}
+
+已登录点击问题咨询链接
+    直到元素可见    id=headFrame
+    选择frame    headFrame
+    直到元素可见    jquery=a:contains('问题咨询')
+    点击元素    jquery=a:contains('问题咨询')
+    不选择frame
+    直到元素可见    jquery=td:contains('业务类型')
+
+已登录填写问题咨询信息
+    [Arguments]    ${businessStyle}    ${businessTitle}    ${problemDesc}    ${problemEmail}=${EMPTY}    ${problemMobile}=${EMPTY}    ${problemSubmiter}=${EMPTY}
+    ...    ${problemRelateSpCode}=${EMPTY}    ${problemOs}=${EMPTY}    ${problemBrowser}=${EMPTY}    ${problemConsultAttach}=false
+    ${problem_id}    获取sequence的nextval    seq_prm_problem_consult
+    下拉框    busineseStyle_container    ${businessStyle}
+    文本框输入文字    问题咨询名称    ${businessTitle}${problem_id}
+    文本域输入文字    详细描述    ${problemDesc}
+    Run Keyword If    '${problemEmail}'!=''    文本框输入文字    提交人邮箱    ${problemEmail}
+    Run Keyword If    '${problemMobile}'!=''    文本框输入文字    提交人手机号    ${problemMobile}
+    Run Keyword If    '${problemSubmiter}'!=''    文本框输入文字    提交人姓名    ${problemSubmiter}
+    Run Keyword If    '${problemConsultAttach}'=='true'    上传附件，输入id    problemConsultAttach    Migu\\attachment\\问题咨询.jpg
+    Run Keyword If    '${problemRelateSpCode}'!=''    文本框输入文字    关联合作编码    ${problemRelateSpCode}
+    Run Keyword If    '${problemOs}'!=''    文本框输入文字    操作系统信息    ${problemOs}
+    Run Keyword If    '${problemBrowser}'!=''    文本框输入文字    浏览器信息    ${problemBrowser}
+    Set Test Variable    ${problem_id}

@@ -1,0 +1,53 @@
+*** Settings ***
+Resource          业务管理common.txt
+
+*** Keywords ***
+进入新增业务管理设置界面
+    进入业务管理设置查询结果页面
+    链接    新增设置
+    直到页面某个元素可见    jquery=div.bottom_div>span#batchAddSpan>a:contains('批量新增设置')
+    Comment    ajax加载完毕
+
+新增一个业务设置
+    文本框通过文字    合作编码    QD20140730001
+    链接    查询
+    直到页面某个元素可见    jquery=div:contains('显示第1条到第1条记录,共1条')
+    单选框    xpath=//input[@value='0000000001']
+    链接    批量新增设置
+    直到页面某个元素可见    jquery=span:contains('请选择业务平台：')
+    选择平台    xpath=//input[@value='1111111111']
+    链接    确认
+    点击二次确认框确认按钮
+    校验二次确认框提示信息并点击按钮    新增业务管理设置成功，可继续新增业务管理设置！
+
+选择平台
+    [Arguments]    ${locator}
+    单选框    ${locator}
+
+检查数据库是否有新增的业务管理设置
+    [Arguments]    ${sql}
+    ${result}    Exec Sql    ${sql}    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+批量新增三个业务设置
+    单选框    xpath=//input[@value='0000000001']
+    单选框    xpath=//input[@value='0000000002']
+    单选框    xpath=//input[@value='0000000003']
+    链接    批量新增设置
+    选择平台    xpath=//input[@value='1111111111']
+    链接    确认
+    点击二次确认框确认按钮
+    校验二次确认框提示信息并点击按钮    新增业务管理设置成功，可继续新增业务管理设置！
+
+没有选择合作新增业务管理设置
+    链接    批量新增设置
+    校验二次确认框提示信息并点击按钮    请先选中一条或多条合作再进行批量新增设置！
+
+没有选择设置平台
+    文本框通过文字    合作编码    QD20140730001
+    链接    查询
+    直到页面某个元素可见    jquery=div:contains('显示第1条到第1条记录,共1条')
+    单选框    xpath=//input[@value='0000000001']
+    链接    批量新增设置
+    链接    确认
+    校验二次确认框提示信息并点击按钮    请先选中一个或多个业务平台再进行确认！

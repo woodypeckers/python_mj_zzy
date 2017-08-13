@@ -1,0 +1,14 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入业务管理设置查询结果页面
+    进入左侧二级菜单    业务管理    业务管理设置
+    直到页面某个元素可见    jquery=a:contains('批量删除设置')
+
+案例运行前确保数据库中业务管理设置记录为空
+    Exec Sql    DELETE FROM prm_sp_platform t;    ${prm_oracle_tns}
+
+删除业务管理设置
+    [Arguments]    ${sql}
+    Exec Sql    ${sql}    ${prm_oracle_tns}

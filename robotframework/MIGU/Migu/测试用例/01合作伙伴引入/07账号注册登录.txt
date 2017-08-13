@@ -1,0 +1,84 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01合作伙伴引入/07账号注册.txt
+
+*** Test Cases ***
+01partner端首页直接进入注册页面
+    [Tags]    smoke
+    打开partner端
+    点击注册按钮
+    检查是否已进入注册页面
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02partner端登录页面点击注册按钮进入注册页面
+    [Tags]    smoke
+    打开partner端
+    点击登录按钮
+    点击注册按钮
+    检查是否已进入注册页面
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03partner端登录页面点击注册账号链接进入注册页面
+    [Tags]    smoke
+    打开partner端
+    点击登录按钮
+    点击元素    jquery=a:contains('注册帐号')
+    检查是否已进入注册页面
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04partner端首页未登录点击管理中心进入登录页面
+    [Tags]    smoke
+    打开partner端
+    点击管理中心
+    检查是否已进入partner端登录页面
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05注册账号必填项检查
+    [Tags]    smoke
+    打开partner端
+    点击注册按钮
+    点击按钮    确定
+    页面错误提示信息校验    公司中文名称    请输入公司中文名称
+    页面错误提示信息校验    账号名    请输入申请帐号名
+    页面错误提示信息校验    密码    请设置密码
+    页面错误提示信息校验    确认密码    再次确认密码不允许为空
+    页面错误提示信息校验    联系人姓名    请输入申请人姓名
+    页面错误提示信息校验    EMAIL    请输入Email
+    页面错误提示信息校验    手机号码    请输入手机号码
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06注册账号未选择意向合作业务提交
+    [Tags]    smoke
+    打开partner端
+    点击注册按钮
+    设置账号信息
+    填写注册账号信息    公司    账号    李    ${email}    ${mobile}
+    点击按钮    确定
+    检查提示信息    请在音乐、游戏、动漫、视频、阅读中选择3个或3个以上！
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+07注册账号意向合作业务为两个提交
+    [Documentation]    意向合作业务为两个，提交时会报错
+    [Tags]    smoke
+    打开partner端
+    点击注册按钮
+    设置账号信息
+    填写注册账号信息    公司    账号    李    ${email}    ${mobile}
+    选择内容范围    游戏
+    选择内容范围    音乐
+    点击按钮    确定
+    检查提示信息    请在音乐、游戏、动漫、视频、阅读中选择3个或3个以上！
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08注册账号，填写正确信息
+    [Tags]    smoke
+    打开partner端
+    点击注册按钮
+    设置账号信息
+    填写注册账号信息    公司    账号    李    ${email}    ${mobile}
+    选择内容范围    游戏
+    选择内容范围    音乐
+    选择内容范围    视频
+    点击按钮    确定
+    账号注册成功后数据校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器

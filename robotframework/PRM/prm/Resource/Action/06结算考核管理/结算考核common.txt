@@ -1,0 +1,50 @@
+*** Settings ***
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/公用.txt
+Resource          ../../Common/附件上传.txt
+
+*** Keywords ***
+增加一条加分项
+    点击元素    xpath=//a[@onclick="addAddItemRow();"]
+
+增加一条减分项
+    点击元素    xpath=//a[@onclick="addSubtractItemRow();"]
+
+检查结算考核模板的状态
+    [Arguments]    ${模板名称}    ${base_id}    ${待检查的VALID_FLAG}
+    [Documentation]    '生效标志，1为生效，0为失效，默认为生效'
+    ${VALID_FLAG}    数据库查询    select VALID_FLAG from prm_exam_template a where a.template_name = '${模板名称}' and base_id='${base_id}';
+    Should Be Equal    ${VALID_FLAG}    ${待检查的VALID_FLAG}
+
+清除结算考核模板
+    [Arguments]    ${template_name}    ${base_id}
+    [Documentation]    ${template_id} 模板ID
+    删除对应的结算考核信息
+    删除数据库记录    \ \ delete from prm_exam_template a where a.template_name='${template_name}' and a.base_id='${base_id}'
+
+插入一条结算考核模板信息
+    [Arguments]    ${template_name}=自动化测试结算考核模板    ${base_id}=001
+    ${SEQ_EXAM_TEMPLATE_ID}    获取sequence的nextval    SEQ_EXAM_TEMPLATE_ID
+    exec sql    insert into prm_exam_template \ \ (TEMPLATE_ID, \ \ \ BASE_ID, \ \ \ TEMPLATE_NAME, \ \ \ TEMPLATE_CODE, \ \ \ VALID_FLAG, \ \ \ CREATE_DATE, \ \ \ UPDATE_DATE) values \ \ ('${SEQ_EXAM_TEMPLATE_ID}', \ \ \ '${base_id}', \ \ \ '${template_name}', \ \ \ 'JSKHMB_12582JD_${SEQ_EXAM_TEMPLATE_ID}', \ \ \ '1', \ \ \ to_date('10-10-2014 14:19:09', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ to_date('10-10-2014 14:19:09', 'dd-mm-yyyy hh24:mi:ss'));    ${prm_oracle_tns}
+    Set Test Variable    ${EXAM_TEMPLATE_ID}    ${SEQ_EXAM_TEMPLATE_ID}
+
+进入结算考核模板管理页面
+    进入左侧二级菜单    考核管理    结算考核管理
+    ajax加载完毕
+    直到页面某个元素可见    jquery=div.top_div>span.button>a:contains('配置打分项')
+    ${href}=    Get Element Attribute    jquery=div.top_div>span.button>a:contains('配置打分项')@href
+    go to    ${href}
+    Comment    直到页面某个元素可见    jquery=a:contains("配置打分项")
+    Comment    点击元素    jquery=a:contains("配置打分项")
+    Comment    ajax加载完毕
+    Comment    unselect Frame
+
+插入一条结算考核信息与模板关联
+    删除数据库记录    delete from prm_exam a where a.TEMPLATE_ID='0900000008'
+    ${SEQ_EXAM_ID}    获取sequence的nextval    SEQ_EXAM_ID
+    ${EXAM_TEMPLATE_ID}    Get Variable Value    ${EXAM_TEMPLATE_ID}
+    exec sql    insert into prm_exam \ \ (EXAM_ID, \ \ \ TEMPLATE_ID, \ \ \ BASE_ID, \ \ \ COOP_TYPE, \ \ \ PRODUCT_ID, \ \ \ STATUS, \ \ \ CREATE_DATE, \ \ \ UPDATE_DATE, \ \ \ SP_ID, \ \ \ SP_CODE, \ \ \ COMPANY_ISN, \ \ \ CHECK_MONTH, \ \ \ EXAM_SCORE, \ \ \ DATA_RIGHT) values \ \ ('${SEQ_EXAM_ID}', \ \ \ '${EXAM_TEMPLATE_ID}', \ \ \ '001', \ \ \ '2', \ \ \ '0410041', \ \ \ '1', \ \ \ to_date('14-07-2014 11:08:23', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ to_date('14-07-2014 11:08:23', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ '0000013918', \ \ \ 'CP20140711154', \ \ \ 'NO.065122', \ \ \ '201403', \ \ \ 66, \ \ \ '04120410041');    ${prm_oracle_tns}
+
+删除对应的结算考核信息
+    ${EXAM_TEMPLATE_ID}    Get Variable Value    ${EXAM_TEMPLATE_ID}
+    删除数据库记录    delete from prm_exam a where a.TEMPLATE_ID='${EXAM_TEMPLATE_ID}'

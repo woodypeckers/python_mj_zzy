@@ -1,0 +1,43 @@
+*** Settings ***
+Resource          合作伙伴引入common.txt
+
+*** Keywords ***
+公司合作提交后公司信息校验
+    [Arguments]    ${status}    ${tax_no}    ${shareholding_no}
+    [Documentation]    需要传入参数：公司的状态、税务登记证个数、股权信息条数
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_apply_company t WHERE t.cn_name='${cn_name}' AND t.status='${status}' AND \ \ \ \ \ \ \ \ t.submitter_id IN (SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}');
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT COUNT(*) FROM prm_company_staff t WHERE t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}') AND t.company_isn IN(SELECT b.company_isn FROM prm_apply_company b WHERE b.cn_name='${cn_name}');
+    Should Be Equal As Strings    1    ${res2}
+    ${res3}    数据库查询    SELECT COUNT(*) FROM prm_apply_company_operating t WHERE t.company_id IN (SELECT g.company_id FROM prm_apply_company g WHERE g.cn_name='${cn_name}') \ \ \ \ \ \ \ AND t.license_no='${org}';
+    Should Be Equal As Strings    1    ${res3}
+    ${res4}    数据库查询    SELECT COUNT(*) FROM prm_apply_company_tax_reg t WHERE t.company_id IN (SELECT g.company_id FROM prm_apply_company g WHERE g.cn_name='${cn_name}');
+    Should Be Equal As Strings    ${tax_no}    ${res4}
+    ${res5}    数据库查询    SELECT COUNT(*) FROM prm_apply_company_shareholding t WHERE t.company_id IN (SELECT g.company_id FROM prm_apply_company g WHERE g.cn_name='${cn_name}');
+    Should Be Equal As Strings    ${shareholding_no}    ${res5}
+
+公司合作提交后一点统谈合作信息校验
+    [Arguments]    ${status}    ${coop_type}    ${staff_style}    ${base_id}    ${contact_no}    ${coop_range}
+    [Documentation]    ${status} :合作提交后的状态，必填 \ \ \ \ ${coop_type} ：合作类型。一点接入填写2，统谈统签和分谈分签填写5 \ \ \ \ ${staff_style}：接入类型1-一点接入（CP）；2-分谈分签（渠道）3-统谈统签（渠道） \ \ \ \ ${base_id}：合作基地ID。一点接入填写888,分谈分签填写038，统谈统签填写888 \ \ \ \ \ ${contact_no}:联系人总的个数。
+    ...    ${coop_range}：合作内容范围，多个以逗号分开 \ \ \ \ 分谈分签和一点接入、统谈统签 合作信息的最大区别是内容范围为空
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_apply_sp t WHERE t.cp_short_name='JC${jiancheng}' AND t.coop_type='${coop_type}' AND t.subcompany_confirm_status='0' \ AND t.coop_range='${coop_range}' AND t.staff_style='${staff_style}' AND t.base_id='${base_id}' AND t.status='${status}';
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT COUNT（*） FROM prm_sp_staff t WHERE t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}') \ AND t.sp_isn IN(SELECT b.sp_isn FROM prm_apply_sp b WHERE b.cp_short_name='JC${jiancheng}');
+    Should Be Equal As Strings    1    ${res2}
+    ${res3}    数据库查询    SELECT COUNT(*) FROM prm_apply_bank_account t WHERE t.company_isn IN(SELECT b.company_isn FROM prm_apply_company b WHERE b.cn_name='${cn_name}') \ AND t.base_id='${base_id}';
+    Should Be Equal As Strings    1    ${res3}
+    ${res4}    数据库查询    SELECT COUNT（*） FROM prm_apply_contact t WHERE t.owner_type='2' AND t.owner_id IN(SELECT g.sp_id FROM prm_apply_sp g WHERE g.cp_short_name='JC${jiancheng}');
+    Should Be Equal As Strings    ${contact_no}    ${res4}
+
+公司合作提交后分谈分签合作信息校验
+    [Arguments]    ${status}    ${coop_type}    ${staff_style}    ${base_id}    ${contact_no}
+    [Documentation]    ${status} :合作提交后的状态，必填 \ \ \ \ ${coop_type} ：合作类型。一点接入填写2，统谈统签和分谈分签填写5 \ \ \ \ ${staff_style}：接入类型1-一点接入（CP）；2-分谈分签（渠道）3-统谈统签（渠道） \ \ \ \ ${base_id}：合作基地ID。一点接入填写888,分谈分签填写038，统谈统签填写888 \ \ \ \ \ ${contact_no}:联系人总的个数。
+    ...    分谈分签和一点接入、统谈统签 合作信息的最大区别是内容范围为空
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_apply_sp t WHERE t.cp_short_name='JC${jiancheng}' AND t.coop_type='${coop_type}' AND t.subcompany_confirm_status='0' \ AND t.coop_range IS NULL AND t.staff_style='${staff_style}' AND t.base_id='${base_id}' AND t.status='${status}';
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT COUNT（*） FROM prm_sp_staff t WHERE t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}') \ AND t.sp_isn IN(SELECT b.sp_isn FROM prm_apply_sp b WHERE b.cp_short_name='JC${jiancheng}');
+    Should Be Equal As Strings    1    ${res2}
+    ${res3}    数据库查询    SELECT COUNT(*) FROM prm_apply_bank_account t WHERE t.company_isn IN(SELECT b.company_isn FROM prm_apply_company b WHERE b.cn_name='${cn_name}') \ AND t.base_id='${base_id}';
+    Should Be Equal As Strings    1    ${res3}
+    ${res4}    数据库查询    SELECT COUNT（*） FROM prm_apply_contact t WHERE t.owner_type='2' AND t.owner_id IN(SELECT g.sp_id FROM prm_apply_sp g WHERE g.cp_short_name='JC${jiancheng}');
+    Should Be Equal As Strings    ${contact_no}    ${res4}

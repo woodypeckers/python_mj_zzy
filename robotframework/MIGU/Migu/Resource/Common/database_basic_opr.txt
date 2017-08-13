@@ -1,0 +1,41 @@
+*** Settings ***
+Documentation     存放数据库基本操作的关键字：增删改查等
+Library           ../../MyLibrary/OracleLibrary.py
+Resource          basic_opr.txt
+
+*** Keywords ***
+查询数据库记录数
+    [Arguments]    ${sql}    ${count}
+    [Documentation]    输入查询语句和预期记录数。如果数据库里面查询出的记录数和用户输入的记录数相等，则验证通过。 \ 适用于界面执行新增操作后，查看数据库中是否有该记录
+    ${result}    Exec Sql    ${sql}    ${migu_oracle_tns}
+    Should Be Equal    ${result}    ${count}
+
+删除数据库记录
+    [Arguments]    ${sql}
+    [Documentation]    输入删除语句
+    Exec Sql    ${sql}    ${migu_oracle_tns}
+
+数据库查询
+    [Arguments]    ${sql}
+    [Documentation]    输入查询语句，返回查询结果
+    ${result}    Exec Sql    ${sql}    ${migu_oracle_tns}
+    [Return]    ${result}
+
+获取sequence的nextval
+    [Arguments]    ${sequence_name}
+    [Documentation]    输入sequence的名称，返回sequence的下一个值。 适用于插入数据时，需要把表中某些主键的值自动加1，防止到时候主键重复
+    ${result}    Exec Sql    select ${sequence_name}.nextval from dual    ${migu_oracle_tns}
+    [Return]    ${result}
+
+执行sql语句
+    [Arguments]    ${sql}
+    [Documentation]    只是单纯的执行某条sql语句，不返回结果。比如说:insert语句，update语句等
+    Exec Sql    ${sql}    ${migu_oracle_tns}
+
+邮件发送查询
+    [Arguments]    ${account_name}    ${email}
+    ${res1}    数据库查询    select count(*) from email_send t where dbms_lob.instr(t.message,rawtohex('<pre>管理员已为您分配了登录【咪咕合作伙伴接入平台】的账号:</pre> <pre>登录账号：${account_name}</pre>'))>0 AND t.email_to='${email}';
+
+短信发送查询
+    [Arguments]    ${account_name}    ${mobile}
+    ${res2}    数据库查询    SELECT count(*) FROM sms_send t WHERE t.destination='13899001122' AND t.content LIKE '%管理员已为您分配了账号： 登录账号：阿斯达1%';

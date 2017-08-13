@@ -1,0 +1,23 @@
+*** Settings ***
+Library           ../../MyLibrary/ExcelOprPhk.py
+
+*** Keywords ***
+创建excel文件
+    [Arguments]    ${fileName}=prm\\template\\test.xls    ${sheetName}=Sheet1
+    Create Excel    ${fileName}    ${sheetName}
+
+删除excel文件
+    [Arguments]    ${fileName}=prm\\template\\test.xls
+    Del Excel    ${fileName}
+
+excel表格中一个单元格插入值
+    [Arguments]    ${value}    ${row}    ${col}    ${fileName}=prm\\template\\test.xls    ${sheetName}=Sheet1
+    Change Excel Cell Value    ${value}    ${row}    ${col}    ${fileName}    ${sheetName}
+
+excel表中插入一行记录
+    [Arguments]    ${value}    ${row}=1    ${col}=0    ${fileName}=prm\\template\\test.xls    ${sheetName}=Sheet1
+    Change Excel Value By Row    ${value}    ${row}    ${col}    ${fileName}    ${sheetName}
+
+excel表格中插入多行记录
+    [Arguments]    ${value}    ${rows}    ${startRow}=1    ${fileName}=prm\\template\\test.xls    ${sheetName}=Sheet1
+    Change Excel Value By Col    ${value}    ${rows}    ${startRow}    ${fileName}    ${sheetName}

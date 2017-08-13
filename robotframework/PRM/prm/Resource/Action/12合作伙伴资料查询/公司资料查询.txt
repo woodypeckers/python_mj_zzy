@@ -1,0 +1,35 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+进入公司资料查询页面
+    不选择frame
+    点击右上角菜单    合作伙伴资料查询->公司资料查询
+    select frame    content
+
+查看某公司详情
+    Comment    直到页面某个元素可见    cnNameLike
+    文本输入_通过id定位    cnNameLike    李红军有限公司
+    链接_通过id定位    queryBtn
+    click link    jquery=a:contains('李红军有限公司')
+    unselect frame
+    sleep    2s
+    select frame    content
+    直到页面某个元素可见    backButton
+    链接_通过id定位    backButton
+
+点击页面导出按钮
+    文本输入_通过id定位    cnNameLike    李红军有限公司
+    链接_通过id定位    queryBtn
+    sleep    1s
+    click link    exportBtn
+    sleep    2s
+    Comment    win close    文件下载
+    Comment    ${title}=    Win Get Title
+    Comment    log    ${title}
+    Win Wait Active    文件下载
+    Control Click    \    \    Button3
+    Comment    sleep    2s
+    Comment    win wait    另存为    \    15
+    Comment    Win Activate    另存为

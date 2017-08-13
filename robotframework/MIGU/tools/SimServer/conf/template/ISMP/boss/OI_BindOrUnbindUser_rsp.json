@@ -1,0 +1,15 @@
+{
+    "Response": {
+        "ErrorInfo": {
+            "Code": "$${Code}$$",
+            "Message": "$${Message}$$",
+            "TransactionId": "##{TransactionId}##",
+            "TransactionTime": "##{TransactionTime}##",
+            "BusiCode": "OI_BindOrUnbindUser"
+        },
+        "RetInfo": {
+            "UserID": "##{UserID}$$",
+            "VirtualUserID": "VirtualUserID" 		
+        }
+    }
+}

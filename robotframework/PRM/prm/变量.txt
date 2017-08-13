@@ -1,0 +1,17 @@
+*** Variables ***
+${browser_type}    ie
+${title}          中国移动业务合作伙伴信息服务平台
+${base_name}      游戏及12580基地
+${upload_file_windows_title_ip}    10.12.3.24
+${reg_account}    注册公司账号
+${cn_name}        注册公司名称    # 公司中文名称
+${prm_oracle_tns}    prm_auto/prm_auto_1000@10.12.3.197:1521/ora11g
+${zzbg_upload_file_operating}    ${EMPTY}
+${zzbg_postcode}    123456
+${zzbg_licenseNo}    商务电子
+${reg_account1}    注册公司账号1
+${url_admin}      http://10.12.12.157:18080/prm_admin/portal/main.jsp
+${url_sp}         http://10.12.12.157:18080/prm_sp/portal/main.jsp
+${url_base_simulator}    http://10.12.12.247:9003
+${url_sims_simulator}    http://10.12.12.247:9002
+${close_browser_per_suite}    Flase

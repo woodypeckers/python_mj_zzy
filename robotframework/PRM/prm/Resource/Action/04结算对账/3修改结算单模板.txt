@@ -1,0 +1,45 @@
+*** Settings ***
+Resource          结算对账common.txt
+
+*** Keywords ***
+查询出待修改的结算单
+    ajax加载完毕
+    文本框通过文字    模板编号：    ${settle_template_no}
+    点击元素    xpath=//a[text()='查询']    #点击查询按钮
+    ajax加载完毕
+
+进入结算单模板修改页面
+    直到页面某个元素可见    jquery=div:contains('${settle_template_no}')
+    链接    修改
+    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[@href='javascript:void(0);']
+
+提交修改后的结算单模板
+    点击元素    xpath=//a[@href='javascript:void(0);']
+    ajax加载完毕
+    校验弹出框信息并点击按钮    修改模板成功    确认
+
+结算单已被使用，点击修改按钮，检查提示信息
+    直到页面某个元素可见    jquery=div:contains('${settle_template_no}')
+    链接    修改
+    校验弹出框信息并点击按钮    该模板已经被使用不能修改，是否需要复制该模板    确认
+    ajax加载完毕
+    直到页面某个元素可见    jquery=div.title span:contains("主字段信息")
+
+结算单模板类型未修改提交,检查提示信息
+    文本框通过文字    结算单类型：    ${settle_type}
+    点击元素    xpath=//a[@href='javascript:void(0);']
+    校验弹出框信息并点击按钮    结算单类型已经被使用，请修改结算单类型    确认
+
+结算单模板类型修改提交,检查提示信息
+    文本框通过文字    结算单类型：    模板类型修改后的${settle_type}
+    点击元素    xpath=//a[@href='javascript:void(0);']
+    ajax加载完毕
+    校验弹出框信息并点击按钮    新增模板成功    确认
+
+校验数据库里面是否有修改后的结算单模板
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_settle_template t WHERE t.settle_type='模板类型修改后的${settle_type}' AND t.base_id='001' AND t.status='1';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+退出admin端
+    链接    退出系统

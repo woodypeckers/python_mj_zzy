@@ -1,0 +1,126 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Teardown
+Test Timeout      5 minutes
+Resource          ../Resource/Action/03合作管理.txt
+Resource          ../Resource/Common/dbscript.txt
+
+*** Test Cases ***
+01 合作申请
+    [Tags]    smoke
+    合作伙伴合作申请_数据清除
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/",登陆名"郭红梅",密码"aaa111"
+    进入一级菜单    合作管理
+    进入合作申请页面
+    输入合作申请资料_输入必须信息
+    提交合作申请
+    合作伙伴合作申请_查询新增的合作申请    阅读基地    CP    手机报    已提交，待受理
+    新增合作申请数据库校验
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02 合作受理_审批通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_audit
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请受理
+    审批待受理合作并关闭浏览器    通过
+    检查数据库对应合作的状态    CP9999999    apply_score
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03 合作受理_审批不通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_audit
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请受理
+    审批待受理合作并关闭浏览器    未通过
+    检查数据库对应合作的状态    CP9999999    apply_audit_deny
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04 合作评审_审批通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_score
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请评审
+    审批待评审合作并关闭浏览器    通过
+    检查数据库对应合作的状态    CP9999999    apply_decision
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05 合作评审_审批不通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_score
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请评审
+    审批待评审合作并关闭浏览器    未通过
+    检查数据库对应合作的状态    CP9999999    apply_decision
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06 合作决策_审批通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_decision
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请决策
+    审批待决策合作并关闭浏览器    通过
+    检查数据库对应合作的状态    CP9999999    apply_sign
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+07 合作决策_审批不通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_decision
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作申请决策
+    审批待决策合作并关闭浏览器    未通过
+    检查数据库对应合作的状态    CP9999999    apply_decision_deny
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08 合作签约_审批通过
+    [Tags]    smoke
+    生成待审批的合作信息    李红军有限公司    CP9999999    apply_sign
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作签约
+    审批待签约合作并关闭浏览器
+    检查合作正式表状态    CP9999999    A
+    清理合作正式表数据    CP9999999
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+09 合作变更_变更部分字段
+    [Tags]    smoke
+    新增商用合作    李红军有限公司    CP8899999    A    李红军
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/",登陆名"李红军",密码"aaa111"
+    进入一级菜单    合作管理
+    输入查询条件查询需要变更的合作
+    进入合作变更页面修改部分字段
+    检查合作申请表对应的状态    CP8899999    alter_audit
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+10 合作变更_变更全部字段
+    [Tags]    smoke
+    [Template]
+    新增商用合作    李红军有限公司    CP8899999    A    李红军
+    登录PRM合作伙伴端"http://10.12.12.157:18080/prm_sp/",登陆名"李红军",密码"aaa111"
+    unselect Frame
+    进入一级菜单    合作管理
+    ajax加载完毕
+    输入查询条件查询需要变更的合作
+    进入合作变更页面修改全部字段
+    检查合作申请表对应的状态    CP8899999    alter_audit
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+11 合作变更_审批通过
+    [Tags]    smoke
+    新增商用合作    李红军有限公司    CP8899999    alter_audit    李红军
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作资料信息变更
+    审批变更的合作信息    通过
+    检查合作申请表对应的状态    CP8899999    A
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+12 合作变更_审批不通过
+    [Tags]    smoke
+    新增商用合作    李红军有限公司    CP8899999    alter_audit    李红军
+    使用sims_admin登录系统
+    点击待审批合作记录进入待审批页面    李红军有限公司    引入管理    合作资料信息变更
+    审批变更的合作信息    未通过
+    检查合作申请表对应的状态    CP8899999    alter_deny
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+*** Keywords ***

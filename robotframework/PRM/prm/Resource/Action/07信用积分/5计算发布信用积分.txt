@@ -1,0 +1,35 @@
+*** Settings ***
+Resource          信用积分common.txt
+
+*** Keywords ***
+进入信用积分计算发布页面
+    进入左侧二级菜单    考核管理    信用积分管理
+    链接    计算&发布
+    选择frame    bottom_frame
+    直到页面某个元素可见    xpath=//a[text()='计算']
+
+计算发布信用积分
+    [Documentation]    计算发布 动漫基地-手机动漫产品-CP 2014年5月的信用积分
+    下拉框通过文字    产品名称：    手机动漫产品
+    Select Checkbox    xpath=//input[@name="coopTypess"]
+    信用积分时间框选择    2014年    5
+    链接    计算
+    校验二次确认框提示信息并点击按钮    是否已完成以下数据?\n1、合作伙伴的上传。2、违约案例的登记。\n3、履约扣分的上传。4、奖励加分的上传。
+    ajax加载完毕
+    链接    发布
+    校验二次确认框提示信息并点击按钮    您确认发布本月信用积分？
+    ajax加载完毕
+
+检查数据库是否有计算发布的信用积分
+    ${result}    Exec Sql    SELECT COUNT（*） FROM prm_credit t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+删除初始化信用积分计算发布数据及计算产生的数据
+    Exec Sql    DELETE FROM prm_credit_encourage t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_item t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_operation t WHERE t.base_id='051' AND t.product_id='0510001' AND t.check_month='201405';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_operation t WHERE t.base_id='051' AND t.product_id='0510001' AND t.check_month='201404';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_satisfy t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_sp t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_sp t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201406';    ${prm_oracle_tns}    #信用积分发布后，会把该发布月的考核对象自动生成为下一个月份的考核对象。所以需要把自动生成的考核对象也删除
+    Exec Sql    DELETE FROM prm_credit t WHERE t.base_id='051' AND t.sp_id='0000000004' AND t.check_month='201405';    ${prm_oracle_tns}

@@ -1,0 +1,98 @@
+*** Settings ***
+Resource          ../../../../../../SVN/trunk/MIGU/Migu/Resource/Common/公用.txt
+Resource          ../../Resource/Action/05合同管理/01合同录入.txt
+
+*** Test Cases ***
+01填写必填项新增CP合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    新增合同只填写必填项    800000000002    HT-2016022
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02填写所有项新增CP合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    新增合同填写所有项    800000000002    HT-2016022
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03admin端查看CP合同详情
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    根据合同编码查看合同详情    8793233232
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04续签CP合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    查询合同编码    8793233232
+    续签通知
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05终止CP合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    查询合同编码    8793233232
+    批量终止    2017-09-30    合同终止
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    合同状态检查    8793233232
+    清除合同终止状态    8793233232
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06admin端查看渠道合同详情
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    渠道合同管理
+    展开查询框
+    根据合同编码查看合同详情    qd-20160906
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+07续签渠道合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    渠道合同管理
+    展开查询框
+    查询合同编码    qd-20160906
+    续签通知
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08终止渠道合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    渠道合同管理
+    展开查询框
+    查询合同编码    qd-20160906
+    批量终止    2017-09-30    合同终止
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    合同状态检查    qd-20160906
+    清除合同终止状态    qd-20160906
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+09填写必填项新增渠道合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    渠道合同管理
+    新增合同只填写必填项    811000000001    HT-2016023
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016023'
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+10填写所有项新增渠道合同
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    渠道合同管理
+    新增合同填写所有项    811000000001    HT-2016023
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016023'
+    [Teardown]    teardown_案例运行失败时关闭浏览器

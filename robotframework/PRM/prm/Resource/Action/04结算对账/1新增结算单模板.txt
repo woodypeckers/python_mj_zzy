@@ -1,0 +1,157 @@
+*** Settings ***
+Resource          结算对账common.txt
+
+*** Keywords ***
+输入12582基地结算单模板信息，没有扩展字段
+    ${seq_settle_template_id}    获取sequence的nextval    seq_settle_template_id
+    文本框通过文字    结算单类型：    12582基地结算单模板${seq_settle_template_id}
+    Set Test Variable    ${template_type}    12582基地结算单模板${seq_settle_template_id}
+
+提交结算单模板信息
+    点击元素    xpath=//a[@href='javascript:void(0);']
+    ajax加载完毕
+    校验弹出框信息并点击按钮    新增模板成功    确认
+    等待一段时间
+
+增加一条结算单模板扩展字段
+    点击元素    jquery=span:contains("新增一条记录")
+
+校验数据库里面是否有新增的结算单模板
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_settle_template t WHERE t.settle_type='${template_type}' AND t.base_id='001' AND t.status='1';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+输入结算单模板信息，一条扩展字段，扩展字段为数字
+    ${seq_settle_template_id}    获取sequence的nextval    seq_settle_template_id
+    文本框通过文字    结算单类型：    12582基地结算单模板${seq_settle_template_id}
+    Set Test Variable    ${template_type}    12582基地结算单模板${seq_settle_template_id}
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname0    扩展字段1
+    文本输入_通过id定位    itemDesc0    扩展字段说明1
+
+输入结算单模板信息，一条扩展字段，扩展字段为字符，长度为50
+    ${seq_settle_template_id}    获取sequence的nextval    seq_settle_template_id
+    文本框通过文字    结算单类型：    12582基地结算单模板${seq_settle_template_id}
+    Set Test Variable    ${template_type}    12582基地结算单模板${seq_settle_template_id}
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname0    扩展字段1
+    下拉框_通过id定位    valueType0    字符
+    文本输入_通过id定位    valueLength0    50
+    文本输入_通过id定位    itemDesc0    扩展字段说明1
+
+输入结算单模板信息，一条扩展字段，扩展字段为字符，长度为0
+    ${seq_settle_template_id}    获取sequence的nextval    seq_settle_template_id
+    文本框通过文字    结算单类型：    12582基地结算单模板${seq_settle_template_id}
+    Set Test Variable    ${template_type}    12582基地结算单模板${seq_settle_template_id}
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname0    扩展字段1
+    下拉框_通过id定位    valueType0    字符
+    文本输入_通过id定位    valueLength0    0
+    文本输入_通过id定位    itemDesc0    扩展字段说明1
+    校验出错信息_提交    请填写正整数(如果是字符则不能超过999个字符)
+
+输入结算单模板信息，二十条扩展字段
+    ${seq_settle_template_id}    获取sequence的nextval    seq_settle_template_id
+    文本框通过文字    结算单类型：    12582基地结算单模板${seq_settle_template_id}
+    Set Test Variable    ${template_type}    12582基地结算单模板${seq_settle_template_id}
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname0    扩展字段1
+    文本输入_通过id定位    itemDesc0    扩展字段说明1
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname1    扩展字段2
+    文本输入_通过id定位    itemDesc1    扩展字段说明2
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname2    扩展字段3
+    文本输入_通过id定位    itemDesc2    扩展字段说明3
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname3    扩展字段4
+    文本输入_通过id定位    itemDesc3    扩展字段说明4
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname4    扩展字段5
+    文本输入_通过id定位    itemDesc4    扩展字段说明5
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname5    扩展字段6
+    文本输入_通过id定位    itemDesc5    扩展字段说明6
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname6    扩展字段7
+    文本输入_通过id定位    itemDesc6    扩展字段说明7
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname7    扩展字段8
+    文本输入_通过id定位    itemDesc7    扩展字段说明8
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname8    扩展字段9
+    文本输入_通过id定位    itemDesc8    扩展字段说明9
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname9    扩展字段10
+    文本输入_通过id定位    itemDesc9    扩展字段说明10
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname10    扩展字段11
+    文本输入_通过id定位    itemDesc10    扩展字段说明11
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname11    扩展字段12
+    文本输入_通过id定位    itemDesc11    扩展字段说明12
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname12    扩展字段13
+    文本输入_通过id定位    itemDesc12    扩展字段说明13
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname13    扩展字段14
+    文本输入_通过id定位    itemDesc13    扩展字段说明14
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname14    扩展字段15
+    文本输入_通过id定位    itemDesc14    扩展字段说明15
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname15    扩展字段16
+    文本输入_通过id定位    itemDesc15    扩展字段说明16
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname16    扩展字段17
+    文本输入_通过id定位    itemDesc16    扩展字段说明17
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname17    扩展字段18
+    文本输入_通过id定位    itemDesc17    扩展字段说明18
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname18    扩展字段19
+    文本输入_通过id定位    itemDesc18    扩展字段说明19
+    增加一条结算单模板扩展字段
+    文本输入_通过id定位    itemCnname19    扩展字段20
+    文本输入_通过id定位    itemDesc19    扩展字段说明20
+
+输入结算单模板信息，二十一条扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+    增加一条结算单模板扩展字段
+
+进入结算单发布页面
+    选择frame    content
+    点击元素    xpath=//a[text()='发布']
+
+填写发布的结算单信息
+    选择附件    settlementFile    prm\\temp\\税务登记证国税.jpg
+
+进入新增结算单模板页面
+    Comment    选择frame    content
+    链接    新增
+    ajax加载完毕
+    直到页面某个元素可见    jquery=div.title span:contains("主字段信息")
+
+校验出错弹出提示框
+    [Arguments]    ${dialog_msg}
+    Wait Until Page Contains Element    jquery=span[class='dialog-msg']
+    ${msg}=    Get Element Text    jquery=span[class='dialog-msg']
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}

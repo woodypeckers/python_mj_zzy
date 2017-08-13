@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<fields>
+	<merchantId>$${merchantId}$$</merchantId>
+	<returnCode>$${returnCode}$$</returnCode>
+	<message></message>
+	<version>$${version}$$</version>
+	<amount>$${amount}$$</amount>
+	<orderId>$${orderId}$$</orderId>
+	<refundStatus>$${refundStatus}$$</refundStatus>
+	<refundFlowNo>$${refundFlowNo}$$</refundFlowNo>
+	<hmac>$${hmac}$$</hmac>
+</fields>

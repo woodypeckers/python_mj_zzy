@@ -1,0 +1,389 @@
+*** Settings ***
+Library           ../../MyLibrary/MyTimeLibrary.py
+Library           ../../MyLibrary/OracleLibrary.py
+Resource          jquery_action.txt
+Resource          ../../变量.txt
+Library           String
+Library           Remote    http://10.12.12.157:18001    WITH NAME    rtplt
+Library           ../../MyLibrary/ChangeXml.py
+Library           Collections
+Resource          数据库操作.txt
+Library           ../../MyLibrary/PostXml.py
+Resource          dbscript.txt
+Resource          附件上传.txt
+Resource          excel_opr.txt
+Library           ../../MyLibrary/PhkLibrary.py
+Library           OperatingSystem
+
+*** Variables ***
+${last_login_account}    ${EMPTY}
+${prm_interface_xml_body}    ${EMPTY}
+${close_browser_per_suite}    False
+
+*** Keywords ***
+输入日期
+    [Arguments]    ${input_id}    ${value}
+    Execute Javascript    window.document.getElementById( "${input_id}").readOnly = false;return 0;
+    Comment    Execute Javascript    jQuery("#${input_id}").removeAttr('disabled');
+    Click Element    id=${input_id}
+    Input Text    id=${input_id}    ${value}
+    Wait Until Page Contains Element    jquery=a.ui-state-default.ui-state-active    10s
+    Click Element    jquery=a.ui-state-default.ui-state-active
+
+获取系统当前时间
+    ${time}=    Get Time    epoch
+
+获取当前unix时间戳
+    ${sec}    Get Time    epoch
+    [Return]    ${sec}
+
+获取当前时间时分秒
+    ${hms}    Get Hms
+    [Return]    ${hms}
+
+获取当前时间年月日时分秒
+    ${ymdhms}    Get Ymdhms
+    [Return]    ${ymdhms}
+
+获取年月日
+    ${ymd}    Get Ymd
+    [Return]    ${ymd}
+
+使用sims_admin登录系统
+    [Documentation]    使用ie浏览器登录自动化环境admin端
+    登录admin端    username=sims_admin    password=aaa111
+
+点击右上角菜单
+    [Arguments]    ${menuchain}
+    ${menu_level_1}    ${menu_level_2}    String.Split String    ${menuchain}    ->
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu a:contains('${menu_level_1}')    15s
+    Execute Javascript    jQuery("div#headMenu ul.sf-menu a:contains('${menu_level_1}')").parent().attr('class','sfHover');
+    Click Element    jquery=div#headMenu ul.sf-menu a:contains('${menu_level_1}')
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu ul a:contains('${menu_level_2}')
+    Click Element    jquery=div#headMenu ul.sf-menu ul a:contains('${menu_level_2}')
+
+登录PRM管理员端"${url_admin}",登陆名"${username}",密码"${password}"
+    Run Keyword If    '${last_login_account}'=='${username}'    Unselect Frame
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开管理员端
+    Click Element    id=loginName
+    Input Text    id=loginName    ${username}
+    Click Element    id=artiPwd
+    Input Text    id=password    ${password}
+    按钮    立即登录
+    Wait Until Ajax Load Complete    请稍候...
+    Wait Until Ajax Load Complete    正在处理，请稍待。。。
+    Wait Until Page Contains Element    id=content
+    ajax加载完毕
+    Set Suite Variable    ${last_login_account}    ${username}
+
+登录PRM合作伙伴端"${url_sp}",登陆名"${username}",密码"${password}"
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开合作伙伴端
+    Select Frame Until Element Visible    loginPage    id=loginName
+    Comment    选择frame    loginPage
+    Click Element    id=loginName
+    Input Text    id=loginName    ${username}
+    Click Element    id=artiPwd
+    Wait Until Element Is Visible    id=password    5s
+    Input Text    id=password    ${password}
+    按钮    立即登录
+    Comment    Wait Until Ajax Load Complete    请稍后...
+    Comment    Wait Until Ajax Load Complete    请稍候...
+    Comment    Wait Until Ajax Load Complete    正在处理，请稍待。。。
+    Wait Until Page Contains Element    id=content    15s
+    Comment    ajax加载完毕    请稍候...
+    Comment    直到页面不包含某个元素    id=loginPage
+    不选择frame
+    Set Suite Variable    ${last_login_account}    ${username}
+
+退出管理员端,重新登录"${url_admin}",登陆名"${username}",密码"${password}"
+    [Arguments]    ${username}    ${password}
+    退出PRM系统
+    登录admin端    ${username}    ${password}
+
+获取加密后的password
+    [Arguments]    ${staff_id}    ${passwd}=aaa111
+    ${encrypt_passwd}    rtplt.Encryptpasswd    ${staff_id}    ${passwd}
+    [Return]    ${encrypt_passwd}
+
+进入一级菜单
+    [Arguments]    ${menu1}
+    Comment    Unselect Frame
+    Wait Until Element Is Visible    id=toHomepage    15s
+    ajax加载完毕
+    Wait Until Element Is Visible    //a[contains(text(),'${menu1}')]    15s
+    Click link    //a[contains(text(),'${menu1}')]
+    ajax加载完毕
+
+关闭浏览器
+    [Documentation]    案例运行终止后，关闭driver
+    Close ALL Browsers
+
+打开管理员端
+    [Documentation]    使用ie浏览器打开自动化环境admin端。直接调用此关键字，不需要输入任何参数
+    Open Or Reuse Browser    ${url_admin}    ${browser_type}    \    ${HUB}
+    Unselect Frame
+    Run Keyword If Element Visible    id=logout    Click Link    id=logout
+    Delete All Cookies
+    Go To    ${url_admin}
+    Title Should Be    中国移动业务合作伙伴信息服务平台
+    Maximize Browser Window
+    Unselect Frame
+
+打开合作伙伴端
+    [Documentation]    使用ie浏览器打开自动化环境sp端。直接调用此关键字，不需要输入任何参数
+    Open Or Reuse Browser    ${url_sp}    ${browser_type}    \    ${HUB}
+    Wait Until Page Contains    平台
+    Unselect Frame
+    Run Keyword If Element Visible    id=logout    Click Link    id=logout
+    ${cookies}=    Get Cookies
+    Delete All Cookies
+    ${cookies}=    Get Cookies
+    Go To    ${url_sp}
+    Title Should Be    中国移动业务合作伙伴信息服务平台
+    Maximize Browser Window
+    Unselect Frame
+
+直到页面不包含某个元素
+    [Arguments]    ${element_name}
+    Wait Until Page Not Contains Element    ${element_name}
+
+选择frame
+    [Arguments]    ${frame_id}
+    Select Frame    ${frame_id}
+
+不选择frame
+    Unselect Frame
+
+直到页面某个元素可见
+    [Arguments]    ${element_name}    ${wait_time}=30
+    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${element_name}    ${wait_time}
+    Run Keyword If    '${status}'=='false'    ajax加载完毕
+    Wait Until Element Is Visible    ${element_name}    ${wait_time}
+
+点击新增一条记录
+    [Arguments]    ${text}
+    Click Element    xpath=//span[contains(text(),"${text}")]/following-sibling::span[contains(text(),"新增一条记录")]
+
+文本输入_通过id定位
+    [Arguments]    ${id}    ${content}
+    [Documentation]    适用于通过id定位的文本框
+    直到页面某个元素可见    id=${id}
+    点击元素    id=${id}
+    Input Text    id=${id}    ${content}
+
+下拉框_通过id定位
+    [Arguments]    ${id}    ${content}
+    [Documentation]    适用于通过id定位的下拉框
+    Select From List    id=${id}    ${content}
+    Wait For Condition    return window.jQuery.active == 0;    5s
+
+连续两次日期输入之间sleep0.2s
+    [Documentation]    ie浏览器，连续两次日期输入之间sleep 0.2s; \ chrome也有这个问题，所以改成所有浏览器都sleep 0.2
+    Comment    Run Keyword If    '${browser_type}'=='ie'    sleep    0.2s
+    ajax加载完毕
+    sleep    0.2s
+
+链接_通过id定位
+    [Arguments]    ${id}
+    [Documentation]    适用于通过id定位的文本框
+    Click Link    id=${id}
+
+选择合作伙伴
+    [Arguments]    ${sp_code}
+    Click Element    jquery=a:contains("选择")
+    ajax加载完毕
+    ${title}    Get Window Titles
+    ${ids}=    Get Window Identifiers
+    sleep    2s
+    Select Window    选择合作公司
+    Comment    直到页面某个元素可见    xpath=//select[@class='pagination-page-list']
+    点击元素    spCode
+    文本输入_通过id定位    spCode    ${sp_code}
+    点击元素    queryBtn
+    ajax加载完毕
+    focus    Xpath=//input[@name='spSelect']
+    Click Element    Xpath=//input[@name='spSelect']
+    Click Element    jquery=a:contains("确认")
+    Run Keyword if    '${browser_type}'=='chrome'    select window    title=中国移动业务合作伙伴信息服务平台
+    Return From Keyword If    '${browser_type}'=='chrome'
+    Select Window
+    Sleep    1s
+    [Teardown]
+
+修改xml节点的值
+    [Arguments]    ${content}    ${nodePath}
+    Change Node Text    ${content}    ${nodePath}
+
+选择附件
+    [Arguments]    ${id}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    Choose File    id=${id}    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s
+
+退出PRM系统
+    不选择frame
+    链接    退出系统
+    Wait Until Page Contains Element    id=loginName
+
+登录admin端
+    [Arguments]    ${username}    ${password}=aaa111
+    Run Keyword If    '${last_login_account}'=='${username}'    Unselect Frame
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开管理员端
+    Click Element    id=loginName
+    Input Text    id=loginName    ${username}
+    Click Element    id=artiPwd
+    Input Text    id=password    ${password}
+    按钮    立即登录
+    Wait Until Ajax Load Complete    请稍候...
+    Wait Until Ajax Load Complete    正在处理，请稍待。。。
+    Wait Until Page Contains Element    id=content
+    Select Frame Until Element Visible    id=content    jquery=div.title_index
+    Title Should Be    中国移动业务合作伙伴信息服务平台
+    Set Suite Variable    ${last_login_account}    ${username}
+    Unselect Frame
+
+打开浏览器
+    Open Browser    about:blank    ${browser_type}    \    ${hub}
+    Maximize Browser Window
+
+浏览器删除cookie并返回空白页面
+    Wait Until Ajax Load Complete    请稍候...
+    Wait Until Ajax Load Complete    请稍待...
+    Wait Until Ajax Load Complete    正在处理，请稍待。。。
+    Unselect Frame
+    Delete All Cookies
+    Go To    about:blank
+
+teardown_案例运行失败时关闭浏览器
+    Run Keyword If Test Failed    Set Suite Variable    ${last_login_account}    ${EMPTY}
+    Run Keyword If Test Failed    截屏
+    Run Keyword If Test Failed    Log Source
+    Comment    Run Keyword If Test Failed    Close Browser If Exist
+    Run Keyword If Test Failed    Close All Browsers
+    Run Keyword If Test Failed    OperatingSystem.Run    taskkill /F /IM iedriverserver.exe
+    Comment    log    ${RunOutPut}
+    Run Keyword If Test Failed    OperatingSystem.Run    taskkill /F /IM chromedriver.exe
+    Comment    log    ${RunOutPut}
+
+teardown_案例集结束时关闭浏览器
+    Run Keyword If    '${close_browser_per_suite}'=='True'    Close Browser If Exist
+
+修改消息同步报文Header
+    [Arguments]    ${activicty_code}    ${req_sys}
+    [Documentation]    ${activicty_code} :消息号
+    ...    ${req_sys}:接收系统编号
+    ${CURRENT_TIME}    获取当前时间年月日时分秒
+    ${REQ_TRANS_ID}    获取sequence的nextval    seq_message_receive_next_id
+    修改xml节点的值    0001    /Msg/Header/Version
+    修改xml节点的值    0    /Msg/Header/TestFlag
+    修改xml节点的值    ${activicty_code}    /Msg/Header/ActivityCode
+    修改xml节点的值    ${req_sys}    /Msg/Header/TestFlag
+    修改xml节点的值    ${CURRENT_TIME}00000    /Msg/Header/ReqDateTime
+    修改xml节点的值    999${CURRENT_TIME}${REQ_TRANS_ID}000    /Msg/Header/ReqTransID
+    修改xml节点的值    0    /Msg/Header/ActionCode
+    修改xml节点的值    2001    /Msg/Header/RcvSys
+
+检查消息同步结果
+    [Arguments]    ${res_code}
+    ${res}    Post Interface Xml    ${url_base_simulator}
+    Should Be Equal As Strings    ${res}    ${res_code}
+
+检查Sims公司信息同步给PRM的结果
+    [Arguments]    ${res_code}
+    ${res}    Post Interface Xml    ${url_sims_simulator}
+    Should Be Equal As Strings    ${res}    ${res_code}
+
+读取xml文件
+    [Arguments]    ${filePath}
+    Read Interface File    ${filePath}
+
+删除xml节点
+    [Arguments]    ${nodePath}
+    Remove Interface Node    ${nodePath}
+
+检查提示信息
+    [Arguments]    ${dialog_msg}=*
+    [Documentation]    该关键字可用于判断提示框的内容是否正确
+    Wait Until Page Contains Element    jquery=div.dialog_shadow    5s
+    Comment    Element Should Be Visible    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+校验出错信息_提交
+    [Arguments]    ${dialog_msg}
+    [Documentation]    适用于信息填写界面，如果必填项未填写，提交时，校验必填框后面的提示信息
+    链接    提交
+    ajax加载完毕
+    Wait Until Page Contains Element    jquery=span[class='Validform_checktip Validform_wrong']
+    ${msg}=    Get Element Text    jquery=span[class='Validform_checktip Validform_wrong']
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+点击一级菜单
+    [Arguments]    ${menu1}
+    不选择frame
+    直到页面某个元素可见    xpath=//ul[@id='leftmenu']/li/a[text()='${menu1}']    #jquery=ul#leftmenu>li>a:contains("${menu1}")
+    点击元素    xpath=//ul[@id='leftmenu']/li/a[text()='${menu1}']    #jquery=ul#leftmenu>li>a:contains("${menu1}")
+
+进入左侧二级菜单
+    [Arguments]    ${menu1}    ${menu2}
+    Comment    Reload Page Until Element Is Visivble    id=toHomepage
+    unselect frame
+    Wait Until Element Is Visible    jquery=ul#leftmenu>li>a:contains("${menu1}")    15
+    Execute Javascript    jQuery('ul#leftmenu>li>a:contains("${menu1}")+ul').attr('style','block');return 0;
+    Comment    Wait For Condition    return jQuery.active==0;    15
+    Comment    Wait Until Element Is Visible    xpath=//ul[@id='leftmenu']/li/a[text()='${menu1}']//following-sibling::ul//a[text()='${menu2}']    30
+    Comment    点击元素    xpath=//ul[@id='leftmenu']/li/a[text()='${menu1}']//following-sibling::ul//a[text()='${menu2}']
+    Comment    Wait For Condition    return jQuery.active==0;    15
+    Run Keyword If    "${menu2}"=="合同管理"    Wait Until Page Contains Element    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li:nth-child(2)>a:contains("${menu2}")
+    Run Keyword If    "${menu2}"=="合同管理"    点击元素    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li:nth-child(2)>a:contains("${menu2}")
+    Run Keyword If    "${menu2}"!="合同管理"    Wait Until Page Contains Element    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li>a:contains("${menu2}")
+    Run Keyword If    "${menu2}"!="合同管理"    点击元素    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li>a:contains("${menu2}")
+    sleep    2s
+    选择frame    content
+
+刷新页面并等待两秒
+    Reload Page
+    Comment    ajax加载完毕
+    等待一段时间    2
+
+只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    [Documentation]    部分案例只能在IE浏览器下面运行。目前，Jenkins上面的运行方式为第一次运行为非IE浏览器，便于提高运行速度。失败案例的retry采用IE浏览器。 \ \ 那么，第一次运行时，我们已知的必须在IE浏览器下面运行的案例肯定失败，那么我们加入关键字，这些案例运行时，如果是非IE浏览器，那么一进入运行就直接失败
+    Run Keyword If    '${browser_type}'!='ie'    select frame    1111
+
+等待一段时间
+    [Arguments]    ${time}=1
+    [Documentation]    默认为1s
+    Sleep    ${time}
+
+非正式账号登录PRM合作伙伴端"${url_sp}",登陆名"${username}",密码"${password}"
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开合作伙伴端
+    Select Frame Until Element Visible    loginPage    id=loginName
+    Click Element    id=loginName
+    Input Text    id=loginName    ${username}
+    Click Element    id=artiPwd
+    Wait Until Element Is Visible    id=password    5s
+    Input Text    id=password    ${password}
+    按钮    立即登录
+    直到页面不包含某个元素    jquery=input[value="注册新帐号"]
+    不选择frame
+    Set Suite Variable    ${last_login_account}    ${username}
+
+登录合作伙伴端
+    [Arguments]    ${username}    ${password}=aaa111
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开合作伙伴端
+    Select Frame Until Element Visible    loginPage    id=loginName
+    Click Element    id=loginName
+    Input Text    id=loginName    ${username}
+    Click Element    id=artiPwd
+    Wait Until Element Is Visible    id=password    5s
+    Input Text    id=password    ${password}
+    按钮    立即登录
+    直到页面不包含某个元素    jquery=input[value="注册新帐号"]
+    不选择frame
+    Set Suite Variable    ${last_login_account}    ${username}

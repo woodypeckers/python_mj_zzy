@@ -1,0 +1,26 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Template
+Resource          ../../Resource/Action/11信息数据导入/01合作级信息导入.txt
+
+*** Test Cases ***
+导入记录全正确的阅读基地合作信息
+    [Tags]    smoke    noff
+    Comment    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    清除相关合作信息    AP20150309112
+    进入合作级信息导入页面并上传附件    prm\\template\\业务合作信息导入模板.xls
+    发布导入文件并检查提示信息    导入成功
+    检查数据库中合作的状态    AP20150309112    A
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+导入记录部分正确的阅读基地合作信息
+    [Tags]    smoke    noff
+    Comment    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    清除相关合作信息    AP20150309113
+    进入合作级信息导入页面并上传附件    prm\\template\\业务合作信息导入模板部分错误.xls
+    进入错误结果页面并点击忽略错误
+    发布导入文件并检查提示信息    导入成功
+    检查数据库中合作的状态    AP20150309113    A
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,79 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/03公告/04审批公告.txt
+
+*** Test Cases ***
+01审批公告，同意发布
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕总部+咪咕互娱    \    \    \    是
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象    渠道
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    退出admin端且清除cookie
+    登录admin端    sysadmin
+    进入左侧二级菜单    公告管理    公告管理
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    点击查询列表操作列链接    审批
+    直到元素可见    jquery=div:contains('公告审批')
+    点击按钮    同意发布
+    校验弹出框信息并点击按钮    公告已成功发布！
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    直到元素可见    jquery=td:contains('已发布')
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02审批公告，驳回
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕总部+咪咕互娱    \    \    \    是
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象    渠道
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    退出admin端且清除cookie
+    登录admin端    sysadmin
+    进入左侧二级菜单    公告管理    公告管理
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    点击查询列表操作列链接    审批
+    直到元素可见    jquery=div:contains('公告审批')
+    点击按钮    驳回
+    文本域输入文字    驳回原因    公告内容不正确
+    点击按钮    确定
+    校验弹出框信息并点击按钮    公告已驳回！
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    直到元素可见    jquery=td:contains('退回修改')
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03审批公告，驳回原因为空
+    [Tags]    smoke
+    登录admin端    zbadmin
+    进入左侧二级菜单    公告管理    公告管理
+    进入公告信息填写界面
+    填写公告基本信息    咪咕总部+咪咕互娱    \    \    \    是
+    填写公告标题
+    填写公告正文
+    按合作类型选择发布对象    渠道
+    点击按钮    提交
+    校验弹出框信息并点击按钮    提交成功
+    退出admin端且清除cookie
+    登录admin端    sysadmin
+    进入左侧二级菜单    公告管理    公告管理
+    展开查询框
+    管理员端公告输入查询条件    ${announce_title}
+    点击查询列表操作列链接    审批
+    直到元素可见    jquery=div:contains('公告审批')
+    点击按钮    驳回
+    点击按钮    确定
+    页面错误提示信息校验    驳回原因    请输入驳回原因
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,47 @@
+*** Settings ***
+Library           AutoItLibrary
+Library           Selenium2Library
+Library           ../../MyLibrary/OracleLibrary.py
+Library           ../../MyLibrary/PhkLibrary.py
+
+*** Keywords ***
+IE附件上传
+    [Arguments]    ${upload_name}    ${fullpath}    ${win_title}='选择要上载的附件'
+    Wait Until Page Contains Element    ${upload_name}
+    Mouse Over    ${upload_name}
+    Click Element    ${upload_name}
+    ${upload_window_exist}    Win Exists    ${win_title}
+    log    ${upload_window_exist}
+    Run Keyword If    '${upload_window_exist}'=='0'    Send    ${SPACE}
+    Run Keyword If    '${upload_window_exist}'=='0'    sleep    0.2s
+    Win Wait    ${win_title}    \    10
+    Win Activate    ${win_title}
+    ControlSetText    ${win_title}    \    [CLASS:Edit; INSTANCE:1]    ${fullpath}
+    Control Focus    ${win_title}    \    [CLASS:Button; INSTANCE:1]
+    Send    !O
+    sleep    0.2s
+
+上传附件_开户银行许可证
+    [Arguments]    ${upload_file}
+    Run Keyword If    '${browser_type}'=='ie'    上传附件_IE_开户银行许可证    ${upload_file}
+    Run Keyword If    '${browser_type}'!='ie'    上传附件_非IE_开户银行许可证    ${upload_file}
+
+上传附件_IE_开户银行许可证
+    [Arguments]    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    IE附件上传    id=uploadBtn_spBankAccountAttach    ${fullpath}    选择要上载的文件，通过: ${upload_file_windows_title_ip}
+
+上传附件_非IE_开户银行许可证
+    [Arguments]    ${upload_file}
+    Choose File    jquery=#spBankAccountAttach input[type='file']    ${upload_file}
+
+附件上传_通过xpath定位
+    [Arguments]    ${text_content}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    ${input_id}=    Get Element Attribute    xpath=//td[contains(text(),("${text_content}"))]//following-sibling::td//input[@type='file']@id
+    Run Keyword If    '${browser_type}'=='ie'    Execute Javascript    window.document.getElementById( "${input_id}").style.cssText = "";return 0;
+    Judge File Exist    ${fullpath}
+    Choose File    xpath=//td[contains(text(),("${text_content}"))]//following-sibling::td//input[@type='file']    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s

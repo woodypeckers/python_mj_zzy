@@ -1,0 +1,204 @@
+*** Settings ***
+Documentation     所有jquery操作全部写到这个里面
+Library           Selenium2Library
+Library           ../../MyLibrary/MyLibrary.py
+Library           ../../MyLibrary/PhkLibrary.py
+Library           Remote    http://10.12.12.157:18001    WITH NAME    rtplt
+Library           ../../MyLibrary/MyTimeLibrary.py
+
+*** Keywords ***
+校验弹出框信息并点击按钮
+    [Arguments]    ${dialog_msg}=*    ${button_text}=确认
+    [Documentation]    不想校验内容，则diaglog_msg填*; \ button_text为按钮上的字符串
+    Wait Until Ajax Load Complete    请稍候...
+    直到元素可见    jquery=div.dialog_shadow    15s
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+    click link    ${button_text}
+    ajax加载完毕
+
+文本框内容输入错误后，校验文本框后面的提示信息
+    [Arguments]    ${locator}    ${dialog_msg}
+    [Documentation]    适用于文本框内容输入完毕，鼠标离开输入焦点后，如果内容输入错误，文本框后面的错误提示框. \ ${locator}:需要点击的其他地方。 \ \ \ 一般来说：这种提示信息需要点击其他地方才会出现
+    点击元素    ${locator}
+    Wait Until Page Contains Element    jquery=span[class='Validform_checktip Validform_wrong']
+    ${msg}=    Get Element Text    jquery=span[class='Validform_checktip Validform_wrong']
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+校验弹出框信息
+    [Arguments]    ${dialog_msg}
+    Wait Until Ajax Load Complete    请稍候...
+    直到元素可见    jquery=div.dialog_shadow    15s
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+下拉框
+    [Arguments]    ${locator}    ${content}
+    Execute Javascript    jQuery('div#${locator} ').attr('style','display: block;')
+    点击元素    jquery=div#${locator}>ul>li:contains('${content}')
+
+文本框输入
+    [Arguments]    ${locator}    ${content}
+    Input Text    ${locator}    ${content}
+
+文本域输入
+    [Arguments]    ${locator}    ${content}
+    Click Element    ${locator}
+    Input Text    ${locator}    ${content}
+
+点击元素
+    [Arguments]    ${locator}
+    [Documentation]    1、点击某个元素，支持链接、按钮等点击操作
+    Click Element    ${locator}
+
+截屏
+    Capture Page Screenshot2
+
+ajax加载完毕
+    [Documentation]    此关键字主要用于提交的时候，等待提示语句加载完毕。例如“请稍后”
+    Wait For Condition    return jQuery.active==0;    15s
+
+获取当前时间年月日时分秒
+    ${hms}    Get Hms
+    [Return]    ${hms}
+
+阿拉伯数字转换为中文数字
+    [Arguments]    ${Arabic_number}
+    [Documentation]    1、输入一个阿拉伯数字串，返回一个中文数字串
+    ...    2、将阿拉伯数字转换为中文数字。如将 123 转换为 一二三 。主要用于公司中文名称不支持数字的场合
+    ${Chinese_number}    Arabic Numerals Str Transform Chinese Str    ${Arabic_number}
+    [Return]    ${Chinese_number}
+
+直到元素可见
+    [Arguments]    ${locator}    ${timeout}=15s
+    Wait Until Element Is Visible    ${locator}    ${timeout}
+
+打开浏览器
+    [Arguments]    ${url}
+    [Documentation]    新开一个浏览器，或者重用当前已有的浏览器
+    Open Or Reuse Browser    ${url}    ${browser_type}    \    ${HUB}
+
+关闭浏览器
+    Close Browser
+
+关闭所有浏览器
+    Close All Browsers
+
+最大化浏览器
+    Maximize Browser Window
+
+选择Frame
+    [Arguments]    ${locator}
+    Select Frame    ${locator}
+
+多次选择Frame直到Frame中元素可见
+    [Arguments]    ${locator_frame}    ${locator_element}
+    Select Frame Until Element Visible    ${locator_frame}    ${locator_element}
+
+不选择Frame
+    Unselect Frame
+
+获取加密后的密码
+    [Arguments]    ${staff_id}    ${passwd}=aaa111
+    [Documentation]    输入参数为staff_id和需要加密的密码，默认密码是aaa111. \ \ migu存放在sec_staff表里面的密码和sims、prm一样，都与账号的staff_id有关联
+    ${encrypt_passwd}    rtplt.Encryptpasswd    ${staff_id}    ${passwd}
+    [Return]    ${encrypt_passwd}
+
+删除所有Cookie
+    Delete All Cookies
+
+检查页面标题
+    [Arguments]    ${title}
+    [Documentation]    验证当前页面的标题是否正确
+    Title Should Be    ${title}
+
+跳转到指定Url
+    [Arguments]    ${url}
+    [Documentation]    用于浏览器已经打开后，需要使用当前浏览器打开新的url的场景
+    Go To    ${url}
+
+执行JavaScript
+    [Arguments]    ${code}
+    [Documentation]    执行JavaScript语句
+    Execute Javascript    ${code}
+
+等待一段时间
+    [Arguments]    ${time}=2s
+    [Documentation]    默认等待2s。 用于执行某个关键字后等待一段时间再执行下一个关键字
+    Sleep    ${time}
+
+刷新页面
+    [Documentation]    刷新当前页面
+    Reload Page
+
+选择窗口
+    [Arguments]    ${locator}='None'
+    Select Window    ${locator}
+
+获取元素内容
+    [Arguments]    ${locator}
+    [Documentation]    返回指定元素的文本内容
+    ${content}    Get Element Text    ${locator}
+    [Return]    ${content}
+
+标题必须为
+    [Arguments]    ${title}
+    Title Should Be    ${title}
+
+文本框输入文字
+    [Arguments]    ${text}    ${content}
+    [Documentation]    使用方式：
+    ...    文本框输入，通过前面描述文字定位|法人代表姓名|张三
+    Input Text    jquery=td:contains('${text}')~td>input[type='text']    ${content}
+
+文本框输入密码
+    [Arguments]    ${text}    ${content}
+    [Documentation]    使用方式：
+    ...    文本框输入，通过前面描述文字定位|法人代表姓名|张三
+    Input Text    jquery=td:contains('${text}')~td>input[type='password']    ${content}
+
+下拉框输入文字
+    [Arguments]    ${text}    ${list1}    ${list2}=${EMPTY}
+    [Documentation]    支持一个描述信息对于一个下拉框及一个描述信息对应两个下拉框（如银行归属地有省以及市，这个时候只需要在参数里面输入省及市就可以了）
+    ...    使用方式：下拉框选择，通过前面描述文字定位|注册资金币种|美元 \ \ \ \ \ \ \ ; \ \ 下拉框选择，通过前面描述文字定位|银行归属地|浙江|杭州
+    Run Keyword If    '${list2}'==''    Select From List    jquery=td:contains('${text}')~td>select    ${list1}
+    Run Keyword If    '${list2}'!=''    Select From List    jquery=td:contains('${text}')~td>select:first    ${list1}
+    Run Keyword If    '${list2}'!=''    Select From List    jquery=td:contains('${text}')~td>select:last    ${list2}
+
+文本域输入文字
+    [Arguments]    ${text}    ${content}
+    Input Text    jquery=td:contains('${text}')~td>textarea    ${content}
+
+点击链接
+    [Arguments]    ${link_name}
+    [Documentation]    需要输入链接的名称。适用于<a>...</a>这种标签类型的
+    Click Element    jquery=td>a:contains('${link_name}')
+
+公司合作文本框
+    [Arguments]    ${text}    ${content}
+    [Documentation]    使用方式：
+    ...    文本框输入，通过前面描述文字定位|法人代表姓名|张三
+    ...    备注：这个关键字适用于分配账号后，填写公司合作的页面
+    Input Text    jquery=div:contains('${text}')~div>input[type='text']    ${content}
+
+公司合作文本域
+    [Arguments]    ${text}    ${content}
+    [Documentation]    使用方式：
+    ...    文本框输入，通过前面描述文字定位|公司简介|卓望公司是个IT公司
+    ...    备注：这个关键字适用于分配账号后，填写公司合作的页面
+    Input Text    jquery=div:contains('${text}')~div>textarea    ${content}
+
+公司合作下拉框
+    [Arguments]    ${text}    ${list1}    ${list2}=${EMPTY}
+    [Documentation]    支持一个描述信息对于一个下拉框及一个描述信息对应两个下拉框（如银行归属地有省以及市，这个时候只需要在参数里面输入省及市就可以了）
+    ...    使用方式：下拉框选择，通过前面描述文字定位|注册资金币种|美元 \ \ \ \ \ \ \ ; \ \ 下拉框选择，通过前面描述文字定位|银行归属地|浙江|杭州
+    ...    备注：这个关键字适用于分配账号后，填写公司合作的页面
+    Run Keyword If    '${list2}'==''    Select From List    jquery=div:contains('${text}')~div>select    ${list1}
+    Run Keyword If    '${list2}'!=''    Select From List    jquery=div:contains('${text}')~div>select:first    ${list1}
+    Run Keyword If    '${list2}'!=''    Select From List    jquery=div:contains('${text}')~div>select:last    ${list2}
+
+清除cookie
+    Delete All Cookies
+
+移动页面滚动条到页面最底部
+    执行JavaScript    document.documentElement.scrollTop=10000

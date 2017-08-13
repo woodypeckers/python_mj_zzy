@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='GBK'?>
+<Msg>
+  <Header>
+    <Version>0001</Version>
+    <TestFlag>0</TestFlag>
+    <ActivityCode>330002</ActivityCode>
+    <ReqSys>02101</ReqSys>
+    <ReqDateTime>20150724121421014</ReqDateTime>
+    <ReqTransID>021021003</ReqTransID>
+    <ActionCode>0</ActionCode>
+    <Sign>a10f46acf9c1f553f185ad8830b55d07</Sign>
+    <RcvSys>88888</RcvSys>
+  </Header>
+  <Body>
+    <CoopType>1</CoopType>
+    <CoopCode>cp8989003</CoopCode>
+    <SubCoppCodes>
+        <CoopContent></CoopContent>
+        <SubCoopCode>yy0003</SubCoopCode>
+    </SubCoppCodes>
+  </Body>
+</Msg>

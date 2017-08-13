@@ -1,0 +1,56 @@
+*** Settings ***
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/公用.txt
+Resource          ../../Common/附件上传.txt
+
+*** Keywords ***
+进入分层分级管理页面
+    进入左侧二级菜单    考核管理    分层分级管理
+    Comment    ajax加载完毕
+    直到页面某个元素可见    jquery=div.top_div>span>a:contains('导入')
+    ${href}=    Get Element Attribute    jquery=div.top_div>span>a:contains('导入')@href
+    log    ${href}
+    go to    ${href}
+    直到页面某个元素可见    jquery=span:contains('分层分级导入')
+    Comment    ajax加载完毕
+
+进入分层分级导入页面并上传文件
+    [Arguments]    ${check_mesg}
+    Run Keyword If    '${browser_type}'=='phantomjs'    Execute Javascript    window.confirm = function(msg){return true;};
+    下拉框_通过ID定位    checkCycle    2014年1季度    #xpath=//select[@id="checkCycle"]
+    选择附件    gradeFile    prm\\template\\分层分级导入模板.xls
+    直到页面某个元素可见    xpath=//a[contains(text(),"上传文件")]
+    链接    上传文件
+    Comment    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[contains(text(),"发布")]
+    链接    发布
+    comment    ${mes}    Confirm Action
+    comment    Choose Ok On Next Confirmation
+    sleep    1s
+    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    Comment    ajax加载完毕    请稍候...
+    校验弹出框信息并点击按钮    ${check_mesg}    确认
+
+删除导入的分层分级数据
+    [Arguments]    ${sp_code}
+    删除数据库记录    delete from prm_grade a where a.sp_code='${sp_code}' and a.credit_level ='A201410181405'
+
+进入分层分级导入页面并上传有错误数据的导入文件
+    [Arguments]    ${check_mesg}
+    Run Keyword If    '${browser_type}'=='phantomjs'    Execute Javascript    window.confirm = function(msg){return true;};
+    下拉框_通过ID定位    checkCycle    2014年1季度    #xpath=//select[@id="checkCycle"]
+    选择附件    gradeFile    prm\\template\\有错误数据的分层分级导入模板.xls
+    链接    上传文件
+    Comment    ajax加载完毕
+    Comment    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[contains(text(),"忽略错误")]
+    链接    忽略错误
+    Comment    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[contains(text(),"发布")]
+    链接    发布
+    sleep    1s
+    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    comment    ${mes}    Confirm Action
+    comment    Choose Ok On Next Confirmation
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    ${check_mesg}    确认

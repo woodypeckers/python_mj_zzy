@@ -1,0 +1,20 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+进入合作情况查询页面
+    不选择frame
+    点击右上角菜单    合作伙伴资料查询->合作情况查询
+
+查看合作的详情页面
+    unselect frame
+    select frame    content
+    文本输入_通过id定位    spCodeLike    CP20140730002
+    链接_通过id定位    queryBtn
+    click link    jquery=a:contains('CP20140730002')
+    unselect frame
+    sleep    2s
+    select frame    content
+    直到页面某个元素可见    backButton
+    链接_通过id定位    backButton

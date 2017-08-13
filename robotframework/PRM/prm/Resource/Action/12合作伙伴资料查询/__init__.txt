@@ -1,0 +1,3 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt

@@ -1,0 +1,64 @@
+*** Settings ***
+Resource          合同common.txt.txt
+
+*** Keywords ***
+进入合同导入页面
+    点击元素    id=toImport
+
+创建合同导入文件并写入数据
+    [Arguments]    ${text}
+    创建excel文件
+    设置导入文件的列名    合同编号,合同名称,合作编码,公司中文名称,合作类型,合同签订时间,合同有效起始时间,合同有效结束时间,合同金额（元）,主办部门,联系人,法人,签署人,是否自动续签,自动续签时长,备注
+    写入需要导入的数据    ${text}
+
+设置导入文件的列名
+    [Arguments]    ${title}    ${row}=0
+    excel表中插入一行记录    ${title}    ${row}
+
+写入需要导入的数据
+    [Arguments]    ${text}    ${row}=1
+    excel表中插入一行记录    ${text}    ${row}
+
+上传需要导入的合同文件
+    [Arguments]    ${id}    ${upload_file}=Migu\\temp\\test.xls
+    unselect frame
+    select frame    content
+    直到元素可见    jquery=div:contains('合同管理->CP合同管理->CP合同导入')
+    选择附件    ${id}    ${upload_file}
+
+导入文件
+    [Arguments]    ${text}
+    Comment    Select Window
+    Comment    多次选择Frame直到Frame中元素可见    content    id=add
+    Comment    sleep    1s
+    Comment    点击元素    Xpath=//*[@id="add"]
+    Comment    sleep    1s
+    直到元素可见    jquery=a:contains('${text}')
+    执行JavaScript    jQuery("a:contains('${text}')").click()
+    等待一段时间    1s
+
+未上传附件点击二次确认框
+    校验二次确认框提示信息且点击非确认取消按钮    有合同附件未上传，继续上传合同吗？    继续上传
+    sleep    1s
+
+创建合同导入文件并写入多条数据，有错误记录
+    [Arguments]    ${para_1}    ${para_2}    ${para_3}
+    创建excel文件
+    设置导入文件的列名    合同编号,合同名称,合作编码,公司中文名称,合作类型,合同签订时间,合同有效起始时间,合同有效结束时间,合同金额（元）,主办部门,联系人,法人,签署人,是否自动续签,自动续签时长,备注
+    写入需要导入的数据    ${para_1}
+    写入需要导入的数据    ${para_2}    ${para_3}
+
+进入错误数据展示页面点击忽略错误
+    unselect frame
+    select frame    content
+    点击元素    Xpath=//input[@value="忽略错误"]
+    sleep    1s
+
+创建错误的合同模板
+    创建excel文件
+    设置导入文件的列名    合同编号,合同名称,合作编码,公司中文名称,合作类型,合同签订时间,合同有效起始时间,合同有效结束时间,合同金额（元）,主办部门,联系人,法人,签署人,是否自动续签
+
+校验结果检查
+    [Arguments]    ${check_info}
+    直到元素可见    jquery=span:contains('错误结果')
+    直到元素可见    jquery=td:contains('${check_info}')

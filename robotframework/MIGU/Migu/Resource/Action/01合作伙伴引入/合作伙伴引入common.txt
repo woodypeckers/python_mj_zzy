@@ -1,0 +1,546 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入账号分配资料填写页面
+    直到元素可见    jquery=a:contains('分配新账号')
+    点击元素    jquery=a:contains('分配新账号')
+    直到元素可见    jquery=div:contains('分配账号信息')
+
+账号分配提交
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    是否确认分配账号？
+    校验二次确认框提示信息且点击按钮    账号分配成功
+    Comment    直到元素可见    jquery=a:contains('分配新账号')
+
+账号分配成功后数据校验
+    [Arguments]    ${account_type}=1
+    [Documentation]    传入参数：账号类型（默认为1，一点接入CP）
+    等待一段时间    1s
+    账号分配邮件校验
+    账号分配短信校验
+    账号分配账号校验    ${account_type}
+
+账号分配邮件校验
+    [Arguments]    ${number}=1
+    [Documentation]    校验账号分配成功后邮件是否发送
+    ${res}    数据库查询    select count(*) from email_send t where dbms_lob.instr(t.message,rawtohex('管理员已为您分配了登录【咪咕合作伙伴接入平台】的账号'))>0 AND dbms_lob.instr(t.message,rawtohex('登录账号：${account_name}'))>0 AND t.email_to='${email}';
+    Should Be Equal As Strings    ${number}    ${res}
+
+账号分配短信校验
+    [Arguments]    ${number}=1
+    [Documentation]    校验账号分配成功后短信是否发送
+    ${res}    数据库查询    SELECT count(*) FROM sms_send t WHERE t.destination='${mobile}' AND t.content LIKE '%管理员已为您分配了账号：登录账号：${account_name}%';
+    Should Be Equal As Strings    ${number}    ${res}
+
+账号分配账号校验
+    [Arguments]    ${account_type}
+    [Documentation]    校验账号分配成功后数据库中是否有分配的账号信息
+    ${res}    数据库查询    SELECT COUNT(*) FROM sec_staff t WHERE t.login_name='${account_name}' AND t.status='INITIAL';
+    Should Be Equal As Strings    1    ${res}
+    ${res}    数据库查询    SELECT COUNT(*) FROM sec_staff_extend t WHERE t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}') AND t.staff_style='${account_type}' AND t.staff_type='1' and t.coop_range is null AND t.coop_second_range is null;
+    Should Be Equal As Strings    1    ${res}
+
+账号类型选择
+    [Arguments]    ${radio_label}    ${choose_radio}
+    Wait Until Page Contains Element    jquery=td:contains('${radio_label}')~td>div>label:contains('${choose_radio}')
+    Execute Javascript    jQuery("td:contains('${radio_label}')~td>div>label:contains('${choose_radio}')").click()
+
+设置账号信息
+    [Documentation]    由于账号名不可以重复，所以需要在帐号名后面加个独一无二的后缀，防止账号名重复。该关键字会设置一个用例变量：${account_name_suffix} ：帐号名的后缀 ，长度为4位数字 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ${cn_name_suffix}：公司名称的后缀，长度为4个中文字符
+    ${account_apply_id}    获取sequence的nextval    seq_account_apply
+    ${company_id}    获取sequence的nextval    seq_apply_company
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${company_id}
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'00000000')) AS Id FROM dual;
+    Set Test Variable    ${account_name_suffix}    ${account_apply_id}
+    Set Test Variable    ${cn_name_suffix}    ${cn_suffix}
+    Set Test Variable    ${mobile}    139${mobile_phone}
+    Set Test Variable    ${email}    ${account_apply_id}@11.com
+
+填写分配渠道账号信息
+    [Arguments]    ${account_type}    ${cnName}    ${loginName}    ${realName}    ${email}    ${mobile_phone}
+    Select From List    id=firstCat    ${account_type}
+    文本框输入文字    公司中文名称    ${cnName}${cn_name_suffix}
+    文本框输入文字    账号名    ${loginName}${account_name_suffix}
+    文本框输入文字    联系人姓名    ${realName}${cn_name_suffix}
+    文本框输入文字    E-mail    ${email}
+    文本框输入文字    手机号    ${mobile_phone}
+    Set Test Variable    ${account_name}    ${loginName}${account_name_suffix}
+
+填写注册账号信息
+    [Arguments]    ${cnName}    ${loginName}    ${realName}    ${email}    ${mobile_phone}    ${passwd}=Aaaa1111
+    ...    ${confirm_passwd}=Aaaa1111
+    文本框输入文字    公司中文名称    ${cnName}${cn_name_suffix}
+    文本框输入文字    账号名    ${loginName}${account_name_suffix}
+    文本框输入密码    密码    ${passwd}
+    文本框输入密码    确认密码    ${confirm_passwd}
+    文本框输入文字    联系人姓名    ${realName}${cn_name_suffix}
+    文本框输入文字    EMAIL    ${email}
+    文本框输入文字    手机号码    ${mobile_phone}
+    Set Test Variable    ${account_name}    ${loginName}${account_name_suffix}
+
+查询出补发邮件的账号
+    [Arguments]    ${account_name}
+    admin端查询结果校验    账号名    ${account_name}
+
+补发账号提交
+    直到元素可见    jquery=div:contains('补发账号通知')
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    是否确认补发账号通知？
+    校验二次确认框提示信息且点击按钮    账号补发成功
+
+账号补发邮件校验
+    [Arguments]    ${number}=1
+    [Documentation]    校验账号补发成功后邮件是否发送
+    ${res}    数据库查询    select count(*) from email_send t where dbms_lob.instr(t.message, rawtohex('您在 【咪咕合作伙伴接入平台】的账号信息如下')) > 0 AND dbms_lob.instr(t.message,rawtohex('登录账号：${account_name}')) > 0 AND t.email_to = '${email}';
+    Should Be Equal As Strings    ${number}    ${res}
+
+账号补发短信校验
+    [Arguments]    ${number}=1
+    [Documentation]    校验账号补发成功后短信是否发送
+    ${res}    数据库查询    SELECT count(*) \ FROM sms_send t WHERE t.destination = '${mobile}' AND t.content LIKE '%账号信息通知，账号：${account_name}%';
+    Should Be Equal As Strings    ${number}    ${res}
+
+账号补发账号校验
+    [Arguments]    ${number}=1
+    [Documentation]    校验账号补发成功后数据库中是否有分配的账号信息
+    ${res}    数据库查询    SELECT COUNT(*) FROM sec_staff t WHERE t.login_name='${account_name}' AND t.status='INITIAL';
+    Should Be Equal As Strings    ${number}    ${res}
+
+账号补发成功后数据校验
+    等待一段时间    1s
+    账号补发邮件校验
+    账号补发短信校验
+    账号补发账号校验
+
+修改初创账号密码
+    [Arguments]    ${new_passed}=Aaaa1111    ${old_passwd}=aaa111
+    [Documentation]    默认修改初创账号的密码为abc123
+    校验二次确认框提示信息且点击按钮    初次登录，密码必须重新设置！
+    直到元素可见    jquery=div:contains('-------您的帐号为初创状态，在使用之前，请先修改密码-------')
+    文本框输入    id=oldPassword    ${old_passwd}
+    文本框输入    id=newPassword    ${new_passed}
+    文本框输入    id=newPasswordConfirm    ${new_passed}
+    点击按钮    确定
+    校验二次确认框提示信息且点击按钮    修改个人密码成功
+
+公司基本信息，填写必填信息
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=p:contains('公司基本信息（必填）')
+    公司合作文本框    组织机构代码    ${org}
+    上传附件，输入id    orgCodeAttach    Migu\\attachment\\组织机构代码附件.jpg
+    公司合作文本框    法人代表姓名    法人代表张三
+    公司合作文本框    法人代表证件号    43252219861211517X
+    下拉框    regCapitalCurrency_container    美元
+    公司合作文本框    注册资金（万元）    9899998
+    下拉框    companyNature_container    事业单位
+    下拉框    listSitution_container    香港上市
+
+公司基本信息，填写所有信息
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=p:contains('公司基本信息（必填）')
+    公司合作文本框    组织机构代码    ${org}
+    上传附件，输入id    orgCodeAttach    Migu\\attachment\\组织机构代码附件.jpg
+    公司合作文本框    法人代表姓名    法人代表张三
+    下拉框    lawManLicenseType_container    其他    #法人证件类型
+    公司合作文本框    其它证件类型    火星护照
+    公司合作文本框    法人代表证件号    HX98811223311121
+    下拉框    regCapitalCurrency_container    其他    #注册资金币种
+    公司合作文本框    其它币种名称    火星币    #注册资金币种名称
+    公司合作文本框    注册资金（万元）    989.9998    #注册资金
+    下拉框    companyNature_container    外商投资    #公司性质
+    公司合作文本框    外资比例    98.7    #外资比例
+    下拉框    listSitution_container    其他地区上市    #公司上市情况
+    公司合作文本框    公司上市的其他地区    火星交易中心上市的    #上市的地区
+    子公司分公司选择    是否分公司    是    #是否是分公司选择是
+    公司合作文本框    总公司名称    火星总公司
+    子公司分公司选择    是否子公司    是    #是否是子公司选择是
+    公司合作文本框    母公司名称    火星母公司
+    公司合作文本域    公司简介    这是火星公司.公司业务特别广泛，设计到IT，武器（包括核武器）-，等乱七八糟111哈哈
+    上传附件，输入id    ruleAttach    Migu\\attachment\\公司章程信息附件.jpg
+
+填写公司营业执照信息
+    [Arguments]    ${licenseNo}    ${licenseProvince}=浙江    ${startDate}=2015-07-14    ${endDate}=${EMPTY}
+    [Documentation]    ${enddate}:如果为true，则会输入营业执照截止日期，否则不输入营业执照截止日期
+    文本框输入    id=licenseNo    ${licenseNo}
+    上传附件，输入id    lawManAttach    Migu\\attachment\\营业执照.jpg
+    下拉框    licenseProvinceId_container    ${licenseProvince}
+    输入日期    startDate    ${startDate}
+    Run Keyword If    '${enddate}'!=''    等待一段时间    0.1
+    Run Keyword If    '${enddate}'!=''    输入日期    endDate    ${endDate}
+
+填写税务登记信息
+    [Arguments]    ${taxRegNo}    ${taxType}=国税    ${taxQualification}=一般纳税人    ${licenseDate}=2015-07-15    ${bizScopeDesc}=${EMPTY}    ${list}=0
+    [Documentation]    如果数量大于1个，${list}必须要传值。如果有两条税务记录，第一条${list}可以不要填写，第二条必须填写给${list}传参数1
+    Run Keyword If    '${browser_type}'=='ie'    点击元素    jquery=input[name='company.companyTaxRegList[${list}].taxRegNo']    #填写税务登记证时，IE浏览器必须先点击填写框才可以填写
+    文本框输入    jquery=input[name='company.companyTaxRegList[${list}].taxRegNo']    ${taxRegNo}${list}
+    上传附件，输入id    taxReg${list}attach    Migu\\attachment\\税务登记证.jpg
+    下拉框    taxType${list}_container    ${taxType}
+    下拉框    taxQualification${list}_container    ${taxQualification}
+    输入日期    licenseDate[${list}]    ${licenseDate}
+    Run Keyword If    '${bizScopeDesc}'!=''    文本域输入    jquery=textarea[name='company.companyTaxRegList[${list}].bizScopeDesc']    ${bizScopeDesc}
+
+填写公司股权结构
+    [Arguments]    ${shareholderLicenseId}    ${shareholderName}=股东张三    ${captialForm}=货币    ${shareholderNature}=境内法人    ${subscribeCapital}=100    ${shareholderRatio}=10
+    ...    ${listed}=是    ${list}=0
+    [Documentation]    如果数量大于1个，${list}必须要传值。如果有多条股权记录记录，第一条${list}可以不要填写，第二条必须填写给${list}传参数1，第三条必须给${list}传参数2，以此类推
+    文本框输入    jquery=input[name='company.companyShareholdingList[${list}].shareholderLicenseId']    ${shareholderLicenseId}${list}
+    文本框输入    jquery=input[name='company.companyShareholdingList[${list}].shareholderName']    ${shareholderName}${list}
+    下拉框    captialForm${list}_container    ${captialForm}
+    下拉框    shareholderNature${list}_container    ${shareholderNature}
+    文本框输入    jquery=input[name='company.companyShareholdingList[${list}].subscribeCapital']    ${subscribeCapital}
+    文本框输入    jquery=input[name='company.companyShareholdingList[${list}].shareholderRatio']    ${shareholderRatio}
+    下拉框    listed${list}_container    ${listed}
+
+填写公司其他资质
+    [Arguments]    ${fileRemark}=文件说明    ${list}=0
+    [Documentation]    如果数量大于1个，${list}必须要传值. \ \ \ \ ${list}:点了N次“新增一条记录”按钮，则填写N-1. \ 比如，点了一次，填写0；点了5次，填写4. \ \ \ \
+    文本框输入    jquery=input[name='company.businessFileList[${list}].fileRemark']    ${fileRemark}${list}
+    上传附件，输入id    businessFile${list}attach    Migu\\attachment\\其他资质.jpg
+
+勾选确认框
+    点击元素    jquery=p:contains('同意并保证所填信息真实准确')>label
+
+公司填写页面点击下一步
+    点击按钮    下一步
+    不选择frame
+    选择frame    id=content
+    直到元素可见    jquery=p:contains('合作基本信息(必填）')
+
+选择内容范围
+    [Arguments]    ${content}
+    Run Keyword If    '${content}'=='音乐'    点击元素    jquery=input[value='021']~label:first
+    Run Keyword If    '${content}'=='游戏'    点击元素    jquery=input[value='038']~label:first
+    Run Keyword If    '${content}'=='动漫'    点击元素    jquery=input[value='051']~label:first
+    Run Keyword If    '${content}'=='视频'    点击元素    jquery=input[value='061']~label:first
+    Run Keyword If    '${content}'=='阅读'    点击元素    jquery=input[value='041']~label:first
+    Comment    Run Keyword If    '${content}'=='图书'    Execute Javascript    jquery=input[value='041001']
+    Comment    Run Keyword If    '${content}'=='杂志'    Execute Javascript    jquery=input[value='041002']
+    Comment    Run Keyword If    '${content}'=='漫画'    Execute Javascript    jquery=input[value='041003']
+    Comment    Run Keyword If    '${content}'=='听书'    Execute Javascript    jquery=input[value='041004']
+
+填写银行账号信息
+    [Arguments]    ${pBankAccountAccountNo}    ${spBankAccountBankName}=中国招商银行    ${spBankAccountBankTypeCode}=招商银行    ${spBankAccountProvinceId}=浙江    ${spBankAccountCityId}=杭州
+    公司合作文本框    银行帐号    ${pBankAccountAccountNo}
+    下拉框    spBankAccountBankTypeCode_container    ${spBankAccountBankTypeCode}
+    Run Keyword If    '${spBankAccountBankTypeCode}'=='其他银行'    文本框输入    id=spBankAccountBankTypeName    太阳系银行地球分行
+    下拉框    spBankAccountProvinceId_container    ${spBankAccountProvinceId}
+    下拉框    spBankAccountCityId_container    ${spBankAccountCityId}
+    公司合作文本框    开户银行    ${spBankAccountBankName}
+    上传附件，输入id    spBankAccountAttach    Migu\\attachment\\银行开户许可证.jpg
+
+填写业务联系人
+    [Arguments]    ${spBizContactName}=联系人姓名    ${spBizContactMobile}=13800000000    ${spBizContactEmail}=11@11.com    ${spBizContactPostCode}=789122    ${spBizContactPostAddress}=业务联系人住址    ${ContactPhone}=${EMPTY}
+    ...    ${ContactFax}=${EMPTY}    ${qq}=${EMPTY}
+    文本框输入    id=spBizContactName    ${spBizContactName}
+    文本框输入    id=spBizContactMobile    ${spBizContactMobile}
+    文本框输入    id=spBizContactEmail    ${spBizContactEmail}
+    文本框输入    id=spBizContactPostCode    ${spBizContactPostCode}
+    文本框输入    id=spBizContactPostAddress    ${spBizContactPostAddress}
+    run keyword if    '${ContactPhone}'!=''    文本框输入    id=spBizContactPhone    ${ContactPhone}
+    run keyword if    '${ContactFax}'!=''    文本框输入    id=spBizContactFax    ${ContactFax}
+    run keyword if    '${qq}'!=''    文本框输入    id=spBizContactQq    ${qq}
+
+填写业务负责人
+    [Arguments]    ${spBizOwnerName}=负责人姓名    ${spBizOwnerMobile}=13800000000    ${spBizOwnerEmail}=11@11.com    ${spBizOwnerPostCode}=789122    ${spBizOwnerPostAddress}=业务负责人住址    ${spBizOwnerPhone}=${EMPTY}
+    ...    ${spBizOwnerFax}=${EMPTY}    ${qq}=${EMPTY}
+    文本框输入    id=nameSpBizOwner    ${spBizOwnerName}
+    文本框输入    id=mobileSpBizOwner    ${spBizOwnerMobile}
+    文本框输入    id=emailSpBizOwner    ${spBizOwnerEmail}
+    文本框输入    id=postcodeSpBizOwner    ${spBizOwnerPostCode}
+    文本框输入    id=postAddressSpBizOwner    ${spBizOwnerPostAddress}
+    run keyword if    '${spBizOwnerPhone}'!=''    文本框输入    id=phoneSpBizOwner    ${spBizOwnerPhone}
+    run keyword if    '${spBizOwnerFax}'!=''    文本框输入    id=faxSpBizOwner    ${spBizOwnerFax}
+    run keyword if    '${qq}'!=''    文本框输入    id=qqSpBizOwner    ${qq}
+
+新增其他联系人
+    点击元素    jquery=a:contains('新增其它联系人')
+
+填写其他联系人信息
+    [Arguments]    ${list}=0    ${contactType}=财务联系人    ${spBizContactName}=联系人姓名    ${spBizContactMobile}=13800000000    ${spBizContactEmail}=11@11.com    ${spBizContactPostCode}=789122
+    ...    ${spBizContactPostAddress}=业务联系人住址    ${ContactPhone}=${EMPTY}    ${ContactFax}=${EMPTY}    ${qq}=${EMPTY}
+    [Documentation]    ${list}:点了N次“新增其他联系人”按钮，则填写N-1. \ 比如，点了一次，填写0；点了5次，填写4. \ \ \ \ \ 该关键字只适用于财务、技术、客户联系人现在的情况
+    下拉框    contactType${list}_container    ${contactType}
+    文本框输入    jquery=input[name='sp.otherContactList[${list}].name']    ${spBizContactName}
+    文本框输入    jquery=input[name='sp.otherContactList[${list}].mobile']    ${spBizContactMobile}
+    文本框输入    jquery=input[name='sp.otherContactList[${list}].email']    ${spBizContactEmail}
+    文本框输入    jquery=input[name='sp.otherContactList[${list}].postcode']    ${spBizContactPostCode}
+    文本框输入    jquery=textarea[name='sp.otherContactList[${list}].postAddress']    ${spBizContactPostAddress}
+    run keyword if    '${ContactPhone}'!=''    文本框输入    jquery=input[name='sp.otherContactList[${list}].phone']    ${ContactPhone}
+    run keyword if    '${ContactFax}'!=''    文本框输入    jquery=input[name='sp.otherContactList[${list}].fax']    ${ContactFax}
+    run keyword if    '${qq}'!=''    文本框输入    jquery=input[name='sp.otherContactList[${list}].qq']    ${qq}
+
+填写纳税属性
+    [Arguments]    ${spTaxQualification}=增值税一般纳税人
+    下拉框    spTaxQualification_container    ${spTaxQualification}
+    Run Keyword If    '${spTaxQualification}'=='增值税一般纳税人'    下拉框    spTaxRate_container    11%
+
+填写信息安全相关资料
+    [Arguments]    ${spInfoHeaderName}=安全人姓名    ${spInfoHeaderMobile}=13800000000    ${infoAttach}=false    ${infoCommitAttach}=false
+    [Documentation]    如果需要上传信息安全保障措施和信息安全承诺书，只需要${infoAttach} 和${infoCommitAttach}这两个参数传值true即可
+    公司合作文本框    信息安全责任人    ${spInfoHeaderName}
+    公司合作文本框    安全责任人手机号    ${spInfoHeaderMobile}
+    Run Keyword If    '${infoAttach}'=='true'    上传附件，输入id    infoAttach    Migu\\attachment\\信息安全保障措施.jpg
+    Run Keyword If    '${infoCommitAttach}'=='true'    上传附件，输入id    infoCommitAttach    Migu\\attachment\\信息安全承诺书.jpg
+
+填写合作其他资质
+    [Arguments]    ${fileRemark}=文件说明    ${list}=0
+    [Documentation]    如果数量大于1个，${list}必须要传值
+    文本框输入    jquery=input[name='sp.businessFileList[${list}].fileRemark']    ${fileRemark}${list}
+    上传附件，输入id    businessFile${list}attach    Migu\\attachment\\其他资质.jpg
+
+合作填写页面提交
+    点击按钮    提交
+    不选择frame
+    选择frame    id=content
+    直到元素可见    jquery=div:contains('恭喜，您的合作申请已提交审核！')
+
+税务登记信息新增一条记录
+    点击元素    jquery=a[onclick='addcompanyTaxReg(this);']
+
+公司股权结构新增一条记录
+    点击元素    jquery=a[onclick='addcompanyShareholding(this);']
+
+公司其他资质新增一条记录
+    点击元素    jquery=a[onclick='addbusinessFile(this);']
+
+合作申请附件新增一条记录
+    点击元素    jquery=a[onclick='addBusinessFileRow('',this);']
+
+一点接入输入查询条件
+    [Arguments]    ${cnName}    ${status}=${EMPTY}    ${orgCode}=${EMPTY}    ${coop_range}=${EMPTY}
+    [Documentation]    查询条件必须输入公司中文名称和处理状态
+    点击按钮    清空
+    文本框输入文字    公司中文名称    ${cnName}
+    Run Keyword If    '${orgCode}'!=''    文本框输入文字    组织机构代码证：    ${orgCode}
+    Run Keyword If    '${coop_range}'!=''    下拉框    subCompanyConfirmBaseId_container    ${coop_range}
+    Run Keyword If    '${status}'!=''    下拉框    subCompanyConfirmStatus_container    ${status}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${cnName}')
+
+分谈分签输入查询条件
+    [Arguments]    ${cnName}    ${status}    ${orgCode}=${EMPTY}    ${coop_sign}=${EMPTY}    ${coop_type}=${EMPTY}
+    [Documentation]    查询条件必须输入公司中文名称和处理状态
+    点击按钮    清空
+    文本框输入文字    公司中文名称    ${cnName}
+    Run Keyword If    '${orgCode}'!=''    文本框输入文字    组织机构代码证：    ${orgCode}
+    Run Keyword If    '${coop_sign}'!=''    下拉框    subCompanyConfirmBaseId_container    ${coop_sign}
+    下拉框    spStatus_container    ${status}
+    Run Keyword If    '${coop_type}'!=''    下拉框    subCompanyConfirmBaseId_container    ${coop_type}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${cnName}')
+
+统谈统签输入查询条件
+    [Arguments]    ${cnName}    ${status}=${EMPTY}    ${orgCode}=${EMPTY}    ${coop_range}=${EMPTY}
+    [Documentation]    查询条件必须输入公司中文名称和处理状态
+    点击按钮    清空
+    文本框输入文字    公司中文名称    ${cnName}
+    Run Keyword If    '${orgCode}'!=''    文本框输入文字    组织机构代码证：    ${orgCode}
+    Run Keyword If    '${coop_range}'!=''    下拉框    subCompanyConfirmBaseId_container    ${coop_range}
+    Run Keyword If    '${status}'!=''    下拉框    subCompanyConfirmStatus_container    ${status}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${cnName}')
+
+填写审批结果
+    [Arguments]    ${result}    ${opinion}    ${audit_attach}=false
+    [Documentation]    一点接入CP，分谈分签渠道的审批都可以调用这个关键字.需要传入的参数为审批结果：审批通过或审批退回修改；审批意见。 \ 如果审批通过，则会自动填写合作编码。 \如果需要上传附件的话，${audit_attach}需要传入参数为true
+    select window
+    select frame    content
+    下拉框输入文字    审批结果：    ${result}
+    文本域输入文字    审批意见：    ${opinion}
+    Comment    Run Keyword If    '${result}'=='审批通过'    文本框输入文字    合作编码：    ${sp_code}
+    Run Keyword If    '${audit_attach}'=='true'    上传附件，输入id    fileGroupId    Migu\\attachment\\公司合作审批附件.jpg
+
+填写合同信息
+    [Arguments]    ${contractNo}    ${contractName}    ${startDate}    ${endDate}    ${spContractAttach}=false    ${signDate}=${EMPTY}
+    ...    ${contractAmount}=${EMPTY}    ${isRenew}=${EMPTY}    ${sponsor}=${EMPTY}    ${lawMan}=${EMPTY}    ${contact}=${EMPTY}    ${signedMan}=${EMPTY}
+    ...    ${remark}=${EMPTY}
+    [Documentation]    ${spContractAttach}：传入值为true，则上传合同附件
+    select window
+    select frame    content
+    文本框输入文字    合同编号：    ${contractNo}${sp_code}
+    文本框输入文字    合同名称：    ${contractName_}${sp_code}
+    输入日期    startDate    ${startDate}
+    等待一段时间    1s
+    输入日期    endDate    ${endDate}
+    等待一段时间    1s
+    Run Keyword If    '${signDate}'!=''    输入日期    signDate    ${signDate}
+    Run Keyword If    '${contractAmount}'!=''    文本框输入文字    合同金额（元）：    ${contractAmount}
+    Run Keyword If    '${isRenew}'!=''    合同自动续签选择    是否自动续签：    ${isRenew}
+    Run Keyword If    '${sponsor}'!=''    文本框输入文字    主办部门：    ${sponsor}
+    Run Keyword If    '${lawMan}'!=''    文本框输入文字    法人：    ${lawMan}
+    Run Keyword If    '${contact}'!=''    文本框输入文字    联系人：    ${contact}
+    Run Keyword If    '${signedMan}'!=''    文本框输入文字    签署人：    ${signedMan}
+    Run Keyword If    '${remark}'!=''    文本域输入    id=remark    ${remark}
+    Run Keyword If    '${spContractAttach}'=='true'    上传附件，输入id    spContractFileGroupId    Migu\\attachment\\合同附件.jpg
+
+填写结算信息
+    [Arguments]    ${settleType}    ${settleProperty}    ${settleMod}    ${settleIsLinkAssessment}    ${settleMethod}    ${settleCycle}=${EMPTY}
+    ...    ${settleMark}=${EMPTY}    ${settleTypeDes}=${EMPTY}
+    [Documentation]    如果结算类型${settle_type}为其他，结算类型说明${settle_type_explain}必填
+    下拉框输入文字    结算类型：    ${settleType}
+    下拉框输入文字    结算性质：    ${settleProperty}
+    下拉框输入文字    结算模式：    ${settleMod}
+    下拉框输入文字    是否与考核挂钩：    ${settleIsLinkAssessment}
+    下拉框输入文字    结算方式：    ${settleMethod}
+    Run Keyword If    '${settleCycle}'!=''    下拉框输入文字    结算周期：    ${settleCycle}
+    Run Keyword If    '${settleMark}'!=''    文本框输入    id=spContractSettleTatio    ${settleMark}
+    Run Keyword If    '${settleTypeDes}'!=''    文本域输入文字    结算类型说明：    ${settleTypeDes}
+
+填写合作简称
+    [Arguments]    ${text}
+    公司合作文本框    ${text}    JC${jiancheng}
+
+子公司分公司选择
+    [Arguments]    ${radio_label}    ${choose_radio}
+    [Documentation]    ${radio_label} 单选框标签，即radio前面的描述内容
+    ...
+    ...    ${choose_radio} radio名称
+    Wait Until Page Contains Element    jquery=div:contains('${radio_label}')~div>label:contains('${choose_radio}')
+    Execute Javascript    jQuery("div:contains('${radio_label}')~div>label:contains('${choose_radio}')").click()
+
+上传阅读资质文件
+    [Arguments]    ${list}=0
+    [Documentation]    如果内容范围选择了阅读，必须要上传一个阅读的资质文件
+    上传附件，输入id    businessFile${list}attach    Migu\\attachment\\其他资质.jpg
+
+合同自动续签选择
+    [Arguments]    ${radio_label}    ${choose_radio}
+    Wait Until Page Contains Element    jquery=td:contains('${radio_label}')~td>label:contains('${choose_radio}')
+    Execute Javascript    jQuery("td:contains('${radio_label}')~td>label:contains('${choose_radio}')").click()
+
+公司合作审批后数据校验
+    [Arguments]    ${status1}    ${status2}    ${NO1}    ${NO2}
+    [Documentation]    传入的参数分别为：申请表中公司状态、申请表中合作状态、prm_company表中该公司记录条数、prm_sp表中该合作记录条数 \ \ \ 如果审批通过，那么${NO1}和${NO2}都需要传值1；审批退回修改，那么${NO1}和${NO2}都需要传值0
+    ${res1}    数据库查询    SELECT t.status FROM prm_apply_company t WHERE t.cn_name='${cn_name}' AND t.submitter_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}');
+    Should Be Equal As Strings    ${status1}    ${res1}
+    ${res2}    数据库查询    SELECT t.status FROM prm_apply_sp t WHERE t.sp_isn IN(SELECT g.sp_isn FROM prm_sp_staff g WHERE g.staff_id IN(SELECT b.staff_id FROM sec_staff b WHERE b.login_name='${account_name}'));
+    Should Be Equal As Strings    ${status2}    ${res2}
+    ${res3}    数据库查询    SELECT COUNT(*) FROM prm_company t WHERE t.cn_name='${cn_name}' AND t.status='A';
+    Should Be Equal As Strings    ${NO1}    ${res3}
+    ${res4}    数据库查询    SELECT COUNT(*) FROM prm_sp t WHERE t.sp_isn IN(SELECT g.sp_isn FROM prm_sp_staff g WHERE g.staff_id IN(SELECT b.staff_id FROM sec_staff b WHERE b.login_name='${account_name}'));
+    Should Be Equal As Strings    ${NO2}    ${res4}
+
+子公司确认基地选择
+    [Arguments]    ${base}
+    直到元素可见    jquery=label:contains('${base}')
+    点击元素    jquery=label:contains('${base}')
+
+填写一点接入CP子公司确认信息
+    [Arguments]    ${sub_sp_code}    ${sub_deal_comment}=${EMPTY}    ${sub_confirm_attach}=false
+    文本框输入文字    子公司合作编码：    ${sub_sp_code}
+    Run Keyword If    '${sub_deal_comment}'!=''    文本域输入文字    审批意见：    ${sub_deal_comment}
+    Run Keyword If    '${sub_confirm_attach}'=='true'    上传附件，输入id    fileGroupId    Migu\\attachment\\子公司确认附件.jpg
+
+填写统谈统签渠道子公司确认信息
+    [Arguments]    ${sub_sp_code}    ${sub_deal_comment}=${EMPTY}    ${sub_confirm_attach}=false
+    直到元素可见    jquery=div:contains('子公司确认')
+    文本框输入文字    互娱渠道商ID：    ${sub_sp_code}
+    Run Keyword If    '${sub_deal_comment}'!=''    文本域输入文字    审批意见：    ${sub_deal_comment}
+    Run Keyword If    '${sub_confirm_attach}'=='true'    上传附件，输入id    fileGroupId    Migu\\attachment\\子公司确认附件.jpg
+
+子公司确认后admin端检查
+    [Arguments]    ${base}
+    [Documentation]    子公司确认成功后，admin端查询列表里面基地名称前面有个勾的标记
+    直到元素可见    jquery=span.leixing_on:contains('${base}')
+
+子公司确认后partner端检查
+    [Arguments]    ${base}
+    [Documentation]    有子公司确认且未全部确认，partner端登录后该基地的开通状态为“已开通”，有“业务申报”的链接
+    不选择frame
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=td:contains('${base}')~td>span:contains('已开通')
+    直到元素可见    jquery=td:contains('${base}')~td>span>a:contains('业务申报')
+
+partner端正式账号登录后校验
+    [Documentation]    partner账号审批通过且所有子公司全部确认后，登录后会有一个首页的页签
+    不选择frame
+    直到元素可见    id=logout
+    点击管理中心
+    直到元素可见    id=headFrame
+    选择frame    headFrame
+    直到元素可见    jquery=a:contains('公司资料')
+    直到元素可见    jquery=a:contains('合作信息')
+    直到元素可见    jquery=a:contains('合同查看')
+
+partner端审批退回修改账号登录后校验
+    [Arguments]    ${opinion}
+    [Documentation]    账号退回修改后，会有审批状态为：退回修改；会有审批意见。 \ 这里需要传入参数${opinion}：管理员审批时填写的审批意见
+    不选择frame
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=p:contains('审批结果')>span:contains('退回修改')
+    直到元素可见    jquery=p:contains('${opinion}')>span:contains('审批意见')
+
+填写受理审批结果
+    [Arguments]    ${result}    ${opinion}=${EMPTY}    ${audit_attach}=false
+    [Documentation]    一点接入CP，分谈分签渠道的审批都可以调用这个关键字.需要传入的参数为审批结果：审批通过或审批退回修改；审批意见。 \ 如果审批通过，则会自动填写合作编码。 \如果需要上传附件的话，${audit_attach}需要传入参数为true
+    select window
+    select frame    content
+    直到元素可见    id=flowInfoDealResult
+    下拉框输入文字    审批结果：    ${result}
+    文本域输入文字    审批意见：    ${opinion}
+    Run Keyword If    '${audit_attach}'=='true'    上传附件，输入id    fileGroupId    Migu\\attachment\\受理附件.jpg
+
+partner端受理评审签约结果校验
+    [Arguments]    ${result}    ${opinion}=无
+    [Documentation]    受理评审审批后，需要校验下审批状态。如果审批时填写了审批意见，那么调用该关键字时，需要填写${opinion}审批意见
+    不选择frame
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=div:contains('${result}')
+    直到元素可见    jquery=div:contains('${opinion}')
+
+填写评审审批结果
+    [Arguments]    ${result}    ${opinion_admin}=这是管理员之间的内部意见    ${opinion_partner}=${EMPTY}    ${audit_attach}=false
+    [Documentation]    一点接入CP，分谈分签渠道的审批都可以调用这个关键字.需要传入的参数为审批结果：审批通过或审批退回修改；审批意见。 \ 如果审批通过，则会自动填写合作编码。 \如果需要上传附件的话，${audit_attach}需要传入参数为true
+    select window
+    select frame    content
+    下拉框输入文字    审批结果：    ${result}
+    文本域输入文字    审批意见（内部意见）：    ${opinion_admin}
+    文本域输入文字    审批通知（面向合作伙伴）：    ${opinion_partner}
+    Run Keyword If    '${audit_attach}'=='true'    上传附件，输入id    fileGroupId    Migu\\attachment\\评审附件.jpg
+
+填写合作编码
+    [Documentation]    一点接入CP，分谈分签渠道的审批都可以调用这个关键字.需要传入的参数为审批结果：审批通过或审批退回修改；审批意见。 \ 如果审批通过，则会自动填写合作编码。 \如果需要上传附件的话，${audit_attach}需要传入参数为true
+    文本框输入文字    合作编码：    ${sp_code}
+
+partner端签约后结果校验
+    [Documentation]    签约通过子公司未确认前，partner登录不会进入正式账号页面
+    不选择frame
+    直到元素可见    id=content
+    选择frame    content
+    直到元素可见    jquery=div:contains('恭喜，您的合作申请已通过！')
+    直到元素可见    jquery=div:contains('现进入业务申报开通阶段，申报通道开通后系统会通过邮件通知您。')
+
+点击管理中心
+    [Documentation]    partner账号审批通过且所有子公司全部确认后，登录后会有一个首页的页签
+    点击元素    id=managerCenter
+
+账号注册成功后数据校验
+    [Arguments]    ${coop_range}=021, 038, 061    ${coop_second_range}=041001, 041002, 041003, 041004    ${account_type}=1    ${account_status}=NORMAL    ${account_source}=0
+    [Documentation]    传入参数：账号类型（默认为1，一点接入CP）、账号状态（自注册和分配账号的状态不一样，默认为初创）、账号来源（分配和子注册，默认为分配）
+    ${res}    数据库查询    SELECT COUNT(*) FROM sec_staff t WHERE t.login_name='${account_name}' AND t.status='${account_status}';
+    Should Be Equal As Strings    1    ${res}
+    ${res}    数据库查询    SELECT COUNT(*) FROM sec_staff_extend t WHERE t.staff_id IN(SELECT g.staff_id FROM sec_staff g WHERE g.login_name='${account_name}') AND t.staff_style='${account_type}' AND t.staff_type='${account_source}' and t.coop_range='${coop_range}';
+    Should Be Equal As Strings    1    ${res}
+
+填写CP账号信息
+    [Arguments]    ${cnName}    ${loginName}    ${realName}    ${email}    ${mobile_phone}
+    文本框输入文字    公司中文名称    ${cnName}${cn_name_suffix}
+    文本框输入文字    账号名    ${loginName}${account_name_suffix}
+    文本框输入文字    联系人姓名    ${realName}${cn_name_suffix}
+    文本框输入文字    E-mail    ${email}
+    文本框输入文字    手机号    ${mobile_phone}
+    Set Test Variable    ${account_name}    ${loginName}${account_name_suffix}
+
+选择渠道分类
+    sleep    1s
+    直到元素可见    jquery=td:contains('渠道分类：')
+    下拉框输入文字    渠道分类：    自有

@@ -1,0 +1,41 @@
+*** Settings ***
+Library           ../MyLibrary/OracleLibrary.py
+Resource          ../变量.txt
+Library           Selenium2Library
+Library           String
+Library           Remote    http://10.12.12.157:18001    WITH NAME    rtplt
+
+*** Keywords ***
+获取sequence的nextval
+    [Arguments]    ${sequence_name}
+    ${result}    Exec Sql    select ${sequence_name}.nextval from dual    ${prm_oracle_tns}
+    ${value}    Evaluate    ${result}[0][0]
+    [Return]    ${value}
+
+点击右上角菜单
+    [Arguments]    ${menuchain}
+    ${menu_level_1}    ${menu_level_2}    String.Split String    ${menuchain}    ->
+    Comment    String.Split String
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')
+    Execute Javascript    jQuery("div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')").parent().attr('class','sfHover');
+    Click Element    jquery=div#headMenu ul.sf-menu a:contains('合作伙伴资料查询')
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+    Click Element    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+    Mouse Out    jquery=div#headMenu ul.sf-menu ul a:contains('公司资料查询')
+
+获取加密后的password
+    [Arguments]    ${staff_id}    ${passwd}=aaa111
+    ${encrypt_passwd}    rtplt.Encryptpasswd    ${staff_id}    ${passwd}
+    [Return]    ${encrypt_passwd}
+
+二级菜单
+    Unselect Frame
+    Comment    Wait Until Element Is Visible    id=toHomepage    15s    #两个wait until，没有必要，每个消耗0.6秒左右
+    Wait Until Element Is Visible    jquery=ul#leftmenu>li>a:contains("${menu1}")    15s
+    Run Keyword If Element Not Visible    xpath=//ul[@id='leftmenu']/li/a[contains(text(),'${menu1}')]//following-sibling::ul//a[text()='${menu2}']    Click Element    jquery=ul#leftmenu>li>a:contains("${menu1}")
+    Wait Until Element Is Visible    xpath=//ul[@id='leftmenu']/li/a[contains(text(),'${menu1}')]//following-sibling::ul//a[text()='${menu2}']    15s
+    Click link    xpath=//ul[@id='leftmenu']/li/a[contains(text(),'${menu1}')]//following-sibling::ul//a[text()='${menu2}']
+    Wait For Condition    return jQuery.active==0;    15s
+    ajax加载完毕    请稍候...
+    ajax加载完毕
+    选择frame    content

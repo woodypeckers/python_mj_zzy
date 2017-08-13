@@ -1,0 +1,18 @@
+{
+    "Request": {
+        "BusiParams": {
+            "OrderNo": "$${OrderNo}$$",
+            "Type": "$${Type}$$",
+            "MobNum": "$${MobNum}$$",
+            "AddNum": "$${AddNum}$$",           
+            "UserID": "$${UserID}$$",
+            "Unit": "$${Unit}$$",
+            "VirtualUserID": "$${VirtualUserID}$$"
+        },
+        "BusiCode": "$${BusiCode}$$"
+    },
+    "PubInfo": {
+        "TransactionId": "201",
+        "TransactionTime": "201502"
+    }
+}

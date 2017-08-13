@@ -1,0 +1,80 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入导入界面
+    [Arguments]    ${menu}    ${text}
+    进入左侧二级菜单    考核管理    信用积分管理
+    点击元素    jquery=div.menu>ul#tabs>div#liText>li>a:contains('${menu}')
+    选择frame    bottom_frame
+    直到页面某个元素可见    jquery=div.top_div>span#import>a:contains('导入')
+    点击元素    jquery=div.top_div>span#import>a:contains('导入')
+    直到页面某个元素可见    xpath=//td[contains(text(),"${text}")]
+
+上传导入信息
+    [Arguments]    ${year}    ${month}    ${file_name}
+    信用积分时间框选择    ${year}    ${month}
+    选择附件    textfield11    prm\\template\\${file_name}
+    链接    上传文件
+    Comment    ajax加载完毕
+    Comment    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[text()="提交"]
+
+提交导入信息
+    [Documentation]    *History*:
+    ...    2014.12.15: 发现提交时的windows模式对话框被ajax模式对话框替代，所以修改KW
+    Run Keyword If    '${browser_type}'=='phantomjs'    Execute Javascript    window.confirm = function(msg){return true;};
+    点击元素    xpath=//a[text()="提交"]
+    Comment    sleep    1s
+    Comment    Choose Ok On Next Confirmation
+    Comment    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    您确认要提交吗？    确认
+    校验弹出框信息并点击按钮    导入成功    确认
+    Comment    ajax加载完毕
+
+信用积分时间框选择
+    [Arguments]    ${year}    ${month}
+    点击元素    id=checkMonth
+    Select From List    id=tbSelYear    ${year}
+    点击元素    xpath=//span[text()="${month}"]
+
+删除同步成功信用积分信息
+    Exec Sql    DELETE FROM prm_credit t WHERE t.sp_id='0000000001' AND t.check_month='201401' AND t.base_id='041';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_operation t WHERE t.product_id='0410051' AND t.check_month='201401' AND t.base_id='041' AND t.status='3' AND t.coop_type='5';;    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_credit_item t WHERE t.sp_id='0000000001' AND t.check_month='201401' AND t.base_id='041';    ${prm_oracle_tns}
+    Exec Sql    DELETE FROM PRM_IF_CREDIT_PROVINCE t WHERE t.sp_id='0000000001' AND t.check_month='201401' AND t.base_id='041';    ${prm_oracle_tns}
+
+信用积分同步报文每个节点取最大值
+    修改xml节点的值    12345678901234567890123456789012    /Msg/Body/Credit/ProcessID
+    修改xml节点的值    123456    /Msg/Body/Credit/LastScore
+    修改xml节点的值    123456    /Msg/Body/Credit/EncourageScore
+    修改xml节点的值    123456    /Msg/Body/Credit/IncreaseScore
+    修改xml节点的值    123456    /Msg/Body/Credit/SatisfyScore
+    修改xml节点的值    123456    /Msg/Body/Credit/FoulScore
+    修改xml节点的值    123456    /Msg/Body/Credit/CreditScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/LastScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/FoulScore
+    修改xml节点的值    123456    /Msg/Body/Credit/ProvinceCredit/CreditScore
+
+信用积分同步报文必填字段全部填写，选填字段不填写
+    修改xml节点的值    \    /Msg/Body/Credit/LastScore
+    修改xml节点的值    \    /Msg/Body/Credit/EncourageScore
+    修改xml节点的值    \    /Msg/Body/Credit/IncreaseScore
+    修改xml节点的值    \    /Msg/Body/Credit/SatisfyScore
+    修改xml节点的值    \    /Msg/Body/Credit/FoulScore
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/LastScore
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/FoulScore
+
+进入信用积分页签
+    [Arguments]    ${menu}
+    进入左侧二级菜单    考核管理    信用积分管理
+    链接    ${menu}
+    ajax加载完毕
+    选择frame    bottom_frame

@@ -1,0 +1,323 @@
+<html>
+  <head>
+	  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>i5ting_ztree_toc:readme</title>
+		<link href="toc/style/github-bf51422f4bb36427d391e4b75a1daa083c2d840e.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/style/github2-d731afd4f624c99a4b19ad69f3083cd6d02b81d5.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/css/zTreeStyle/zTreeStyle.css" media="all" rel="stylesheet" type="text/css"/>
+	  <style>
+		pre {
+		    counter-reset: line-numbering;
+		    border: solid 1px #d9d9d9;
+		    border-radius: 0;
+		    background: #fff;
+		    padding: 0;
+		    line-height: 23px;
+		    margin-bottom: 30px;
+		    white-space: pre;
+		    overflow-x: auto;
+		    word-break: inherit;
+		    word-wrap: inherit;
+		}
+
+		pre a::before {
+		  content: counter(line-numbering);
+		  counter-increment: line-numbering;
+		  padding-right: 1em; /* space after numbers */
+		  width: 25px;
+		  text-align: right;
+		  opacity: 0.7;
+		  display: inline-block;
+		  color: #aaa;
+		  background: #eee;
+		  margin-right: 16px;
+		  padding: 2px 10px;
+		  font-size: 13px;
+		  -webkit-touch-callout: none;
+		  -webkit-user-select: none;
+		  -khtml-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+
+		pre a:first-of-type::before {
+		  padding-top: 10px;
+		}
+
+		pre a:last-of-type::before {
+		  padding-bottom: 10px;
+		}
+
+		pre a:only-of-type::before {
+		  padding: 10px;
+		}
+
+		.highlight { background-color: #ffffcc } /* RIGHT */
+		</style>
+  </head>
+  <body>
+	  <div>
+				<div style='width:25%;'>
+						<ul id="tree" class="ztree" style='width:100%'>
+
+						</ul>
+				</div>
+        <div id='readme' style='width:70%;margin-left:20%;'>
+          	<article class='markdown-body'>
+            	<h3 id="-">简单说明</h3>
+<hr>
+<ul>
+<li>用于“Mock V2”完成后的测试工作</li>
+<li>目前主要测试: custom encoding, custom header, </li>
+<li>也可用于未来使用Mock V2的参考实现(但需要考虑的是，不需要实现得这么复杂，例如加头信息是很简单的事)</li>
+</ul>
+<h3 id="-">安装部署</h3>
+<hr>
+<h4 id="1-python-">1. Python的安装</h4>
+<ul>
+<li>下载并安装Python<ul>
+<li><a href="http://10.1.3.252:10000/python/ActivePython-2.7.10.12-win32-x86.msi">http://10.1.3.252:10000/python/ActivePython-2.7.10.12-win32-x86.msi</a></li>
+</ul>
+</li>
+<li><p>设置path变量</p>
+<ul>
+<li>用户变量<strong>PYTHON_HOME</strong>设置为Python的安装目录，例如:<strong>C:\Python27</strong></li>
+<li>用户变量<strong>PATH</strong>的最后加入:　<strong>;%PYTHON_HOME%;%PYTHON_HOME%\Scripts</strong><p><img src="./media/python_install_path_env.png" alt="python_install_path_env.png" title="用户环境变量配置"></p>    
+</li>
+</ul>
+</li>
+<li><p>设置pip采用国内镜像</p>
+<ul>
+<li>编辑%HOMEPATH%\pip\pip.ini,　内容如下:<pre><code class="lang-ini">[global]
+index-url=http://mirrors.aliyun.com/pypi/simple/
+index-url2=https://pypi.mirrors.ustc.edu.cn/simple/
+[install]
+trusted-host=mirrors.aliyun.com
+</code></pre>
+</li>
+</ul>
+</li>
+<li>手工更新一下pip的版本
+ 命令行模式下 <pre><code class="lang-shell"> &gt; pip install pip --upgrade
+</code></pre>
+<h4 id="2-wxpython-">2. wxpython的安装</h4>
+</li>
+<li>下载并安装wxpython2.8<ul>
+<li><a href="http://10.1.3.252:10000/python/wxPython2.8-win32-unicode-2.8.12.1-py27.exe">http://10.1.3.252:10000/python/wxPython2.8-win32-unicode-2.8.12.1-py27.exe</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="3-">3. 第三方库</h4>
+<h5 id="robotframework">robotframework</h5>
+<ul>
+<li>RF测试框架自身,具体参见: <a href="http://www.robotframework.org">http://www.robotframework.org</a></li>
+<li><p>安装方式:<br> 命令行模式下</p>
+<pre><code class="lang-shell"> &gt; pip install robotframework
+</code></pre>
+<p> <strong>注意：</strong>pip命令可以upgrade Python的第三方组件，方式是在命令行后面加入 --upgrade,例如</p>
+<pre><code class="lang-shell">     &gt; pip install robotframework --upgrade
+</code></pre>
+</li>
+</ul>
+<h5 id="ride">ride</h5>
+<ul>
+<li>用来编写RF案例以及运行案例的集成开发环境,基于wxpython开发</li>
+<li>安装方式:    <pre><code class="lang-shell"> &gt; pip install robotframework-ride
+</code></pre>
+</li>
+<li>ride.py经常在控制台中打印报错信息<ul>
+<li>手工修改robotide/contrib/testrunner/testrunner.py   <p><img src="./media/ride_testrunner_py_console_encoding.png" alt="ride_testrunner_py_encoding" title="ride的源码修改-控制台encoding" width="640" height="200"></p>      
+
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="httplibrary">httplibrary</h5>
+<ul>
+<li>用于RobotFramework调用Python内置的httplibrary库</li>
+<li><p>安装方式:</p>
+<pre><code class="lang-shell"> &gt; pip install robotframework-httplibrary
+</code></pre>
+</li>
+<li><p>手工修改%PYTHON_HOME%/lib/site-packages/HttpLibrary/<strong>init</strong>.py 中的 463行，把encode(&#39;utf-8&#39;)的编码操作注释掉（这个是httplibrary库的缺陷）</p>
+<pre><code class="lang-python">  def set_request_body(self, body):
+     &quot;&quot;&quot;
+     Set the request body for the next HTTP request.
+
+     Example:
+     | Set Request Body           | user=Aladdin&amp;password=open%20sesame |
+     | POST                       | /login                              |
+     | Response Should Succeed  |                                     |
+     &quot;&quot;&quot;
+     logger.info(&#39;Request body set to &quot;%s&quot;.&#39; % body)
+     #self.context.request_body = body.encode(&quot;utf-8&quot;)  #注释掉这一行
+     self.context.request_body = body                    #增加这一行
+</code></pre>
+</li>
+<li>手工修改%PYTHON_HOME%/lib/site-packages/HttpLibrary/livetest.py 中的 123行，即 def _do_httplib_request(self, req)<ul>
+<li>原因是如果通过RF传值，则头信息中会有unicode的问题，而unicode在http库中，直接采用的msg+=message_body的方式，两者直接加，会报错。所以传到python底层的http库之前，先把头信息中的内容进行str()处理, 变化如下所示：<pre><code class="lang-python">def _do_httplib_request(self, req):
+  &quot;Convert WebOb Request to httplib request.&quot;
+  #headers = dict((name, val) for name, val in req.headers.iteritems())        #注释掉这一行
+  headers = dict((str(name), str(val)) for name, val in req.headers.iteritems())  #增加这一行
+  if req.scheme not in self.conn:
+      self._load_conn(req.scheme)s
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="lxml">lxml</h5>
+<ul>
+<li>lxml相对于python自带的xml库的优点在于, GBK编码的支持完美,xpath增加了对namespace的支持,同时,RF库可以配置使用lxml</li>
+<li>安装方式:<pre><code class="lang-shell"> &gt; pip install lxml(或者easy_install lxml)
+ &gt; pip install xmltodict
+</code></pre>
+</li>
+</ul>
+<h5 id="chardet">chardet</h5>
+<ul>
+<li>Python中检测字符串的编码的第三方库,这里用来支撑custom encoding的功能</li>
+<li>安装方式:<pre><code class="lang-shell"> &gt; pip install chardet
+</code></pre>
+</li>
+</ul>
+<h5 id="twisted">twisted</h5>
+<ul>
+<li>SimServer主要是构建在twisted的异步框架上的,这个库在pip安装时会自动安装zope.interface(python对接口的支持)</li>
+<li>安装方式:<pre><code class="lang-shell"> &gt; pip install twisted
+</code></pre>
+</li>
+</ul>
+<h3 id="-">使用说明</h3>
+<hr>
+<h4 id="ide-">IDE方式运行</h4>
+<ul>
+<li>Ride.py装载Demo目录</li>
+<li>配置Mock Server中的模拟服务器,　然后运行起来</li>
+<li>按需要运行Demo中json和xml两个目录下的，自定义头和自定义编码的案例</li>
+</ul>
+<h4 id="-cmd-">自测式cmd运行</h4>
+<ul>
+<li>资源管理器中,双击 SimServer\docs\Demo\do_test.cmd,  其过程如下:<pre><code class="lang-shell">&gt; 立即启动SimServer.py
+&gt; 5秒后, 通过pybot.cmd运行测试, 报告生成在SimServer\docs\Demo\report目录
+&gt; 10秒后, 浏览器打开log.html,可以查看运行报告
+&gt; 通过taskkill /IM python.exe 清除所有的python进程
+</code></pre>
+</li>
+</ul>
+<h3 id="-">详细说明</h3>
+<hr>
+<h4 id="-">自定义头</h4>
+<ol>
+<li><p>需求概述</p>
+<ul>
+<li>自定义头通常在真实系统中有两种情况:<ul>
+<li>Client发起请求中带了custom header, SimServer只需要在返回中带上同样的custom header, 其值与请求包相同</li>
+<li>Client发起请求中没有带头, 但该请求是请求一个新的Custom header, 此时SimServer需要在返回包中给一个随机数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置说明</p>
+<ul>
+<li><p>RF的Resource层关键字中,新增custom_header</p>
+<ul>
+<li>配置为{&quot;key1&quot;:&quot;value1&quot;,&quot;key2&quot;:value2&quot;}</li>
+<li>如果value的配置为&quot;REPLY&quot;,则按请求包的原值返回</li>
+<li>如果value的配置不是&quot;REPLAY&quot;,则按指定值返回 <blockquote>
+<p>也就是说, 随机数可以通过在RF的Client封装中完成指定值; 例如md5或者java加密,分别可以通过RF的python自定义lib和jython+RemoteLibrary来分别实现</p>
+</blockquote>
+</li>
+<li><p>如果不配置custom_header, 则缺省传入的参数值为${EMPTY}, 则保持Mock V1中不带Custom Header时的兼容</p>
+<p>keyword图（ride）:</p>
+  <p><img src="./media/custom_header_1.png" alt="custom_header_1" title="自定义头-底层关键字封装" width="640" height="200"></p><br>testcase图（ride）:
+  <p><img src="./media/custom_header_2.png" alt="custom_header_2" title="自定义头-调用底层关键字例子" width="640" height="200"></p>      
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>实现详解</p>
+<ul>
+<li>自定义头是通过RF的关键字来实现的<ul>
+<li>SimClient.py中新增header</li>
+<li>利用SimClient.py中的dict2xml,如果header不为空,则把header放在simSet接口XML包中去  <p><img src="./media/custom_header_SimClient_py.png" alt="custom_header_SimClient_py" title="自定义头-SimClient.py文件" width="640" height="260"></p>     </li>
+<li>SimServer中对SimSet接口的处理,如果存在header的内容,则把header相关的内容放在expMessage的实体中去  <p><img src="./media/custom_header_expectMessage_py.png" alt="custom_header_expectMessage_py" title="自定义头-expectMessage.py文件"  width="640" height="260"></p>         </li>
+<li>SimServer在返回包时判断,如果expMsg中存在header的定义,且value为<strong>REPLY</strong>,则取请求包中的值原样返回; 否则按expMsg中的header指定值加头返回  <p><img src="./media/custom_header_httpHandler_py.png" alt="custom_header_httpHandler_py" title="自定义头-httpHandler.py文件" width="640" height="260"></p>         
+
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="-">自定义编码</h4>
+<ol>
+<li><p>需求概述</p>
+<ul>
+<li>TBD</li>
+</ul>
+</li>
+<li><p>配置说明</p>
+<ul>
+<li><p>通过conf/system.xml中的配置实现</p>
+<ul>
+<li>配置当前只针对http server实现, 也就是说,一个端口的配置是定死的(大部分场景下, 一类接口的编码是一样的)</li>
+<li><p>如果不配置,缺省的encoding为UTF-8, 保持向Mock V1的兼容</p>
+  <p><img src="./media/custom_encoding_system_xml.png" alt="system_xml" title="在system.xml中进行encoding的配置" width="640" height="260"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>实现详解</p>
+<ul>
+<li>自定义编码的实现如下<ul>
+<li>system.xml中http server中配置的encoding是最主要的判断因素, 返回包完全按此encoding返回</li>
+<li>保持template中实际的req和rsp模板在磁盘保存的编码,与上述一致</li>
+<li>Http包体的编码检测,使用了第三方库chardet, 大部分情况下可以准确检测出来编码, 少量情况加入了一些判断,见utils/encoding.py文件中的detectEncoding()功能</li>
+<li>实现逻辑如下:<ul>
+<li>SimServer收到包, 按system.xml中的指定的编码进行转码, 在消息队列中匹配前面预置的expMsg实例,并根据expMsg实例设置返回包中的参数</li>
+<li>返回包体时,也是先检测包体的encoding</li>
+<li>对于XML包体的处理,通过转为UNICODE之后,再按system.xml中指定的编码转换后发出(注意,此时未显式指定http包头中的charset)</li>
+<li>Json包体的处理和XML的处理还有一点不同,在于json.Loads()时,处理不了UNICODE多字节的情况,所以是Json包转XML时多了一步,即先转UTF-8</li>
+<li>Json包体的处理, 由于是先转XML再处理,所以各种转码的工作需要考虑把第一行去除,否则第一行中的encoding声明会与包体的实际不一致</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>其它</p>
+<ul>
+<li>根据http协议, 包头声明的encoding应与包体的encoding一致; 但现实世界中各系统的实现差异度较大, 所以SimServer目前基本上只考虑包体的实际encoding</li>
+<li>由于多编码的输出,都需要写日志,所以日志会打印包体的encoding,但写日志文件时全部转为UTF-8写文件,这一点在查看日志时需要注意.</li>
+<li>所谓的http的encoding支持, 实际上主要还是考虑UTF-8和GBK两种, UTF-8是UNICODE的一种编码实现, UTF-16LE也是UNICODE的一种编码实现,UTF-8占用的网络带宽少,所以UTF-16LE在网络上使用少</li>
+<li>根据RFC4627的定义, JSON的String缺省UTF-8, 也可以使用<code>\uxxxx</code>, 如果是后者,则有rspMsg.decode(&quot;<strong>unicode-escape</strong>&quot;).encode(encoding)</li>
+</ul>
+</li>
+</ol>
+
+          	</article>
+        </div>
+		</div>
+  </body>
+</html>
+<script type="text/javascript" src="toc/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="toc/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="toc/js/ztree_toc.js"></script>
+<script type="text/javascript" src="toc_conf.js"></script>
+
+<SCRIPT type="text/javascript" >
+<!--
+$(document).ready(function(){
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+    
+    var conf = eval(jquery_ztree_toc_opts);
+		$('#tree').ztree_toc(conf);
+});
+//-->
+</SCRIPT>

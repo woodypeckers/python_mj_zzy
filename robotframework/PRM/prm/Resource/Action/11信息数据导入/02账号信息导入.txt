@@ -1,0 +1,48 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+进入账号信息导入页面并上传附件
+    [Arguments]    ${upload_file}
+    不选择frame
+    点击右上角菜单    信息数据导入->账号信息导入
+    Comment    ajax加载完毕
+    选择frame    content
+    sleep    1s
+    直到页面某个元素可见    jquery=span:contains("导入")
+    Comment    Mouse Over    xpath=//td[text()='账号信息导入：']
+    focus    textfield11
+    选择附件    textfield11    ${upload_file}
+    链接    上传文件
+
+发布账号信息并检查提示信息
+    [Arguments]    ${check_content}
+    Comment    ajax加载完毕
+    直到页面某个元素可见    xpath=//a[contains(text(),"提交")]
+    链接    提交
+    校验弹出框信息并点击按钮    您确认要提交吗？    确认
+    comment    sleep    1s
+    comment    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    comment    comment    ${mec}    关闭对话框    来自网页的消息
+    校验弹出框信息并点击按钮    ${check_content}    确认
+    直到页面某个元素可见    xpath=//a[contains(text(),"返回")]
+    链接    返回
+    Comment    unselect Frame
+
+删除相关的账号信息
+    [Arguments]    ${login_name}
+    删除数据库记录    delete from prm_sp_staff a \ where a.staff_id in (select b.staff_id \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ from sec_staff b \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ where b.login_name = '${login_name}')
+    删除数据库记录    delete from sec_staff a where a.login_name='${login_name}'
+
+进入账号导入错误页面并点击忽略错误
+    直到页面某个元素可见    xpath=//a[contains(text(),"忽略错误")]
+    链接    忽略错误
+    Comment    ajax加载完毕
+
+检查数据库中账号的状态
+    [Arguments]    ${login_name}    ${check_status}
+    ${result}    数据库查询    select a.status \ from sec_staff \ a where a.login_name = '${login_name}'
+    Should Be Equal    ${result}    ${check_status}
+    删除数据库记录    delete from prm_sp_staff a \ where a.staff_id in (select b.staff_id \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ from sec_staff b \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ where b.login_name = '${login_name}') \
+    删除数据库记录    delete from sec_staff a where a.login_name='${login_name}'

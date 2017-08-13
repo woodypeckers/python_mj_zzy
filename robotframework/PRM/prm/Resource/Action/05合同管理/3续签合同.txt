@@ -1,0 +1,12 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          合同管理common.txt
+
+*** Keywords ***
+续签通知该合作记录
+    [Arguments]    ${check_content}
+    Click Element    jquery=a:contains("续签通知")
+    Click Element    jquery=a:contains("发送")
+    ajax加载完毕
+    校验二次确认框提示信息并点击按钮    ${check_content}    确认
+    ajax加载完毕

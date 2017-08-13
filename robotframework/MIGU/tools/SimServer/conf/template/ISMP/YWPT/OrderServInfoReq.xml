@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.monternet.com/ismp/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Header>
+    <sch:TransactionID xsi:type="xsd:string">201509161456301000000</sch:TransactionID>
+  </soapenv:Header>
+  <soapenv:Body>
+    <sch:OrderServInfoReq xsi:type="sch:OrderServInfoReqType">
+      <MsgType xsi:type="xsd:string">$${MsgType}$$</MsgType>
+      <Version xsi:type="xsd:string">1.0.0</Version>
+      <Send_Address xsi:type="sch:address_info_schema">
+        <DeviceType xsi:type="xsd:integer">0</DeviceType>
+        <DeviceID xsi:type="xsd:string">0</DeviceID>
+      </Send_Address>
+      <Dest_Address xsi:type="sch:address_info_schema">
+        <DeviceType xsi:type="xsd:integer">$${Dest_DeviceType}$$</DeviceType>
+        <DeviceID xsi:type="xsd:string">$${Dest_DeviceID}$$</DeviceID>
+      </Dest_Address>
+      <OprNumb xsi:type="xsd:string">20150916145630100000</OprNumb>
+      <MSISDN xsi:type="xsd:string">$${MSISDN}$$</MSISDN>
+      <OprCode xsi:type="xsd:string">$${OprCode}$$</OprCode>
+      <OrderNo xsi:type="xsd:string">$${OrderNo}$$</OrderNo>
+      <Order_Commodity_List xsi:type="sch:order_commodity_list_schema">
+        <StoreNo xsi:type="xsd:string">$${StoreNo}$$</StoreNo>
+        <CommodityID xsi:type="xsd:string">$${CommodityID}$$</CommodityID>
+        <CommodityName xsi:type="xsd:string">$${CommodityName}$$</CommodityName>
+        <CommodityNum xsi:type="xsd:integer">$${CommodityNum}$$</CommodityNum>
+        <CommodityPrice xsi:type="xsd:integer">$${CommodityPrice}$$</CommodityPrice>
+        <Price xsi:type="xsd:integer">$${Price}$$</Price>
+        <InvaildTime xsi:type="xsd:string">20190810155847</InvaildTime>
+        <ServOpenTime xsi:type="xsd:string">20150906101010</ServOpenTime>
+        <CommodityType xsi:type="xsd:string">$${CommodityType}$$</CommodityType>
+        <ServPeriod xsi:type="xsd:integer">365</ServPeriod>
+        <Unit xsi:type="xsd:string">$${Unit}$$</Unit>
+      </Order_Commodity_List>
+      <OrderTime xsi:type="xsd:string">20150625101212</OrderTime>
+    </sch:OrderServInfoReq>
+  </soapenv:Body>
+</soapenv:Envelope>

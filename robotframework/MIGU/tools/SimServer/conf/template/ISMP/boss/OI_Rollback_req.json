@@ -1,0 +1,21 @@
+{		
+"Request":{
+	"BusiParams":{
+	"OrderNo":"$${OrderNo}$$",
+	"OrigReqTransID":"ISMP20150924112618100030",
+	"OrigReqDate":"20150924112618",
+	"PayNum":"$${PayNum}$$",
+	"OrigReqSys":"$${OrigReqSys}$$",
+	"VirtualUserID":"XXXXX13765330673"
+		},
+	"BusiCode":"$${BusiCode}$$"
+	},
+"PubInfo":{
+	"TransactionId":"ISMP20150924112639100031",
+	"TransactionTime":"20150924112639",
+	"OpId":"OpId",
+	"OrgId":"OrgId",
+	"InterfaceId":"6110",
+	"InterfaceType":"51"
+	}
+}

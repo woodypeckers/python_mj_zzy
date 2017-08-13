@@ -1,0 +1,123 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01合作伙伴引入/03一点接入CP审批.txt
+
+*** Test Cases ***
+01CP受理通过
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待受理
+    点击查询列表操作列链接    受理
+    Comment    填写审批结果    审批通过    资料正确，审批通过
+    Comment    填写合同信息    HT.V.${sp_code}    与咪咕的合同${sp_code}    2015-08-20    2020-08-20
+    Comment    填写结算信息    固定分成    分省结算    应收结算    是    按月帐单结算
+    填写受理审批结果    受理通过    受理通过
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    审批成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待评审
+    公司合作审批后数据校验    apply_audit    apply_score    0    0
+    登录partner端    ${account_name}
+    partner端受理评审签约结果校验    已受理，待评审    受理通过
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02CP退回修改
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待受理
+    点击查询列表操作列链接    受理
+    填写受理审批结果    退回修改    资料有错误，需要修改
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    审批成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    退回修改
+    公司合作审批后数据校验    apply_deny    apply_audit_deny    0    0
+    登录partner端    ${account_name}
+    partner端受理评审签约结果校验    退回修改    资料有错误，需要修改
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03CP受理拒绝
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待受理
+    点击查询列表操作列链接    受理
+    填写受理审批结果    受理拒绝    该公司已经被加入黑名单，不予开展合作
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    审批成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    受理拒绝
+    公司合作审批后数据校验    apply_reject    apply_audit_alter    0    0
+    登录partner端    ${account_name}
+    partner端受理评审签约结果校验    受理拒绝    该公司已经被加入黑名单，不予开展合作
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04CP评审通过
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051    apply_score
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待评审
+    点击查询列表操作列链接    评审
+    填写评审审批结果    评审通过    这是管理员之间的内部意见    通过
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    审批成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待签约
+    公司合作审批后数据校验    apply_audit    apply_sign    0    0
+    登录partner端    ${account_name}
+    partner端受理评审签约结果校验    评审通过，待签约    通过
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05CP评审不通过
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051    apply_score
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待评审
+    点击查询列表操作列链接    评审
+    填写评审审批结果    评审不通过    受理是怎么受理的，竟然受理通过，该公司已经加入黑名单了，不允许开展合作。    亲爱的合作伙伴，你公司由于违规，不允许再开展合作
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    审批成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    评审不通过
+    公司合作审批后数据校验    apply_reject    apply_score_deny    0    0
+    登录partner端    ${account_name}
+    partner端受理评审签约结果校验    评审不通过    亲爱的合作伙伴，你公司由于违规，不允许再开展合作
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06CP签约
+    [Tags]    smoke
+    插入流程中公司合作信息    1    021,038,051    apply_sign
+    登录admin端    zbadmin
+    进入左侧二级菜单    引入管理    CP管理
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    签约
+    点击查询列表操作列链接    签约
+    Comment    填写合作编码
+    填写合同信息    HT.V.${sp_code}    与咪咕的合同${sp_code}    2015-08-20    2020-08-20    false    2015-08-20
+    填写结算信息    固定分成    分省结算    应收结算    是    按月帐单结算
+    点击按钮    提交
+    校验二次确认框提示信息且点击按钮    签约成功！
+    展开查询框
+    一点接入输入查询条件    ${cn_name}    待子公司确认
+    公司合作审批后数据校验    A    A    1    1
+    登录partner端    ${account_name}
+    partner端签约后结果校验
+    退出partner端且清除cookie
+    [Teardown]    teardown_案例运行失败时关闭浏览器

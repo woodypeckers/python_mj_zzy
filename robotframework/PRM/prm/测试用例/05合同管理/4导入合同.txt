@@ -1,0 +1,13 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/05合同管理/4导入合同.txt
+
+*** Test Cases ***
+01导入合同数据
+    [Tags]    smoke
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    清理相关合同信息    HT-878878
+    进入合同管理页面
+    上传待导入合同文件    合同导入模版.xls    操作成功!
+    检查导入合同状态    1
+    [Teardown]    teardown_案例运行失败时关闭浏览器

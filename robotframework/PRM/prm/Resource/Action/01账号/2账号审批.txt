@@ -1,0 +1,42 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+提交账号审批结果
+    链接    提交
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    校验弹出框信息并点击按钮    审批成功    确认
+
+审批结果，审批驳回
+    [Arguments]    ${apply_audit_companyName}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    Comment    ajax加载完毕
+    下拉框通过文字    审批结果    审批驳回
+    文本域    审批意见：    ${apply_audit_companyName}的账号注册申请被审批驳回
+
+审批结果，审批通过
+    [Arguments]    ${apply_audit_companyName}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    Comment    ajax加载完毕
+    下拉框通过文字    审批结果    审批通过
+    文本域    审批意见：    ${apply_audit_companyName}的账号注册申请审批通过
+
+审批结果，退回修改
+    [Arguments]    ${apply_audit_companyName}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    Comment    ajax加载完毕
+    下拉框通过文字    审批结果    退回修改
+    文本域    审批意见：    ${apply_audit_companyName}的账号注册申请被退回修改
+
+检查操作按钮
+    [Arguments]    ${text}
+    直到页面某个元素可见    jquery=td[field='opt']>div>span>a
+    ${content}    Get Text    jquery=td[field='opt']>div>span>a
+    Should Be Equal As Strings    ${content}    ${text}
+
+非游戏MM账号审批
+    [Arguments]    ${audit_result}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    下拉框通过文字    审批结果    ${audit_result}
+    文本域    审批意见：    公司${cn_name_suffix}的账号注册申请审批通过

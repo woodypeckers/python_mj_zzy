@@ -1,0 +1,120 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          违约管理common.txt
+
+*** Keywords ***
+进入新增违约界面
+    进入左侧二级菜单    考核管理    信用积分管理
+    点击元素    jquery=div.menu>ul#tabs>div#liText>li>a:contains('违约管理')
+    选择frame    bottom_frame
+    直到页面某个元素可见    jquery=div.top_div>span#add>a:contains('新增')
+    点击元素    jquery=div.top_div>span#add>a:contains('新增')
+    直到页面某个元素可见    xpath=//td[contains(text(),"违约登记号：")]
+
+填写选填项
+    附件上传_通过id定位    fileGroupId    prm\\temp\\违约附件.jpg
+    附件上传_通过id定位    appealGroupId    prm\\temp\\违约申诉附件.jpg
+
+处罚为终止合作
+    Select Checkbox    id=11
+    输入日期    zzDate    2015-11-26
+    文本输入_通过id定位    releaseComment    违约终止通知
+
+检查数据库是否生成一条退出记录
+    [Arguments]    ${SP_CODE}
+    数据库记录数    SELECT COUNT(*) FROM prm_offline t WHERE t.sp_isn IN (SELECT g.sp_isn FROM prm_sp g WHERE g.sp_code='${SP_CODE}');    1
+
+处罚为终止合作，终止通知不填写
+    Select Checkbox    id=11
+    输入日期    zzDate    2015-11-26
+
+处罚为终止合作，终止时间不填写
+    Select Checkbox    id=11
+    文本输入_通过id定位    releaseComment    违约终止通知
+
+提交违约
+    Wait Until Page Contains Element    jquery=div#bottomDiv >span>a:contains('提交')    15
+    Execute Javascript    jQuery("div#bottomDiv >span>a:contains('提交')").click()
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    操作成功    确认
+    Comment    ajax加载完毕
+
+提交违约，检查提示信息
+    [Arguments]    ${msg}
+    Wait Until Page Contains Element    jquery=div#bottomDiv >span>a:contains('提交')    15
+    Execute Javascript    jQuery("div#bottomDiv >span>a:contains('提交')").click()
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    ${msg}    确认
+    Comment    ajax加载完毕
+
+违约时间不填写
+    不选择frame
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    Comment    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    文本输入_通过id定位    foulScore    19
+
+违约现象说明不填写
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    Comment    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    文本输入_通过id定位    foulScore    19
+
+违约定性为空
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Comment    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    文本输入_通过id定位    foulScore    19
+
+违约处罚为空
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Comment    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    文本输入_通过id定位    foulScore    19
+
+考核月份为空
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    文本输入_通过id定位    foulScore    19
+
+扣减分值为空
+    ${title}    Get Window Titles
+    选择frame    content
+    选择frame    bottom_frame
+    文本输入_通过id定位    foulDate    20141101
+    文本输入_通过id定位    foulDesc    违约现象说明：违反国家法律犯规
+    Select Checkbox    id=20510001010001
+    Select Checkbox    id=2051000116
+    Comment    下拉框_通过id定位    checkMonth    2014年11月
+    Click Element    xpath=//select[@id='checkMonth']/option[2]
+    Comment    文本输入_通过id定位    foulScore    19

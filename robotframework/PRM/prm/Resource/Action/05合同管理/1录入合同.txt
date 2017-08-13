@@ -1,0 +1,123 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          合同管理common.txt
+
+*** Keywords ***
+进入合同录入页面只输入必填字段
+    Click Element    jquery=a:contains("合同录入")
+    ajax加载完毕
+    unselect Frame
+    select Frame    content
+    comment    新增合同
+    文本输入_通过id定位    contractNo    HT-878877
+    文本输入_通过id定位    contractName    测试
+    选择合作伙伴    QD20140730001
+    ${title}    Get Window Titles
+    Select Frame    content
+    ${date}    数据库查询    select to_char(sysdate,'YYYY-MM-DD') from dual;
+    输入日期    startDate    ${date}
+    ${date}    数据库查询    select to_char(sysdate+1,'YYYY-MM-DD') from dual;
+    输入日期    endDate    ${date}
+    Click Element    Xpath=//input[@id='isRenewYes']
+    文本输入_通过id定位    renewLast    11
+    点击元素    jquery=a:contains("提交")
+    ajax加载完毕
+    校验弹出框信息并点击按钮    操作成功    确认
+    [Teardown]
+
+进入合同录入页面只输入必填字段-new
+    Click Element    jquery=a:contains("合同录入")
+    ajax加载完毕
+    unselect Frame
+    select Frame    content
+    comment    新增合同
+    文本输入_通过id定位    contractNo    HT-878877
+    文本输入_通过id定位    contractName    测试
+    Click Element    jquery=a:contains("选择")
+    ajax加载完毕
+    unselect Frame
+    ${title}    Get Window Titles
+    ${ids}=    Get Window Identifiers
+    Select Window    选择合作公司
+    文本输入_通过id定位    spCode    CP20140730002
+    点击元素    queryBtn
+    ajax加载完毕
+    focus    Xpath=//input[@name='spSelect']
+    Click Element    Xpath=//input[@name='spSelect']
+    Click Element    jquery=a:contains("确认")
+    log    sucess
+    Comment    select window    中国移动业务合作伙伴信息服务平台
+    select window
+    ${title}    Get Window Titles
+    Select Frame    content
+    Click Element    Xpath=//input[@id='isRenewYes']
+    [Teardown]    close browser
+
+进入合同录入页面输入所有字段
+    ajax加载完毕
+    Click Element    jquery=a:contains("合同录入")
+    ajax加载完毕
+    unselect Frame
+    select Frame    content
+    comment    新增合同
+    文本输入_通过id定位    contractNo    HT-878877
+    文本输入_通过id定位    contractName    测试
+    选择合作伙伴    QD20140730001
+    Select Frame    content
+    ${date}    数据库查询    select to_char(sysdate,'YYYY-MM-DD') from dual;
+    输入日期    startDate    ${date}
+    ${date}    数据库查询    select to_char(sysdate+1,'YYYY-MM-DD') from dual;
+    输入日期    endDate    ${date}
+    文本输入_通过id定位    amount    11
+    文本输入_通过id定位    sponsor    测试
+    Click Element    Xpath=//input[@id='isRenewYes']
+    文本输入_通过id定位    renewLast    11
+    文本输入_通过id定位    contact    联系人
+    文本输入_通过id定位    signedMan    签署人
+    文本输入_通过id定位    lawMan    法人
+    文本输入_通过id定位    remark    备注
+    附件上传_通过id定位    fileGroupId    prm\\temp\\合作审批.jpg
+    点击元素    jquery=a:contains("提交")
+    校验弹出框信息并点击按钮    操作成功    确认
+    ajax加载完毕
+    [Teardown]
+
+进入合同录入页面输入三方合同填写必填字段
+    ajax加载完毕
+    Click Element    jquery=a:contains("合同录入")
+    ajax加载完毕
+    unselect Frame
+    select Frame    content
+    comment    新增合同
+    文本输入_通过id定位    contractNo    HT-878877
+    选择合作伙伴    CP20140730002
+    Select Frame    content
+    点击元素    jquery=a:contains("提交")
+    ajax加载完毕
+    校验弹出框信息并点击按钮    操作成功    确认
+    ajax加载完毕
+    [Teardown]
+
+检查合同总数
+    [Arguments]    ${check_status}
+    数据库记录数    select count(1) from prm_sp_contract a where a.contract_no='HT-878877'    ${check_status}
+
+进入合同录入页面输入三方合同填写所有字段
+    ajax加载完毕
+    Click Element    jquery=a:contains("合同录入")
+    ajax加载完毕
+    unselect Frame
+    select Frame    content
+    comment    新增合同
+    文本输入_通过id定位    contractNo    HT-878877
+    选择合作伙伴    CP20140730002
+    Select Frame    content
+    文本输入_通过id定位    contact    联系人
+    文本输入_通过id定位    signedMan    签署人
+    文本输入_通过id定位    lawMan    法人
+    文本输入_通过id定位    remark    备注
+    点击元素    jquery=a:contains("提交")
+    ajax加载完毕
+    校验弹出框信息并点击按钮    操作成功    确认
+    ajax加载完毕
+    [Teardown]

@@ -1,0 +1,42 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/10业务管理/1新增业务管理设置.txt
+
+*** Test Cases ***
+01新增业务管理设置
+    [Documentation]    新增阅读基地平台一个业务管理设置
+    [Tags]    smoke
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入新增业务管理设置界面
+    新增一个业务设置
+    检查数据库是否有新增的业务管理设置    SELECT COUNT(*) FROM prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111';
+    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111';
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02批量新增三个业务管理设置
+    [Documentation]    批量新增三个阅读基地业务管理设置
+    [Tags]    smoke
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入新增业务管理设置界面
+    批量新增三个业务设置
+    检查数据库是否有新增的业务管理设置    SELECT COUNT(*) FROM prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111';
+    检查数据库是否有新增的业务管理设置    SELECT COUNT(*) FROM prm_sp_platform t WHERE t.sp_id='0000000002' AND t.platform_id='1111111111';
+    检查数据库是否有新增的业务管理设置    SELECT COUNT(*) FROM prm_sp_platform t WHERE t.sp_id='0000000003' AND t.platform_id='1111111111';
+    Comment    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111';
+    Comment    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000002' AND t.platform_id='1111111111';
+    Comment    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000003' AND t.platform_id='1111111111';
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03没有选择合作就新增业务管理设置
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入新增业务管理设置界面
+    没有选择合作新增业务管理设置
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04新增业务管理设置没有选择平台
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入新增业务管理设置界面
+    没有选择设置平台
+    [Teardown]    teardown_案例运行失败时关闭浏览器

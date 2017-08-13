@@ -1,0 +1,15 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/07信用积分/3导入奖励加分.txt
+
+*** Test Cases ***
+01导入奖励加分
+    [Tags]    smoke    noff
+    删除导入的奖励加分
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入导入界面    奖励加分    奖励加分导入
+    上传导入信息    2014年    5    奖励加分导入模板.xls
+    提交导入信息
+    检查数据库是否有导入的奖励加分
+    删除导入的奖励加分
+    [Teardown]    teardown_案例运行失败时关闭浏览器

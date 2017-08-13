@@ -1,0 +1,23 @@
+{
+    "Request": {
+        "BusiParams": {
+            "OrderNo": "$${OrderNo}$$",
+            "MobNum": "$${MobNum}$$",
+            "UserID": "$${UserID}$$",
+            "PayNum": "$${PayNum}$$",           
+            "CommodityID": "$${CommodityID}$$",
+            "Remark": "",
+            "Unit": "01",
+            "VirtualUserID": "XXXXX13765330673"
+        },
+        "BusiCode": "$${BusiCode}$$"
+    },
+    "PubInfo": {
+        "TransactionId": "201",
+        "TransactionTime": "123456",
+        "OpId": "OpId",
+		"OrgId": "OrgId",
+		"InterfaceId": "6110",
+		"InterfaceType": "51"
+    }
+}

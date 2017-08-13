@@ -1,0 +1,12 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01账号/3公司状态查询.txt
+
+*** Test Cases ***
+01公司处于流程中，输入公司中文名称后检查提示信息
+    [Documentation]    公司处于流程中，检查提示信息
+    [Tags]    false
+    打开注册页面
+    输入公司中文名称，该公司处于流程中    手机动漫    #业务名称
+    公司处于流程中，检查提示信息    很抱歉！贵公司的其他账号正在通过中央SIMS平台修改\n贵公司的信息，基于数据唯一性和一致性原因，请\n您终止本次申请操作，请稍候再做尝试！
+    [Teardown]    teardown_案例运行失败时关闭浏览器

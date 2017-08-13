@@ -1,0 +1,167 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+打开注册页面
+    打开合作伙伴端
+    选择frame    loginPage
+    点击注册新账号
+    不选择frame
+    直到页面不包含某个元素    jquery=input[value="注册新帐号"]
+
+提交注册且校验提示信息
+    [Arguments]    ${button_name}=提交
+    链接    ${button_name}
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    链接    确认
+    校验弹出框信息并点击按钮    您的帐号申请已成功提交，请等待管理员审批，管理员审批后系统会\n通过邮件和短信通知您，您也可以通过系统首页登录后查看申请进度。    确认
+
+查询数据库是否有新增的账号待审批记录
+    [Arguments]    ${account}
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_account_apply t WHERE t.account_name='${account}' AND t.status='N';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+查询数据库是否有新增的公司待审批记录
+    [Arguments]    ${text1}    ${text2}
+    [Documentation]    传入两个参数：帐号名和公司名
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_apply_company t WHERE t.cn_name='${text2}' AND t.submitter_name='${text1}' AND t.status='apply_audit';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+填写组织机构代码
+    [Arguments]    ${org_code}
+    文本框通过文字    组织机构代码：    ${org_code}
+
+提交注册信息，注册的公司已经存在且为商用
+    [Arguments]    ${button_name}=提交
+    链接    ${button_name}
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    链接    确认
+    Comment    ajax加载完毕    请稍后...
+    校验弹出框信息并点击按钮    您的帐号申请已成功提交，请等待管理员审批，管理员审批后系统会\n通过邮件和短信通知您，您也可以通过系统首页登录后查看申请进度。    确认
+
+提交注册信息
+    [Arguments]    ${button_name}    ${time}=1
+    Comment    单选框    id=noticeText
+    链接    ${button_name}
+    等待一段时间    ${time}
+
+查看账号状态
+    [Arguments]    ${account_name}    ${status}
+    ${result}    Exec Sql    SELECT t.status FROM prm_account_apply t where t.account_name='${account_name}';    ${prm_oracle_tns}
+    Should Be Equal As Strings    ${result}    ${status}
+
+查看公司状态
+    [Arguments]    ${text1}    ${text2}    ${status}
+    [Documentation]    传入三个参数：帐号名、公司名以及公司状态
+    ${result}    Exec Sql    SELECT t.status FROM prm_apply_company t WHERE t.submitter_name='${text1}' and \ t.cn_name='${text2}' AND t.status ='${status}';    ${prm_oracle_tns}
+    Should Be Equal As Strings    ${result}    ${status}
+
+查看合作状态
+    [Arguments]    ${account_name}    ${status}
+    ${result}    Exec Sql    SELECT t.status FROM prm_apply_sp t WHERE t.sp_isn='${sp_id}';    ${prm_oracle_tns}
+    Comment    ${record}    Collections.Get From List    ${result}    0
+    Comment    ${value}    Collections.Get From List    ${record}    0
+    Should Be Equal As Strings    ${result}    ${status}
+
+填写账号信息
+    [Arguments]    ${business_name}=手机动漫    ${cn_name}=公司    ${account_name}=账号    ${password}=aaa111    ${name}=测试    ${email}=11@11.com
+    ...    ${mobile}=13899001111
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    ${cn_name}${cn_name_suffix}
+    文本框通过文字    申请帐号名    ${account_name}${account_suffix}
+    文本框通过文字    请输入密码    ${password}
+    文本框通过文字    请重新输入密码    ${password}
+    文本框通过文字    申请人姓名    ${name}
+    文本框通过文字    EMAIL    ${email}
+    文本框通过文字    手机号码    ${mobile}
+    链接    下一步
+    等待一段时间    0.5s
+    直到页面某个元素可见    jquery=td:contains("公司中文名称")
+
+非MM账号，填写公司基本必须信息
+    文本框通过文字    组织机构代码：    ${org_code}-
+    文本框通过文字    法人代表姓名    法人代表姓名
+    下拉框通过文字    法人证件类型    身份证
+    文本框通过文字    法人代表证件号    1234
+    下拉框通过文字    注册资金币种    港元
+    文本框通过文字    注册资金(万)    99
+    下拉框通过文字    公司性质    国有控股
+    下拉框通过文字    公司上市情况    香港上市
+    上传组织机构代码附件
+
+上传组织机构代码附件
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+
+上传公司章程信息附件
+    附件上传_通过id定位    ruleAttach    prm\\temp\\公司章程信息附件.jpg
+
+上传营业执照
+    附件上传_通过id定位    lawManAttach    prm\\temp\\营业执照.jpg
+
+上传税务登记证附件
+
+填写公司营业执照信息
+    [Arguments]    ${reg_province}=广东    ${start_date}=2014-01-01    ${end_date}=${EMPTY}
+    ${operating_id}    获取sequence的nextval    seq_apply_company_operating
+    文本框通过文字    注册号    ${operating_id}
+    下拉框通过文字    注册省/市：    ${reg_province}
+    输入日期    startDate    ${start_date}
+    Run Keyword If    '${end_date}'!=''    输入日期    endDate    ${end_date}
+    上传营业执照
+
+填写税务登记证信息
+    [Arguments]    ${list}=0    ${taxType}=国税    ${taxQualification}=一般纳税人    ${licenseDate}=2015-07-15    ${bizScopeDesc}=${EMPTY}
+    [Documentation]    ${list}=0代表填写第一条税务登记证，${list}=1代表填写第二条税务登记证
+    ${tax_reg_id}    获取sequence的nextval    seq_apply_company_tax_reg
+    点击元素    jquery=input[name='accountApply.company.companyTaxRegList[${list}].taxRegNo']
+    文本框    jquery=input[name='accountApply.company.companyTaxRegList[${list}].taxRegNo']    ${tax_reg_id}
+    下拉框    jquery=select[name='accountApply.company.companyTaxRegList[${list}].taxType']    ${taxType}
+    下拉框    jquery=select[name='accountApply.company.companyTaxRegList[${list}].taxQualification']    ${taxQualification}
+    输入日期    licenseDate${list}    ${licenseDate}
+    附件上传_通过id定位    taxReg${list}attach    prm\\temp\\税务登记证国税.jpg
+    Run Keyword If    '${bizScopeDesc}'!=''    文本框    jquery=input[name='company.companyTaxRegList[${list}].bizScopeDesc']    ${bizScopeDesc}
+
+勾选公司页面单选框
+    单选框    id=noticeText
+
+点击注册新账号
+    点击元素    id=reg_account
+
+合作伙伴端检查账号状态
+    [Arguments]    ${login_name}
+    登录合作伙伴端    ${login_name}
+    选择frame    loginPage
+    账号及公司审批状态检查
+
+账号及公司审批状态检查
+    直到页面某个元素可见    jquery=td:contains('待审批')
+
+管理员端检查账号
+    [Arguments]    ${text1}    ${text2}
+    直到页面某个元素可见    jquery=div:contains('${text1}')
+    直到页面某个元素可见    jquery=div:contains('${text2}')
+
+账号审批列表查询账号
+    [Arguments]    ${text1}    ${text2}    ${status}
+    [Documentation]    传入参数：帐号名、公司名、账号状态
+    不选择frame
+    选择frame    content
+    下拉框通过文字    处理状态：    ${status}
+    文本框通过文字    公司中文名：    ${text2}
+    文本框通过文字    申请帐号名：    ${text1}
+    点击元素    xpath=//a[@href='javascript:queryList();']    #点击查询按钮
+
+账号信息设置
+    [Documentation]    帐号名、公司名后面加一个参数，保证帐号名和公司名称的独一无二
+    ${account_id}    获取sequence的nextval    seq_account_apply
+    ${suffix1}    数据库查询    SELECT ltrim(to_char(${account_id},'00000000')) AS Id FROM dual;
+    ${company_apply_id}    获取sequence的nextval    seq_apply_company
+    ${company_id}    数据库查询    SELECT ltrim(to_char(${company_apply_id},'00000000')) AS Id FROM dual;
+    ${suffix2}    Arabic Numerals Str Transform Chinese Str    ${company_id}
+    Set Test Variable    ${account_suffix}    ${suffix1}
+    Set Test Variable    ${cn_name_suffix}    ${suffix2}
+    Set Test Variable    ${org_code}    ${company_id}
+
+点击审批按钮
+    点击元素    xpath=//a[@href='javascript:queryList();']    #点击查询按钮

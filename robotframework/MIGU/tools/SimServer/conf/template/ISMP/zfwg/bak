@@ -1,0 +1,57 @@
+
+
+ merchantAbbr=%E8%B4%B5%E5%B7%9E%E7%A7%BB%E5%8A%A8&type=GWDirectPay&version=2.0.0&currency=RMB&showUr
+l=&amount=400&callbackUrl=http%3A%2F%2F10.12.8.145%3A8000%2Fismp%2Fismp%2FgetGateway&SHRULE=&productN
+um=&merAcDate=20150625&merchantId=1000&openid=&notifyUrl=http%3A%2F%2F10.12.8.145%3A8181%2Fismp%2Fgat
+eway%2FgatewayNotice&characterSet=UTF-8&channelId=E099&requestId=20151110174712100010&orderDate=20150
+625&period=365&productId=1028&Reserved1=&productDesc=sp01&Reserved2=&hmac=23e860d6b6dda7450632c6fcf71
+225a9&payType=2&merchantOrderId=1028&productName=sp01&periodUnit=02
+
+ merchantAbbr=%E8%B4%B5%E5%B7%9E%E7%A7%BB%E5%8A%A8&type=GWDirectPay&version=2.0.0&currency=RMB&showUr
+l=&amount=400&callbackUrl=http%3A%2F%2F10.12.8.145%3A8000%2Fismp%2Fismp%2FgetGateway&SHRULE=&productN
+um=&merAcDate=20150625&merchantId=1000&openid=&notifyUrl=http%3A%2F%2F10.12.8.145%3A8181%2Fismp%2Fgat
+eway%2FgatewayNotice&characterSet=UTF-8&channelId=E099&requestId=20151110183221100011&orderDate=20150
+625&period=365&productId=1028&Reserved1=&productDesc=sp01&Reserved2=&hmac=94b049fdf712e4c2d25d681f92b
+4f690&payType=2&merchantOrderId=1028&productName=sp01&periodUnit=02
+
+{"amount":"${amount}","callbackUrl":"${callbackUrl}","channelId":"${channelId}","characterSet":"${characterSet}","currency":"${currency}","merAcDate":"${merAcDate}","merchantAbbr":"${merchantAbbr}","merchantId":"${merchantId}","merchantOrderId":"${merchantOrderId}","notifyUrl":"${notifyUrl}","orderDate":"${orderDate}","payType":"${payType}","period":"${period}","periodUnit":"${periodUnit}","productDesc":"${productDesc}","productId":"${productId}","productName":"${productName}","requestId":"${requestId}","type":"${type}","version":"${version}"}
+
+
+{"merchantAbbr":"${merchantAbbr}","type":"${type}","version":"${version}","currency":"${currency}","showUrl":"${showUrl}","amount":"${amount}","callbackUrl":"${callbackUrl}","SHRULE":"${SHRULE}","productNum":"${productNum}","merAcDate":"${merAcDate}","merchantId":"${merchantId}","openid":"${openid}","notifyUrl":"${notifyUrl}","characterSet":"${characterSet}","channelId":"${channelId}","requestId":"${requestId}","orderDate":"${orderDate}","period":"${period}","productId":"${productId}","Reserved1":"${Reserved1}","productDesc":"${productDesc}","Reserved2":"${Reserved2}","payType":"${payType}","merchantOrderId":"${merchantOrderId}","productName":"${productName}","periodUnit":"${periodUnit}"}
+
+${validTime} | ${amount} | ${callbackUrl} | ${channelId} | ${characterSet} | ${currency} | ${merAcDate} | ${merchantAbbr} | ${merchantId} | ${merchantOrderId} | ${notifyUrl} | ${orderDate} | ${payType} | ${period} | ${periodUnit} | ${productDesc} | ${productId} | ${productName} | ${requestId} | ${type} | ${version} | ${returnCode} | ${message} | ${orderId} | ${payDate} | ${status} | ${payNo} | ${org_code} | ${organization_payNo} | ${delay}|${Reserved1}|${Reserved2}|${showUrl}|${openid}|${productNum}
+
+
+
+{"amount":"${amount}","callbackUrl":"${callbackUrl}","channelId":"${channelId}","characterSet":"${characterSet}","currency":"${currency}","merAcDate":"${merAcDate}","merchantAbbr":"${merchantAbbr}","merchantId":"${merchantId}","merchantOrderId":"${merchantOrderId}","notifyUrl":"${notifyUrl}","orderDate":"${orderDate}","payType":"${payType}","period":"${period}","periodUnit":"${periodUnit}","productDesc":"${productDesc}","productId":"${productId}","productName":"${productName}","requestId":"${requestId}","type":"${type}","version":"${version}"}
+
+<?xml version="1.0" encoding="utf-8"?>
+<fields>
+	<callbackUrl>$${callbackUrl}$$</callbackUrl>
+	<notifyUrl>$${notifyUrl}$$</notifyUrl>
+	<merchantId>$${merchantId}$$</merchantId>
+	<requestId>20151021</requestId>
+	<type>$${type}$$</type>
+	<version>$${version}$$</version>
+	<hmac>f4697b31cf6b2ff93421771ecedb6c68</hmac>
+	<characterSet>$${characterSet}$$</characterSet>
+	<channelId>$${channelId}$$</channelId>
+	<amount>$${amount}$$</amount>
+	<currency>$${currency}$$</currency>
+	<orderDate>$${orderDate}$$</orderDate>
+	<merchantOrderId>$${merchantOrderId}$$</merchantOrderId>
+	<merAcDate>$${merAcDate}$$</merAcDate>
+	<merchantAbbr>$${merchantAbbr}$$</merchantAbbr>
+	<productDesc>$${productDesc}$$</productDesc>
+	<productId>$${productId}$$</productId>
+	<productName>$${productName}$$</productName>
+	<productNum/>
+	<reserved1/>
+	<reserved2/>
+	<showUrl/>
+	<payType>$${payType}$$</payType>
+	<SHRULE/>
+	<period>$${period}$$</period>
+	<periodUnit>$${periodUnit}$$</periodUnit>
+	<openid/>
+</fields>

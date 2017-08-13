@@ -1,0 +1,65 @@
+*** Settings ***
+Resource          合同common.txt.txt
+
+*** Keywords ***
+新增合同只填写必填项
+    [Arguments]    ${spCode}    ${contact_NO}
+    点击新增合同
+    unselect Frame
+    select Frame    content
+    选择合作伙伴    ${spCode}
+    sleep    2s
+    多次选择Frame直到Frame中元素可见    content    id=contractNo
+    ${title}    Get Window Titles
+    select Frame    content
+    输入合同名称    合同名称测试
+    输入合同编号    ${contact_NO}
+    输入签订时间    2016-08-01
+    输入有效起始时间    2016-02-01
+    输入有效结束时间    2019-02-01
+    点击提交
+
+新增合同填写所有项
+    [Arguments]    ${sp_code}    ${contract_no}    ${contract_no_old}
+    点击新增合同
+    unselect Frame
+    select Frame    content
+    选择合作伙伴    ${sp_code}
+    sleep    1s
+    Select Window
+    select Frame    content
+    选择关联合同    ${contract_no_old}
+    Select Window
+    select frame    content
+    输入合同编号    ${contract_no}
+    输入合同名称    合同名称测试
+    输入签订时间    2016-08-01
+    输入有效起始时间    2016-02-01
+    输入合同金额    100.99
+    输入有效结束时间    2019-02-01
+    输入主管部门    主管部门
+    输入签署人    签署人姓名
+    输入法人    法人姓名
+    输入联系人    联系人姓名
+    输入备注    新增合同新增合同新增合同
+    sleep    1s
+    上传附件，输入id    fileGroupId    migu\\attachment\\合同附件.jpg
+    点击提交
+
+根据合同编码查看合同详情
+    [Arguments]    ${Constact_no}
+    查询合同编码    ${Constact_no}
+    点击查询按钮
+    查看合同详情    ${Constact_no}
+
+续签通知
+    勾选记录并点击续签通知
+
+批量终止
+    [Arguments]    ${endDate}    ${endReason}
+    click button    id=contractIdAll
+    click button    //*[@value="批量终止"]
+    输入终止时间    ${endDate}
+    输入终止原因    ${endReason}
+    click button    Xpath=//input[@value="确认"]
+    校验二次确认框提示信息且点击按钮

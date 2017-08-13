@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<server>
+    <system>
+        <port>8000</port>
+    </system>
+    <!-- 原来的系统配置先注释掉，有些template文件不存在，所以启动老报错，先注释，有需要再启动 <httpServer version="http1.1"
+        port="9080" msgTypeFlag="BusiCode" msgFormat="json" desc="ismp boss"> <template
+        msgType="OI_PrepayOrReleasePayOrder" desc="" delayms="0" > 
+        <request>conf/template/ISMP/boss/PrepayOrReleasePayOrder_req.json</request>
+        <response>conf/template/ISMP/boss/PrepayOrReleasePayOrder_rsp.json</response>
+        </template> <template msgType="OI_PaymentOrReturnBill" desc="" delayms="0"
+        > <request>conf/template/ISMP/boss/OI_PaymentOrReturnBill_req.json</request>
+        <response>conf/template/ISMP/boss/OI_PaymentOrReturnBill_rsp.json</response>
+        </template> <template msgType="OI_Rollback" desc="" delayms="0" > <request>conf/template/ISMP/boss/OI_Rollback_req.json</request>
+        <response>conf/template/ISMP/boss/OI_Rollback_rsp.json</response> </template>
+        <template msgType="OI_RegisterUser" desc="" delayms="0" > <request>conf/template/ISMP/boss/OI_RegisterUser_req.json</request>
+        <response>conf/template/ISMP/boss/OI_RegisterUser_rsp.json</response> </template>
+        <template msgType="OI_BindOrUnbindUser" desc="" delayms="0" > <request>conf/template/ISMP/boss/OI_BindOrUnbindUser_req.json</request>
+        <response>conf/template/ISMP/boss/OI_BindOrUnbindUser_rsp.json</response>
+        </template> <template msgType="OI_BindOrUnbindUser" desc="" delayms="0" >
+        <request>conf/template/ISMP/boss/OI_BindOrUnbindUser_req.json</request> <response>conf/template/ISMP/boss/OI_BindOrUnbindUser_rsp.json</response>
+        </template> <template msgType="OI_FinishPayBill" desc="" delayms="0" > <request>conf/template/ISMP/boss/OI_FinishPayBill_req.json</request>
+        <response>conf/template/ISMP/boss/OI_FinishPayBill_rsp.json</response> </template>
+        </httpServer> <httpServer version="http1.1" port="9090" msgTypeFlag="url"
+        msgFormat="xml" desc="YWPT"> <template msgType="/ismp/OrderServInfoReq" desc=""
+        delayms="0" > <request>conf/template/ISMP/YWPT/OrderServInfoReq.xml</request>
+        <response>conf/template/ISMP/YWPT/OrderServInfoResp.xml</response> </template>
+        </httpServer> <httpServer version="http1.1" port="9099" msgTypeFlag="url"
+        msgFormat="KeyValue" desc="zfwg"> <template msgType="/ismp/zfwg/GatewayPayment"
+        desc="" delayms="0" > <request>conf/template/ISMP/zfwg/Gateway_Payment_Request_req.xml</request>
+        <response>conf/template/ISMP/zfwg/Gateway_Payment_Request_rsp.xml</response>
+        </template> <template msgType="/ismp/zfwg/gatewayNotice" desc="" delayms="0"
+        > <request>conf/template/ISMP/zfwg/gatewayNotice_req.xml</request> <response>conf/template/ISMP/zfwg/gatewayNotice_rsp.xml</response>
+        </template> <template msgType="/ismp/zfwg/gatewayDrawback" desc="" delayms="0"
+        > <request>conf/template/ISMP/zfwg/gatewayDrawback_req.xml</request> <response>conf/template/ISMP/zfwg/gatewayDrawback_rsp.xml</response>
+        </template> </httpServer> -->
+
+    <!-- 下面用于测试custom header和custom encoding -->
+    <httpServer version="http1.1" port="10001" msgTypeFlag="url" msgFormat="json"
+                desc="json server(UTF8)" encoding="UTF-8">
+        <template msgType="/test/json/utf8" desc="" delayms="0">
+            <request>conf/template/test/utf8_req.json</request>
+            <response>conf/template/test/utf8_rsp.json</response>
+        </template>
+    </httpServer>
+   <httpServer version="http1.1" port="10002" msgTypeFlag="url" msgFormat="json"
+                desc="json server(Default UTF-8)">
+        <template msgType="/test/json/default_utf8" desc="" delayms="0">
+            <request>conf/template/test/utf8_req.json</request>
+            <response>conf/template/test/utf8_rsp.json</response>
+        </template>
+    </httpServer>
+    <httpServer version="http1.1" port="10003" msgTypeFlag="url" msgFormat="json"
+                desc="json server(GBK)" encoding="GBK">
+        <template msgType="/test/json/gbk" desc="" delayms="0" encoding='gbk'>
+            <request>conf/template/test/gbk_req.json</request>
+            <response>conf/template/test/gbk_rsp.json</response>
+        </template>
+    </httpServer>
+　  <httpServer version="http1.1" port="10004" msgTypeFlag="url" msgFormat="json"
+                desc="json server(UTF-16LE)"
+                encoding="UTF-16LE">
+        <template msgType="/test/json/unicode" desc="" delayms="0">
+            <request>conf/template/test/unicode_req.json</request>
+            <response>conf/template/test/unicode_rsp.json</response>
+        </template>
+    </httpServer>
+    <!-- xml server -->
+    <httpServer version="http1.1" port="20001" msgTypeFlag="url" msgFormat="xml"
+                desc="xml server(UTF8)" encoding="UTF-8">
+        <template msgType="/test/xml/utf8" desc="" delayms="0">
+            <request>conf/template/test/utf8_req.xml</request>
+            <response>conf/template/test/utf8_rsp.xml</response>
+        </template>
+    </httpServer>
+    <httpServer version="http1.1" port="20002" msgTypeFlag="url" msgFormat="xml"
+                desc="xml server(Default UTF-8)">
+        <template msgType="/test/xml/default_utf8" desc="" delayms="0">
+            <request>conf/template/test/utf8_req.xml</request>
+            <response>conf/template/test/utf8_rsp.xml</response>
+        </template>
+    </httpServer>
+    <httpServer version="http1.1" port="20003" msgTypeFlag="url" msgFormat="xml"
+                desc="xml server(GBK)" encoding="GBK">
+        <template msgType="/test/xml/gbk" desc="" delayms="0" encoding='gbk'>
+            <request>conf/template/test/gbk_req.xml</request>
+            <response>conf/template/test/gbk_rsp.xml</response>
+        </template>
+    </httpServer>
+    <httpServer version="http1.1" port="20004" msgTypeFlag="url" msgFormat="xml"
+                desc="xml server(UTF-16LE)"
+                encoding="UTF-16LE">
+        <template msgType="/test/xml/unicode" desc="" delayms="0">
+            <request>conf/template/test/unicode_req.xml</request>
+            <response>conf/template/test/unicode_rsp.xml</response>
+        </template>
+    </httpServer>
+</server>
+
+
+			

@@ -1,0 +1,34 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01账号/6撤回.txt
+
+*** Test Cases ***
+01非游戏MM待审批账号撤回
+    [Tags]    smoke
+    [Setup]
+    插入待审批账号信息
+    非正式账号登录PRM合作伙伴端"${url_sp}",登陆名"账号${ACCOUNT_ID}",密码"aaa111"
+    撤回    撤回意向业务手机阅读的账号申请成功，可以修改后重新提交！
+    查看账号状态    账号${ACCOUNT_ID}    W
+    查看公司状态    自动化有限公司${apply_audit_companyId}    apply_audit
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02MM待审批账号撤回
+    [Tags]    smoke
+    插入游戏MM待审批账号信息    091    1    0910001    13
+    非正式账号登录PRM合作伙伴端"${url_sp}",登陆名"账号${ACCOUNT_ID}",密码"aaa111"
+    撤回    撤回意向业务MM的账号申请成功，可以修改后重新提交！
+    查看账号状态    账号${ACCOUNT_ID}    W
+    查看公司状态    自动化有限公司${apply_audit_companyId}    apply_audit
+    查看合作状态    账号${ACCOUNT_ID}    end
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03游戏待审批账号撤回
+    [Tags]    smoke
+    插入游戏MM待审批账号信息    038    2    0380001    05
+    非正式账号登录PRM合作伙伴端"${url_sp}",登陆名"账号${ACCOUNT_ID}",密码"aaa111"
+    撤回    撤回意向业务手机游戏的账号申请成功，可以修改后重新提交！
+    查看账号状态    账号${ACCOUNT_ID}    W
+    查看公司状态    自动化有限公司${apply_audit_companyId}    apply_audit
+    查看合作状态    账号${ACCOUNT_ID}    end
+    [Teardown]    teardown_案例运行失败时关闭浏览器

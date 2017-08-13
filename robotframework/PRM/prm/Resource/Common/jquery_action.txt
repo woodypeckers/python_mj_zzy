@@ -1,0 +1,100 @@
+*** Settings ***
+Documentation     所有jquery操作全部写到这个里面
+Library           Selenium2Library
+Library           ../../MyLibrary/MyLibrary.py
+Resource          公用.txt
+
+*** Keywords ***
+按钮
+    [Arguments]    ${button_name}
+    Click Element    jquery=input[value="${button_name}"]
+
+链接
+    [Arguments]    ${link_name}
+    直到页面某个元素可见    xpath=//a[text()='${link_name}']
+    Click Element    xpath=//a[text()='${link_name}']
+    Comment    ajax加载完毕
+
+下拉框通过文字
+    [Arguments]    ${drop_down_box_name}    ${drop_down_box_list}
+    直到页面某个元素可见    jquery=td:contains("${drop_down_box_name}")+td:first>select
+    Select From List    jquery=td:contains("${drop_down_box_name}")+td:first>select    ${drop_down_box_list}
+    Wait For Condition    return window.jQuery.active == 0;    5s
+
+文本框通过文字
+    [Arguments]    ${text_box_name}    ${text_content}
+    [Documentation]    通过文本框前面的提示文字定位文本框
+    Click Element    jquery=td:contains('${text_box_name}')+td:first>input
+    Input Text    jquery=td:contains("${text_box_name}")+td:first>input    ${text_content}
+
+文本域
+    [Arguments]    ${text_area_name}    ${text_content}
+    Click Element    jquery=td:contains('${text_area_name}')+td:first>textarea
+    Input Text    jquery=td:contains("${text_area_name}")+td:first>textarea    ${text_content}
+
+点击元素
+    [Arguments]    ${element}
+    直到页面某个元素可见    ${element}
+    focus    ${element}
+    Click Element    ${element}
+
+校验弹出框信息并点击按钮
+    [Arguments]    ${dialog_msg}=*    ${button_text}=确认
+    [Documentation]    不想校验内容，则diaglog_msg填*; \ button_text为按钮上的字符串
+    Wait Until Ajax Load Complete    请稍候...
+    直到页面某个元素可见    jquery=div.dialog_shadow    15s
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+    click link    ${button_text}
+    ajax加载完毕
+
+截屏
+    Capture Page Screenshot2
+
+ajax加载完毕
+    [Documentation]    此关键字主要用于提交的时候，等待提示语句加载完毕。例如“请稍后”
+    Wait For Condition    return jQuery.active==0;    15s
+
+校验二次确认框提示信息并点击按钮
+    [Arguments]    ${dialog_msg}=*    ${button_text}=确认
+    [Documentation]    不想校验内容，则diaglog_msg填*; \ button_text为按钮上的字符串
+    直到页面某个元素可见    jquery=div.dialog_shadow
+    Comment    Element Should Be Visible    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+    Run Keyword If    '''${button_text}'''=='确认'    点击二次确认框确认按钮
+    Run Keyword If    '''${button_text}'''=='取消'    点击二次确认框取消按钮
+    ajax加载完毕
+
+点击二次确认框确认按钮
+    Click Element    Xpath=//a[@name='yes']
+
+点击二次确认框取消按钮
+    Click Element    Xpath=//a[@name='no']
+
+单选框
+    [Arguments]    ${locator}
+    Select Checkbox    ${locator}
+
+校验出错提示框
+    [Arguments]    ${dialog_msg}    ${class_name}
+    Wait Until Page Contains Element    jquery=span[class='dialog-msg']
+    ${msg}=    Get Element Text    jquery=span[class='${class_name}']
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+文本框内容输入错误后，校验文本框后面的提示信息
+    [Arguments]    ${locator}    ${dialog_msg}
+    [Documentation]    适用于文本框内容输入完毕，鼠标离开输入焦点后，如果内容输入错误，文本框后面的错误提示框. \ ${locator}:需要点击的其他地方。 \ \ \ 一般来说：这种提示信息需要点击其他地方才会出现
+    点击元素    ${locator}
+    Wait Until Page Contains Element    jquery=span[class='Validform_checktip Validform_wrong']
+    ${msg}=    Get Element Text    jquery=span[class='Validform_checktip Validform_wrong']
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+文本框
+    [Arguments]    ${locator}    ${text}
+    [Documentation]    通过文本框的locator定位文本框
+    Input text    ${locator}    ${text}
+
+下拉框
+    [Arguments]    ${locator}    ${text}
+    Select From List    ${locator}    ${text}

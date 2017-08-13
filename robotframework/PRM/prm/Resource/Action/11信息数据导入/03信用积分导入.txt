@@ -1,0 +1,37 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+进入信用积分导入页面
+    [Arguments]    ${upload_file}
+    不选择frame
+    点击右上角菜单    信息数据导入->信用积分导入
+    选择frame    content
+    sleep    1s
+    直到页面某个元素可见    jquery=span:contains("导入")
+    Comment    Mouse Over    xpath=//td[text()='信用积分导入：']
+    focus    textfield11
+    选择附件    textfield11    ${upload_file}
+    链接    上传文件
+    Comment    ajax加载完毕
+
+发布信用积分并检查提示信息
+    [Arguments]    ${check_content}
+    直到页面某个元素可见    xpath=//a[contains(text(),"提交")]
+    链接    提交
+    sleep    1s
+    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    comment    ${mec}    关闭对话框    来自网页的消息
+    校验弹出框信息并点击按钮    ${check_content}    确认
+    直到页面某个元素可见    xpath=//a[contains(text(),"返回")]
+    链接    返回
+    Comment    unselect Frame
+
+清除当月该合作伙伴的信用积分
+    删除数据库记录    delete from prm_credit a where a.sp_id in (select b.sp_id from prm_sp \ b where b.sp_code='CP20140730002') and a.check_month='201410';
+
+进入错误数据页面
+    直到页面某个元素可见    xpath=//a[contains(text(),"忽略错误")]
+    链接    忽略错误
+    Comment    ajax加载完毕

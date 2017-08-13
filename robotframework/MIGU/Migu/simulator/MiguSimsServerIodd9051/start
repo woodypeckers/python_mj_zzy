@@ -1,0 +1,1 @@
+nohup python MiguSimsServerIodd9051.py >  nohup.out &

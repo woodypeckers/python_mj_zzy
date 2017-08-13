@@ -1,0 +1,408 @@
+*** Settings ***
+Suite Setup       setup_插入基地同步应用积分信息
+Suite Teardown    teardown_删除同步成功信用积分信息
+Test Setup
+Test Teardown
+Resource          ../../Resource/Action/07信用积分/6信用积分变更同步.txt
+
+*** Test Cases ***
+01消息内容符合要求
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    检查消息同步结果    000000
+
+02基地+合作编码在PRM不存在
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    9999999999999999    /Msg/Body/Credit/CoopCode
+    检查消息同步结果    000000    #012013：信用积分信息不存在
+
+03报文每个节点取最大值
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    信用积分同步报文每个节点取最大值
+    检查消息同步结果    000000
+    删除同步成功信用积分信息
+
+04上月积分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/LastScore
+    检查消息同步结果    000000
+
+05上月积分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/LastScore
+    检查消息同步结果    000000
+
+06奖励加分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/EncourageScore
+    检查消息同步结果    000000
+
+07奖励加分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/EncourageScore
+    检查消息同步结果    000000
+
+08自然加分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/IncreaseScore
+    检查消息同步结果    000000
+
+09自然加分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/IncreaseScore
+    检查消息同步结果    000000
+
+10履约情况减分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/SatisfyScore
+    检查消息同步结果    000000
+
+11履约情况减分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/SatisfyScore
+    检查消息同步结果    000000
+
+12违约减分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/FoulScore
+    检查消息同步结果    000000
+
+13违约减分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/FoulScore
+    检查消息同步结果    000000
+
+14本月积分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/CreditScore
+    检查消息同步结果    000000
+
+15本月积分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/CreditScore
+    检查消息同步结果    000000
+
+16分省积分上月积分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/LastScore
+    检查消息同步结果    000000
+
+17分省积分上月积分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/LastScore
+    检查消息同步结果    000000
+
+18分省积分奖励加分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    检查消息同步结果    000000
+
+19分省积分奖励加分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    检查消息同步结果    000000
+
+20分省积分自然加分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    检查消息同步结果    000000
+
+21分省积分自然加分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    检查消息同步结果    000000
+
+22分省积分履约情况减分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    检查消息同步结果    000000
+
+23分省积分履约情况减分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    检查消息同步结果    000000
+
+24分省积分违约减分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/FoulScore
+    检查消息同步结果    000000
+
+25分省积分违约减分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/FoulScore
+    检查消息同步结果    000000
+
+26分省积分本月积分超过6位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    1234567    /Msg/Body/Credit/ProvinceCredit/CreditScore
+    检查消息同步结果    000000
+
+27分省积分本月积分小数点后超过2位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    12.999    /Msg/Body/Credit/ProvinceCredit/CreditScore
+    检查消息同步结果    000000
+
+28必填字段全部填写，选填字段不填写
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    信用积分同步报文必填字段全部填写，选填字段不填写
+    检查消息同步结果    000000
+    删除同步成功信用积分信息
+
+29ProcessID为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/ProcessID
+    检查消息同步结果    000000
+
+30OperCode为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/OperCode
+    检查消息同步结果    000000
+
+31BaseId为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/BaseId
+    检查消息同步结果    000000
+
+32CoopCode为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/CoopCode
+    检查消息同步结果    000000
+
+33CheckMonth为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/CheckMonth
+    检查消息同步结果    000000
+
+34CreditScore为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/CreditScore
+    检查消息同步结果    000000
+
+35ProvinceId为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/ProvinceId
+    检查消息同步结果    000000
+
+36分省积分的CreditScore为空
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    \    /Msg/Body/Credit/ProvinceCredit/CreditScore
+    检查消息同步结果    000000
+
+37ProcessID超过32位
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    112345678901234567890123456789012    /Msg/Body/Credit/ProcessID
+    检查消息同步结果    000000
+
+38上月积分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/LastScore
+    检查消息同步结果    000000
+
+39奖励加分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/EncourageScore
+    检查消息同步结果    000000
+
+40自然加分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/IncreaseScore
+    检查消息同步结果    000000
+
+41履约情况减分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/SatisfyScore
+    检查消息同步结果    000000
+
+42违约减分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/FoulScore
+    检查消息同步结果    000000
+
+43本月积分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/CreditScore
+    检查消息同步结果    000000
+
+44分省积分上月积分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/LastScore
+    检查消息同步结果    000000
+
+45分省积分奖励加分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    检查消息同步结果    000000
+
+46分省积分自然加分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    检查消息同步结果    000000
+
+47分省积分履约情况减分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    检查消息同步结果    000000
+
+48分省积分违约减分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/FoulScore
+    检查消息同步结果    000000
+
+49分省积分本月积分不为float
+    [Documentation]    需填写消息号和发送同步消息的系统编码. \ 同步的消息中，一条信用积分记录，一条分省积分记录
+    读取xml文件    prm\\xml\\SyncCreditToPrm.xml
+    修改消息同步报文Header    110016    999    #需填写消息号和发送同步消息的系统编码
+    修改信用积分同步报文中OperCode为新增
+    修改xml节点的值    分:11    /Msg/Body/Credit/ProvinceCredit/CreditScore
+    检查消息同步结果    000000
+
+*** Keywords ***
+setup_插入基地同步应用积分信息
+    删除同步成功信用积分信息
+
+teardown_删除同步成功信用积分信息
+    删除同步成功信用积分信息

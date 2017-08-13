@@ -1,0 +1,17 @@
+{
+    "Request": {
+        "BusiParams": {
+            "MobNum": "$${MobNum}$$",
+            "UserID": ""
+        },
+        "BusiCode": "$${BusiCode}$$"
+    },
+    "PubInfo": {
+            "TransactionId": "",
+            "TransactionTime": "",           
+            "OpId": "",
+            "OrgId": "",
+            "InterfaceId": "",
+            "InterfaceType": ""
+    }
+}

@@ -1,0 +1,42 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+删除同步成功的结算单信息
+    [Documentation]    如果有该结算单记录就删除
+    Exec Sql    DELETE FROM prm_settle_item_value t WHERE t.settle_id IN(SELECT g.settle_id FROM prm_settlement g WHERE g.settlement_no='9988001');     ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_settlement t WHERE t.settlement_no='9988001';     ${prm_oracle_tns}
+    Exec Sql    DELETE FROM prm_link_config t WHERE t.Module_Key='0000000001' AND t.base_id='041';     ${prm_oracle_tns}
+
+结算单同步报文每个节点取最大值
+    修改xml节点的值    12345678901234567890123456789012    /Msg/Body/Settlement/ProcessID    #V32
+    修改xml节点的值    12345678901234567890    /Msg/Body/Settlement/SettlementNo    #V20
+    修改xml节点的值    结算单类型结算单类型    /Msg/Body/Settlement/BillingType    #V20
+    修改xml节点的值    123456789012345    /Msg/Body/Settlement/SettlingAmount    #V15
+    修改xml节点的值    123456789012345    /Msg/Body/Settlement/SubtractAmount    #V15
+    修改xml节点的值    123456789012345    /Msg/Body/Settlement/ChangeAmout    #V15
+    修改xml节点的值    123456789012345    /Msg/Body/Settlement/SettledAmount    #V15
+    修改xml节点的值    结算单扩展字段中文名称中文名称    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldCnName    #V30
+    修改xml节点的值    结算单扩展字段值结算单扩展字段值结算单扩展字段值值    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldValue    #V50
+    修改xml节点的值    对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账    /Msg/Body/Settlement/ReconciliationDesc    #V1000
+    修改xml节点的值    www.11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.com    /Msg/Body/Settlement/Link[1]/LinkUrl    #V1000
+
+结算单同步，必填字段全部填写，选填字段不填写
+    修改xml节点的值    \    /Msg/Body/Settlement/BillingType
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlingAmount
+    修改xml节点的值    \    /Msg/Body/Settlement/SubtractAmount
+    修改xml节点的值    \    /Msg/Body/Settlement/ChangeAmout
+    结算单同步扩展字段为空
+    结算单明细附件为空
+    修改xml节点的值    \    /Msg/Body/Settlement/AutoConfirmDate
+    修改xml节点的值    \    /Msg/Body/Settlement/ReconciliationDesc
+
+结算单同步扩展字段为空
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldCnName    #V15
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldValue
+
+结算单明细附件为空
+    修改xml节点的值    \    /Msg/Body/Settlement/DetailedFile/FileName
+    修改xml节点的值    \    /Msg/Body/Settlement/DetailedFile/FileSaveName
+    修改xml节点的值    \    /Msg/Body/Settlement/DetailedFile/FileSize
+    修改xml节点的值    \    /Msg/Body/Settlement/DetailedFile/FileType

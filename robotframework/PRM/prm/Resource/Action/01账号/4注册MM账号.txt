@@ -1,0 +1,97 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+第二步_MM公司信息_必须，税务登记证为国税和地税
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    文本框通过文字    组织机构代码：    zj${zj_id}
+    下拉框通过文字    法人证件类型    身份证
+    下拉框通过文字    公司性质    国有控股
+    下拉框通过文字    公司上市情况    香港上市
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    文本框通过文字    注册号    ${OPERATING_NO}
+    下拉框通过文字    注册省/市：    广东
+    Run Keyword If    '${browser_type}'=='ie'    sleep    0.2s
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    税务登记证信息-国税
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO}
+    下拉框_通过id定位    taxType0    国税
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\税务登记证国税.jpg
+    点击新增一条记录    税务登记证 (必填)    #增加一条税务记录
+    Comment    税务登记证信息-地税
+    文本输入_通过id定位    taxRegNo1    ${TAX_REG_NO2}
+    下拉框_通过id定位    taxType1    地税
+    下拉框_通过id定位    taxQualification1    一般纳税人
+    输入日期    licenseDate1    2014-01-01
+    附件上传_通过id定位    taxReg1attach    prm\\temp\\税务登记证地税.jpg
+
+第二步_MM公司信息_必须，税务登记证为两证合一
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    文本框通过文字    组织机构代码：    zj${zj_id}
+    下拉框通过文字    法人证件类型    身份证
+    下拉框通过文字    公司性质    国有控股
+    下拉框通过文字    公司上市情况    香港上市
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    文本框通过文字    注册号    ${OPERATING_NO}
+    下拉框通过文字    注册省/市：    广东
+    Run Keyword If    '${browser_type}'=='ie'    sleep    0.2s
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    税务登记证信息-国税
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO}
+    下拉框_通过id定位    taxType0    两证合一
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\两证合一.jpg
+
+第二步_MM公司信息_必须，税务登记证为国税
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    文本框通过文字    组织机构代码：    zj${zj_id}
+    下拉框通过文字    法人证件类型    身份证
+    下拉框通过文字    公司性质    国有控股
+    下拉框通过文字    公司上市情况    香港上市
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    文本框通过文字    注册号    ${OPERATING_NO}
+    下拉框通过文字    注册省/市：    广东
+    Run Keyword If    '${browser_type}'=='ie'    sleep    0.2s
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    税务登记证信息-国税
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO}
+    下拉框_通过id定位    taxType0    国税
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\税务登记证国税.jpg
+
+第二步_MM公司信息_必须，税务登记证为地税
+    ${OPERATING_NO}    获取sequence的nextval    seq_apply_company_operating
+    ${TAX_REG_NO}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${TAX_REG_NO2}    获取sequence的nextval    seq_apply_company_tax_reg
+    文本框通过文字    组织机构代码：    zj${zj_id}
+    下拉框通过文字    法人证件类型    身份证
+    下拉框通过文字    公司性质    国有控股
+    下拉框通过文字    公司上市情况    香港上市
+    附件上传_通过id定位    orgCodeAttach    prm\\temp\\组织机构代码附件.jpg
+    文本框通过文字    注册号    ${OPERATING_NO}
+    下拉框通过文字    注册省/市：    广东
+    Run Keyword If    '${browser_type}'=='ie'    sleep    0.2s
+    附件上传_通过xpath定位    营业执照：（原件扫描件）    prm\\temp\\营业执照.jpg
+    Comment    税务登记证信息-国税
+    文本输入_通过id定位    taxRegNo0    ${TAX_REG_NO}
+    下拉框_通过id定位    taxType0    地税
+    下拉框_通过id定位    taxQualification0    一般纳税人
+    输入日期    licenseDate0    2014-01-01
+    附件上传_通过id定位    taxReg0attach    prm\\temp\\税务登记证地税.jpg
+
+MM税务登记证只为单独的国税或地税，提交检查提示信息
+    [Arguments]    ${button_name}=提交
+    单选框    id=noticeText
+    链接    ${button_name}
+    校验弹出框信息并点击按钮    请同时填写国税和地税的税务登记证信息！    确认

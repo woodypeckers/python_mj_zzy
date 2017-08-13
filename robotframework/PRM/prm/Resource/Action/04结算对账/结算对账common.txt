@@ -1,0 +1,8 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+登录并进入到结算单模板查询页面
+    [Arguments]    ${username}    ${password}
+    登录admin端    ${username}    ${password}
+    进入左侧二级菜单    结算对账    结算单模板定制

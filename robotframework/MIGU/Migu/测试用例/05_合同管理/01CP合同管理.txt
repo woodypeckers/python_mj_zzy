@@ -1,0 +1,139 @@
+*** Settings ***
+Resource          ../../Resource/Common/公用.txt
+Resource          ../../Resource/Action/05合同管理/01合同录入.txt
+Resource          ../../Resource/Action/05合同管理/02合同导入.txt
+
+*** Test Cases ***
+01填写必填项新增CP合同
+    [Tags]    smoket
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    新增合同只填写必填项    800000000002    HT-2016022
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    检查数据库合同是否导入    HT-2016022    1
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02填写所有项新增CP合同
+    [Tags]    smoke
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    新增合同填写所有项    800000000002    HT-2016022    8793233232
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    检查数据库合同是否导入    HT-2016022    1
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='HT-2016022'
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03admin端查看CP合同详情
+    [Tags]    smoke
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    根据合同编码查看合同详情    8793233232
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04续签CP合同
+    [Tags]    smoke
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    查询合同编码    8793233232
+    续签通知
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05终止CP合同
+    [Tags]    smoke
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    展开查询框
+    查询合同编码    8793233232
+    批量终止    2017-09-30    合同终止
+    检查提示信息    操作成功
+    点击二次确认框确认按钮
+    合同状态检查    8793233232
+    清除合同终止状态    8793233232
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06导入完全正确的合同数据
+    [Tags]    smoket
+    登录admin端    sysadmin
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='ht-20160919'
+    进入左侧二级菜单    合同管理    CP合同管理
+    进入合同导入页面
+    创建合同导入文件并写入数据    ht-20160919,ht-20160919,800000000002,李红军公司,CP,2016-05-01,2016-05-01,2016-11-01,100.99,主办部门,联系人,法人,签署人,是,1,22
+    上传需要导入的合同文件    file
+    导入文件    导入文件
+    点击提交
+    未上传附件点击二次确认框
+    检查提示信息    操作成功!
+    点击二次确认框确认按钮
+    删除excel文件
+    检查数据库合同是否导入    ht-20160919    1
+    [Teardown]
+
+07导入有错误记录的合同数据
+    [Tags]    smoke
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='ht-20160919'
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    进入合同导入页面
+    创建合同导入文件并写入多条数据，有错误记录    ht-20160919,ht-20160919,800000000002,李红军公司,CP,2016-05-01,2016-05-01,2016-11-01,100.99,主办部门,联系人,法人,签署人,是,1,222    ht-20160919,ht-20160919,800000000002,李红军公司,CP,2016-05-01,2016-05-01,2016-11-01,100.99,主办部门,联系人,法人,签署人,是,1,222    2
+    上传需要导入的合同文件    file    Migu\\temp\\test.xls
+    导入文件
+    进入错误数据展示页面点击忽略错误
+    点击提交
+    未上传附件点击二次确认框
+    检查提示信息    操作成功!
+    点击二次确认框确认按钮
+    删除excel文件
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08导入错误的合同模板
+    [Tags]    smoke
+    登录admin端    sysadmin
+    进入左侧二级菜单    合同管理    CP合同管理
+    进入合同导入页面
+    创建错误的合同模板
+    上传需要导入的合同文件    file    Migu\\temp\\test.xls
+    导入文件
+    检查提示信息    您使用的导入模板不是最新版本，请下载最新版本
+    点击二次确认框确认按钮
+    删除excel文件
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+09导入只有一条错误记录的合同数据
+    [Tags]    smoke
+    登录admin端    sysadmin
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='ht-20160919'
+    进入左侧二级菜单    合同管理    CP合同管理
+    进入合同导入页面
+    创建合同导入文件并写入数据    ht-20160919,ht-20160919,88888,李红军公司,CP,2016-05-01,2016-05-01,2016-11-01,100.99,主办部门,联系人,法人,签署人,是,1,22
+    上传需要导入的合同文件    file    Migu\\temp\\test.xls
+    导入文件
+    进入错误数据展示页面点击忽略错误
+    检查提示信息    正确记录数为0,请修改后再次导入
+    点击二次确认框确认按钮
+    删除excel文件
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+10导入记录对应的合作编码不存在
+    [Tags]    smoke
+    登录admin端    sysadmin
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='ht-20160919'
+    进入左侧二级菜单    合同管理    CP合同管理
+    进入合同导入页面
+    创建合同导入文件并写入数据    ht-20160919,ht-20160919,88888,李红军公司,CP,2016-05-01,2016-05-01,2016-11-01,100.99,主办部门,联系人,法人,签署人,是,1,22
+    上传需要导入的合同文件    file    Migu\\temp\\test.xls
+    导入文件
+    校验结果检查    合作编码错误，没有找到该合作编码对应的商用合作信息！
+    进入错误数据展示页面点击忽略错误
+    检查提示信息    正确记录数为0,请修改后再次导入
+    点击二次确认框确认按钮
+    删除excel文件
+    [Teardown]    teardown_案例运行失败时关闭浏览器

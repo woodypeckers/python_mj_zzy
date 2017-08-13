@@ -1,0 +1,15 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Teardown
+Resource          ../../Resource/Action/04结算对账/2删除结算单模板.txt
+
+*** Test Cases ***
+01删除结算单模板_模板未被使用
+    [Tags]    smoke
+    登录并进入到结算单模板查询页面    username=admin_12582    password=aaa111
+    插入12582基地结算单模板，模板未被使用
+    查询出待删除的结算单
+    删除结算单模板
+    数据库中查询被删除的结算单模板
+    [Teardown]    teardown_案例运行失败时关闭浏览器

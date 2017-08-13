@@ -1,0 +1,2 @@
+*** Settings ***
+Documentation     咪咕自动化部署的库及脚本信息

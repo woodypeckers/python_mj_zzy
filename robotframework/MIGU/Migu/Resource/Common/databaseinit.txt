@@ -1,0 +1,191 @@
+*** Settings ***
+Resource          database_basic_opr.txt
+
+*** Keywords ***
+插入分配的账号信息
+    [Arguments]    ${cn_prefix}    ${account_prefix}    ${account_type}    ${cn_exist}=0
+    [Documentation]    1、${account_type}：账号类型接入类型 1-一点接入（CP）；2-分谈分签（渠道）3-统谈统签（渠道）
+    ...    2、默认密码是aaa111，账号状态为初创状态，登录后必须修改密码才可以使用。
+    ...    3、${cn_exist}：公司资料是否有完整资料。1为已存在且完整，0为不存在或者存在不完整，默认为0
+    ${department_id}    获取sequence的nextval    seq_sec_department_id
+    ${staff_id}    获取sequence的nextval    seq_sec_staff_id
+    ${account_apply_id}    获取sequence的nextval    seq_account_apply
+    ${company_id}    获取sequence的nextval    seq_apply_company
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${company_id}
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'00000000')) AS Id FROM dual;
+    ${org_code}    数据库查询    SELECT ltrim(to_char(${company_id},'0000000000')) AS Id FROM dual;
+    ${passwd}    获取加密后的密码    ${staff_id}
+    执行sql语句    insert into sec_department (DEPARTMENT_ID, DEPARTMENT_NAME, DEPARTMENT_DESC, PARENT_ID, EMAIL, ADDRESS, ADD_SUB, CREATE_USER, CREATE_DATE, LAST_UPDATE_DATE, DOMAIN) values ('${department_id}', '${cn_prefix}${cn_suffix}', '${cn_prefix}${company_id}', '-997', '', '', '0', '1010240', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', 'SP');    #sec_department表里面插入部门信息
+    执行sql语句    insert into sec_staff (STAFF_ID, LOGIN_NAME, DEPARTMENT_ID, REAL_NAME, PASSWORD, STATUS, SEX, TELEPHONE, MOBILE, EMAIL, CREATE_USER, CREATE_DATE, EXPIRE_DATE, LAST_UPDATE_DATE, PASSWORD_EXPIRE_DATE, LOCK_DATE, CITY_ID) values ('${staff_id}', '${account_prefix}${account_apply_id}', '${department_id}', '${company_id}', '${passwd}', 'INITIAL', 'MALE', '', '139${mobile_phone}', '${account_apply_id}@11.com', '-999', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', '', '', '', '');    #sec_staff表里面插入账号记录
+    执行sql语句    INSERT INTO sec_department_role (DEPARTMENT_ID, ROLE_ID) SELECT '${department_id}', role_id FROM sec_role WHERE role_key LIKE 'SP_ROLE%';    #sec_department_role表里面插入部门对于的角色信息
+    执行sql语句    insert into sec_staff_extend (STAFF_ID, STAFF_STYLE, CN_NAME, CREATE_DATE, LAST_UPDATE, COMPANY_SAVE_DATE, SP_SAVE_DATE, STAFF_TYPE, COMPANY_TYPE) values ('${staff_id}', '${account_type}', '${cn_prefix}${cn_suffix}', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '1', '${cn_exist}');    #sec_staff_extend表里面插入账号类型的信息，区分是一点接入还是分签接入
+    Set Test Variable    ${account_name}    ${account_prefix}${account_apply_id}
+    Set Test Variable    ${org}    ${org_code}
+    Set Test Variable    ${email}    ${account_apply_id}@11.com
+    Set Test Variable    ${mobile}    139${mobile_phone}
+    Set Test Variable    ${jiancheng}    ${account_apply_id}
+    Set Test Variable    ${cn_name}    ${cn_prefix}${cn_suffix}
+
+插入分配的已修改密码的账号信息
+    [Arguments]    ${cn_prefix}    ${account_prefix}    ${account_type}    ${cn_exist}=0
+    [Documentation]    ${cn_exist}：公司资料是否有完整资料。1为已存在且完整，0为不存在或者存在不完整，默认为0
+    ${department_id}    获取sequence的nextval    seq_sec_department_id
+    ${staff_id}    获取sequence的nextval    seq_sec_staff_id
+    ${account_apply_id}    获取sequence的nextval    seq_account_apply
+    ${company_id}    获取sequence的nextval    seq_apply_company
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${company_id}
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'00000000')) AS Id FROM dual;
+    ${org_code}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'0000000000')) AS Id FROM dual;
+    ${passwd}    获取加密后的密码    ${staff_id}
+    执行sql语句    insert into sec_department (DEPARTMENT_ID, DEPARTMENT_NAME, DEPARTMENT_DESC, PARENT_ID, EMAIL, ADDRESS, ADD_SUB, CREATE_USER, CREATE_DATE, LAST_UPDATE_DATE, DOMAIN) values ('${department_id}', '${cn_prefix}${cn_suffix}', '${cn_prefix}${company_id}', '-997', '', '', '0', '1010240', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', 'SP');    #sec_department表里面插入部门信息
+    执行sql语句    insert into sec_staff (STAFF_ID, LOGIN_NAME, DEPARTMENT_ID, REAL_NAME, PASSWORD, STATUS, SEX, TELEPHONE, MOBILE, EMAIL, CREATE_USER, CREATE_DATE, EXPIRE_DATE, LAST_UPDATE_DATE, PASSWORD_EXPIRE_DATE, LOCK_DATE, CITY_ID) values ('${staff_id}', '${account_prefix}${account_apply_id}', '${department_id}', '${company_id}', '${passwd}', 'NORMAL', 'MALE', '', '139${mobile_phone}', '${account_apply_id}@11.com', '-999', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', to_date('27-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2020 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', '');    #sec_staff表里面插入账号记录
+    执行sql语句    INSERT INTO sec_department_role (DEPARTMENT_ID, ROLE_ID) SELECT '${department_id}', role_id FROM sec_role WHERE role_key LIKE 'SP_ROLE%';    #sec_department_role表里面插入部门对于的角色信息
+    执行sql语句    insert into sec_staff_extend (STAFF_ID, STAFF_STYLE, CN_NAME, CREATE_DATE, LAST_UPDATE, COMPANY_SAVE_DATE, SP_SAVE_DATE, STAFF_TYPE, COMPANY_TYPE) values ('${staff_id}', '${account_type}', '${cn_prefix}${cn_suffix}', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '1', '${cn_exist}');    #sec_staff_extend表里面插入账号类型的信息，区分是一点接入还是分签接入
+    Set Test Variable    ${account_name}    ${account_prefix}${account_apply_id}
+    Set Test Variable    ${org}    ${org_code}
+
+插入流程中公司合作信息
+    [Arguments]    ${staff_style}    ${base_range}=${EMPTY}    ${sp_status}=apply_audit    ${cn_status}=apply_audit    ${cn_exist}=0
+    [Documentation]    可以插入流程中的公司合作信息：待受理、待评审、待签约、统谈统签待审批、分谈分签待审批、受理拒绝、评审不通过、退回修改。只要传入对应的${sp_status}和${cn_status}就可以了。默认为待受理、统谈统签待审批、分谈分签待审批
+    ...    1、${staff_style}:接入类型1-一点接入（CP）；2-分谈分签（渠道）3-统谈统签（渠道）
+    ...    2、${sp_status}：apply_audit-待受理、apply_audit_deny-退回修改、apply_audit_alter-受理拒绝apply_score-待评审、apply_score_deny-评审拒绝、apply_sign-待签约
+    ...    3、${cn_status}：apply_audit-公司新增审批、apply_deny公司退回修改、apply_reject公司审批拒绝
+    ...    备注：prm_flow_info表里面和business_log表里面没有插入对应的流程信息记录和业务日志操作记录（因为这写记录对流程操作没啥影响）
+    ${department_id}    获取sequence的nextval    seq_sec_department_id
+    ${staff_id}    获取sequence的nextval    seq_sec_staff_id
+    ${company_id}    获取sequence的nextval    seq_apply_company
+    ${org_code}    数据库查询    SELECT ltrim(to_char(${company_id},'0000000000')) AS Id FROM dual;
+    ${operating_id}    获取sequence的nextval    seq_apply_company_operating
+    ${tax_id}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${account_apply_id}    获取sequence的nextval    seq_account_apply
+    ${sp_id}    获取sequence的nextval    seq_apply_sp
+    ${bank_id}    获取sequence的nextval    seq_apply_bank_account
+    ${contact_id1}    获取sequence的nextval    seq_apply_sp_contract
+    ${contact_id2}    获取sequence的nextval    seq_apply_sp_contract
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${company_id}
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'00000000')) AS Id FROM dual;
+    ${passwd}    获取加密后的密码    ${staff_id}
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${coop_range}    ${base_range}
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${base_id}    888
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${cn_prefix}    一点公司
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${account_prefix}    一点账号
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${coop_type}    2
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${coop_range}    ${base_range}
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${base_id}    038
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${cn_prefix}    分签公司
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${account_prefix}    分签账号
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${coop_type}    5
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${coop_range}    ${base_range}
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${base_id}    888
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${cn_prefix}    统谈公司
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${account_prefix}    统谈账号
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${coop_type}    5
+    执行sql语句    insert into sec_department (DEPARTMENT_ID, DEPARTMENT_NAME, DEPARTMENT_DESC, PARENT_ID, EMAIL, ADDRESS, ADD_SUB, CREATE_USER, CREATE_DATE, LAST_UPDATE_DATE, DOMAIN) values ('${department_id}', '${cn_prefix}${cn_suffix}', '${cn_prefix}${cn_suffix}', '-997', '', '', '0', '1010240', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', 'SP');    #sec_department表里面插入部门信息
+    执行sql语句    insert into sec_staff (STAFF_ID, LOGIN_NAME, DEPARTMENT_ID, REAL_NAME, PASSWORD, STATUS, SEX, TELEPHONE, MOBILE, EMAIL, CREATE_USER, CREATE_DATE, EXPIRE_DATE, LAST_UPDATE_DATE, PASSWORD_EXPIRE_DATE, LOCK_DATE, CITY_ID) values ('${staff_id}', '${account_prefix}${account_apply_id}', '${department_id}', '${cn_suffix}', '${passwd}', 'NORMAL', 'MALE', '', '139${mobile_phone} ', '${account_apply_id}@11.com', '-999', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', to_date('07-09-2015 15:23:03', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-10-2050', 'dd-mm-yyyy'), '', '');    # sec_staff表里面插入账号信息
+    执行sql语句    INSERT INTO sec_department_role (DEPARTMENT_ID, ROLE_ID) SELECT '${department_id}', role_id FROM sec_role WHERE role_key LIKE 'SP_ROLE%';    #sec_department_role表里面插入部门对于的角色信息
+    执行sql语句    insert into sec_staff_extend (STAFF_ID, STAFF_STYLE, CN_NAME, CREATE_DATE, LAST_UPDATE, COMPANY_SAVE_DATE, SP_SAVE_DATE, STAFF_TYPE, COMPANY_TYPE) values ('${staff_id}', '${staff_style}', '${cn_prefix}${cn_suffix}', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '1', '${cn_exist}');    #sec_staff_extend表里面插入账号类型的信息，区分是一点接入还是分谈分签
+    执行sql语句    insert into prm_sp_staff (SP_ISN, STAFF_ID) values ('${sp_id}', '${staff_id}');    #建立账号和合作的关联关系
+    执行sql语句    insert into prm_company_staff (COMPANY_ISN, STAFF_ID) values ('${company_id}', '${staff_id}');    #建立账号和公司的关联关系
+    执行sql语句    insert into prm_apply_sp (SP_ID, COMPANY_ID, SP_ISN, SP_CODE, BASE_ID, COOP_TYPE, PRODUCT_ID, INFO_HEADER_NAME, INFO_HEADER_MOBILE, INFO_ATTACHE_GROUP_ID, INFO_COMMIT_ATTACH_ID, STATUS, APTITUDE_ID, TAX_CODE, TAX_RATE, TAX_QUALIFICATION, BAL_CYCLE, ONLINE_DATE, CREATE_DATE, LAST_UPDATE_DATE, BANK_ID, LAST_INSTANCE_SP_ID, BANK_ISN, DATA_RIGHT, SOURCEFLAG, BASE_APPLY_ID, STAFF_STYLE, COOP_RANGE, CP_SHORT_NAME, SETTLEMENT_CODE, SUBCOMPANY_CONFIRM_STATUS) values ('${sp_id}', '${company_id}', '${sp_id}', '', '${base_id}', '${coop_type}', '', '安全人姓名', '138${mobile_phone}', '', '', '${sp_status}', '', 'VAT11', 11, '0', '', '', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), '${bank_id}', '', '${bank_id}', '${base_id}', '', '', '${staff_style}', '${coop_range}', 'JC${account_apply_id}', '', '0');    #插入合作信息
+    执行sql语句    insert into prm_apply_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id1}', '${contact_id1}', '2', '${sp_id}', '21', '负责人姓名', '', '137${mobile_phone}', '${contact_id1}@11.com', '', '789122', '业务负责人住址', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入业务负责人信息
+    执行sql语句    insert into prm_apply_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id2}', '${contact_id2}', '2', '${sp_id}', '22', '联系人姓名', '', '137${mobile_phone}', '${contact_id2}@11.com', '', '789122', '业务联系人住址', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入业务联系人信息
+    执行sql语句    insert into prm_apply_bank_account (BANK_ID, BANK_ISN, BANK_NAME, ACCOUNT_NO, BANK_TYPE_CODE, BANK_TYPE_NAME, PROVINCE_ID, CITY_ID, BASE_ID, ATTACH_GROUP_ID, COMPANY_ISN, CREATE_DATE, LAST_UPDATE) values ('${bank_id}', '${bank_id}', '中国招商银行', '0000000000${bank_id}', '9004', '', '14', '431', '888', '111100000004|8d60631692871102addc0084c8db543e', '${company_id}', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入银行账号信息
+    执行sql语句    insert into prm_apply_company (COMPANY_ID, CN_NAME, EN_NAME, SHORT_NAME, ORG_CODE, ORG_CODE_ATTACH_ID, COMPANY_ISN, COMPANY_DESC, ADDRESS, POSTCODE, CHILD_FLAG, PARENT_CN_NAME, SUB_FLAG, HEAD_CN_NAME, REG_CAPITAL_CURRENCY, REG_CAPITAL_OTHER_CURRENCY, REG_CAPITAL, LIST_SITUTION, LIST_OTHER_AREA, COMPANY_NATURE, FOREIGN_CAPITAL_RATIO, LAW_MAN, LAW_MAN_ID, LAW_MAN_LICENSE_TYPE, LAW_MAN_OTHER_LICENSE_TYPE, RULE_ATTACH_GROUP_ID, STATUS, SUBMITTER_ID, SUBMITTER_NAME, BASE_ID, LAST_INSTANCE_CM_ID, CREATE_DATE, LAST_UPDATE) values ('${company_id}', '${cn_prefix}${cn_suffix}', '', '', '${org_code}', '111100000001|5161e73c3ce3d7bdb407c2d10f6576ad', '${company_id}', '', '', '', '0', '', '0', '', '1', '', '9899998', '1', '', '1', '', '法人代表张三', '43252219861211517X', '1', '', '', '${cn_status}', '${staff_id}', '', '${base_id} ', '', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入公司基本信息。cn_name要和部门名称一致
+    执行sql语句    insert into prm_apply_company_operating (OPERATING_ID, COMPANY_ID, LICENSE_NO, LICENSE_DATE, START_DATE, END_DATE, CHECK_DATE, LICENSE_PROVINCE_ID, LICENSE_ADDRESS, CREATE_DATE, LAST_UPDATE, ATTACH_GROUP_ID, BIZ_SCOPE_DESC, OPERATING_ISN) values ('${operating_id}', '${company_id}', 'yy${org_code}', '', to_date('14-07-2015', 'dd-mm-yyyy'), '', '', '14', '', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), '111100000002|0e4d69dbf33ea844373c9d2e6c8559de', '', '${operating_id}');    #插入营业执照信息。营业执照号和组织机构代码号一样
+    执行sql语句    insert into prm_apply_company_tax_reg (TAX_REG_ID, TAX_REG_ISN, TAX_REG_NO, LICENSE_DATE, TAX_TYPE, TAX_QUALIFICATION, BIZ_SCOPE_DESC, ATTACH_GROUP_ID, CREATE_DATE, LAST_UPDATE, COMPANY_ID) values ('${tax_id}', '${tax_id}', 'sw${org_code}', to_date('15-07-2015', 'dd-mm-yyyy'), '1', '0', '', '111100000003|c6fd4ece94ab1d3ec1c11047d4c8e780', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), '${company_id}');    #插入税务信息。税务登记号和组织机构代码号一样
+    Set Test Variable    ${account_name}    ${account_prefix}${account_apply_id}
+    Set Test Variable    ${cn_name}    ${cn_prefix}${cn_suffix}
+    Set Test Variable    ${sp_code}    ${sp_id}
+
+插入正式的partner端账号
+    [Arguments]    ${staff_style}=1    ${cn_exist}=0
+    [Documentation]    ${staff_style}:接入类型1-一点接入（CP）；2-分谈分签（渠道）3-统谈统签（渠道）。默认为一点接入CP账号
+    ${department_id}    获取sequence的nextval    seq_sec_department_id
+    ${staff_id}    获取sequence的nextval    seq_sec_staff_id
+    ${company_id}    获取sequence的nextval    seq_apply_company
+    ${org_code}    数据库查询    SELECT ltrim(to_char(${company_id},'0000000000')) AS Id FROM dual;
+    ${operating_id}    获取sequence的nextval    seq_apply_company_operating
+    ${tax_id}    获取sequence的nextval    seq_apply_company_tax_reg
+    ${account_apply_id}    获取sequence的nextval    seq_account_apply
+    ${sp}    获取sequence的nextval    seq_apply_sp
+    ${sp_id}    数据库查询    SELECT 8000|| ltrim(to_char(${sp},'000000')) AS Id FROM dual;
+    ${bank_id}    获取sequence的nextval    seq_apply_bank_account
+    ${contact_id1}    获取sequence的nextval    seq_apply_sp_contract
+    ${contact_id2}    获取sequence的nextval    seq_apply_sp_contract
+    ${NODE_INSTANCE_ID1}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID2}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID3}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID4}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID5}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID6}    获取sequence的nextval    seq_flow_info
+    ${NODE_INSTANCE_ID7}    获取sequence的nextval    seq_flow_info
+    ${CONTRACT_ID}    获取sequence的nextval    seq_apply_sp_contract
+    ${SETTLEMENT_ID}    获取sequence的nextval    seq_apply_sp_settlement
+    ${cn_suffix}    阿拉伯数字转换为中文数字    ${company_id}
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${account_apply_id},'00000000')) AS Id FROM dual;
+    ${passwd}    获取加密后的密码    ${staff_id}
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${coop_range}    021,038,051
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${base_id}    888
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${cn_prefix}    一点公司
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${account_prefix}    一点账号
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${coop_type}    2
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${settlement_code}    38${sp_id}
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${subcompany_confirm_status}    1
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${coop_range}    ${EMPTY}
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${base_id}    038
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${cn_prefix}    分签公司
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${account_prefix}    分签账号
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${coop_type}    5
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${settlement_code}    ${EMPTY}
+    Run Keyword If    '${staff_style}'=='2'    Set Test Variable    ${subcompany_confirm_status}    0
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${coop_range}    021,038,051
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${base_id}    888
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${cn_prefix}    统谈公司
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${account_prefix}    统谈账号
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${coop_type}    5
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${settlement_code}    JF${sp_id}
+    Run Keyword If    '${staff_style}'=='3'    Set Test Variable    ${subcompany_confirm_status}    1
+    执行sql语句    insert into sec_department (DEPARTMENT_ID, DEPARTMENT_NAME, DEPARTMENT_DESC, PARENT_ID, EMAIL, ADDRESS, ADD_SUB, CREATE_USER, CREATE_DATE, LAST_UPDATE_DATE, DOMAIN) values ('${department_id}', '${cn_prefix}${cn_suffix}', '${cn_prefix}${cn_suffix}', '-997', '', '', '0', '1010240', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', 'SP');    #sec_department表里面插入部门信息
+    执行sql语句    insert into sec_staff (STAFF_ID, LOGIN_NAME, DEPARTMENT_ID, REAL_NAME, PASSWORD, STATUS, SEX, TELEPHONE, MOBILE, EMAIL, CREATE_USER, CREATE_DATE, EXPIRE_DATE, LAST_UPDATE_DATE, PASSWORD_EXPIRE_DATE, LOCK_DATE, CITY_ID) values ('${staff_id}', '${account_prefix}${account_apply_id}', '${department_id}', '${cn_suffix}', '${passwd}', 'NORMAL', 'MALE', '', '139${mobile_phone} ', '${account_apply_id}@11.com', '-999', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '', to_date('07-09-2015 15:23:03', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-10-2050', 'dd-mm-yyyy'), '', '');    # sec_staff表里面插入账号信息
+    执行sql语句    INSERT INTO sec_department_role (DEPARTMENT_ID, ROLE_ID) SELECT '${department_id}', role_id FROM sec_role WHERE role_key LIKE 'SP_ROLE%';    #sec_department_role表里面插入部门对于的角色信息
+    执行sql语句    INSERT INTO sec_staff_department_role (STAFF_ID,DEPARTMENT_ID, ROLE_ID) SELECT '${staff_id}','${department_id}', role_id FROM sec_role WHERE role_key LIKE 'SP_ROLE%';    #sec_staff_department_role表里面插入用户角色
+    执行sql语句    insert into sec_staff_extend (STAFF_ID, STAFF_STYLE, CN_NAME, CREATE_DATE, LAST_UPDATE, COMPANY_SAVE_DATE, SP_SAVE_DATE, STAFF_TYPE, COMPANY_TYPE) values ('${staff_id}', '${staff_style}', '${cn_prefix}${cn_suffix}', to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), to_date('21-07-2015 09:52:25', 'dd-mm-yyyy hh24:mi:ss'), '1', '${cn_exist}');    #sec_staff_extend表里面插入账号类型的信息，区分是一点接入还是分谈分签
+    执行sql语句    insert into prm_sp_staff (SP_ISN, STAFF_ID) values ('${sp_id}', '${staff_id}');    #建立账号和合作的关联关系
+    执行sql语句    insert into prm_company_staff (COMPANY_ISN, STAFF_ID) values ('${company_id}', '${staff_id}');    #建立账号和公司的关联关系
+    执行sql语句    insert into prm_apply_sp (SP_ID, COMPANY_ID, SP_ISN, SP_CODE, BASE_ID, COOP_TYPE, PRODUCT_ID, INFO_HEADER_NAME, INFO_HEADER_MOBILE, INFO_ATTACHE_GROUP_ID, INFO_COMMIT_ATTACH_ID, STATUS, APTITUDE_ID, TAX_CODE, TAX_RATE, TAX_QUALIFICATION, BAL_CYCLE, ONLINE_DATE, CREATE_DATE, LAST_UPDATE_DATE, BANK_ID, LAST_INSTANCE_SP_ID, BANK_ISN, DATA_RIGHT, SOURCEFLAG, BASE_APPLY_ID, STAFF_STYLE, COOP_RANGE, CP_SHORT_NAME, SETTLEMENT_CODE, SUBCOMPANY_CONFIRM_STATUS) values ('${sp_id}', '${company_id}', '${sp_id}', '${sp_id}', '${base_id}', '${coop_type}', '', '安全人姓名', '138${mobile_phone}', '', '', 'A', '', 'VAT11', 11, '0', '0', to_date('01-11-2015', 'dd-mm-yyyy'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'), '${bank_id}', '', '${bank_id}', '${base_id}', '', '', '${staff_style}', '${coop_range}', 'JC${account_apply_id}', '${settlement_code}', '${subcompany_confirm_status}');    #插入合作信息
+    执行sql语句    insert into prm_sp (SP_ID, BANK_ID, SP_ISN, SP_CODE, BASE_ID, COOP_TYPE, PRODUCT_ID, INFO_HEADER_NAME, INFO_HEADER_MOBILE, INFO_ATTACHE_GROUP_ID, INFO_COMMIT_ATTACH_ID, STATUS, APTITUDE_ID, TAX_CODE, TAX_RATE, TAX_QUALIFICATION, BAL_CYCLE, ONLINE_DATE, CREATE_DATE, LAST_UPDATE_DATE, COMPANY_ID, DATA_RIGHT, SOURCEFLAG, BASE_APPLY_ID, STAFF_STYLE, COOP_RANGE, CP_SHORT_NAME, SETTLEMENT_CODE, SUBCOMPANY_CONFIRM_STATUS) values ('${sp_id}', '${bank_id}', '${sp_id}', '${sp_id}', '${base_id}', '${coop_type}', '', '安全人姓名', '138${mobile_phone}', '', '', 'A', '', 'VAT6', 6, '0', '0', to_date('01-11-2015', 'dd-mm-yyyy'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'), '${company_id}', '${base_id}', '', '', '${staff_style}', '${coop_range}', 'JC${account_apply_id}', '${settlement_code}', '${subcompany_confirm_status}');
+    Comment    #如果是一点接入CP，插入子公司确认信息
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_sp_extend (SP_ID, BASE_ID, SECTION_CODE, SUB_COMPANY_SP_CODE, CREATE_DATE) values ('${sp_id}', '021', '', '21{sp_id}', to_date('05-11-2015 15:53:56', 'dd-mm-yyyy hh24:mi:ss'));
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_sp_extend (SP_ID, BASE_ID, SECTION_CODE, SUB_COMPANY_SP_CODE, CREATE_DATE) values ('${sp_id}', '038', '', '${settlement_code}', to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'));
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_sp_extend (SP_ID, BASE_ID, SECTION_CODE, SUB_COMPANY_SP_CODE, CREATE_DATE) values ('${sp_id}', '051', '', '51${sp_id}', to_date('05-11-2015 15:53:56', 'dd-mm-yyyy hh24:mi:ss'));
+    Comment    #如果是统谈统签渠道，插入游戏子公司确认信息
+    Run Keyword If    '${staff_style}'=='3'    执行sql语句    insert into prm_sp_extend (SP_ID, BASE_ID, SECTION_CODE, SUB_COMPANY_SP_CODE, CREATE_DATE) values ('${sp_id}', '038', '', '${settlement_code}', to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'));
+    执行sql语句    insert into prm_apply_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id1}', '${contact_id1}', '2', '${sp_id}', '21', '负责人姓名', '', '137${mobile_phone}', '${contact_id1}@11.com', '', '789122', '业务负责人住址', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入业务负责人信息
+    执行sql语句    insert into prm_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id1}', '${contact_id1}', '2', '${sp_id}', '21', '负责人姓名', '', '137${mobile_phone}', '${contact_id1}@11.com', '', '789122', '业务负责人住址', to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'));
+    执行sql语句    insert into prm_apply_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id2}', '${contact_id2}', '2', '${sp_id}', '22', '联系人姓名', '', '137${mobile_phone}', '${contact_id2}@11.com', '', '789122', '业务联系人住址', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入业务联系人信息
+    执行sql语句    insert into prm_contact (CONTACT_ID, CONTACT_ISN, OWNER_TYPE, OWNER_ID, CONTACT_TYPE, NAME, PHONE, MOBILE, EMAIL, FAX, POSTCODE, POST_ADDRESS, CREATE_DATE, LAST_UPDATE) values ('${contact_id2}', '${contact_id2}', '2', '${sp_id}', '22', '联系人姓名', '', '137${mobile_phone}', '${contact_id2}@11.com', '', '789122', '业务联系人住址', to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'));
+    执行sql语句    insert into prm_sp_contract (CONTRACT_ID, SP_ID, CONTRACT_NO, CONTRACT_NAME, CONTRACT_EDITION_ID, FILE_GROUP_ID, SIGN_DATE, START_DATE, END_DATE, TASK_FLAG, LAW_MAN, REMARK, NOTIFY_RENEW_FLAG, OWNER_TYPE, CONTACT_DEADLINE, DELAY_DEADLINE, SIGNED_MAN, SETTLE_TATIO, CONTACT, CREATE_DATE, LAST_UPDATE, STATUS, IS_RENEW, RENEW_LAST, TERMINAL_DATE, AMOUNT, SPONSOR, BATCH_ID, SOURCE_FLAG) values ('${CONTRACT_ID}', '${sp_id}', '合同编号${sp_id}', '合同名称${sp_id}', '', '', null, to_date('01-11-2015', 'dd-mm-yyyy'), to_date('03-11-2015', 'dd-mm-yyyy'), '', '', '', '', '1', '', '', '', '', '', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:55:24', 'dd-mm-yyyy hh24:mi:ss'), '3', '0', null, null, null, '', '', '');    #插入合同信息
+    执行sql语句    insert into prm_apply_sp_settlement (SETTLEMENT_ID, SETTLEMENT_ISN, SP_ID, SETTLEMENT_TYPE, SETTLEMENT_TYPE_DES, SETTLEMENT_METHOD, SETTLEMENT_MOD, SETTLEMENT_PROPERTY, SETTLEMENT_BASE_ID, CREATE_DATE, LAST_UPDATE, IS_LINK_ASSESSMENT) values ('${SETTLEMENT_ID}', '${SETTLEMENT_ID}', '${sp_id}', '1', '', '1', '1', '0', '103', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '1');    #插入结算信息
+    执行sql语句    insert into prm_sp_settlement (SETTLEMENT_ID, SETTLEMENT_ISN, SETTLEMENT_TYPE, SETTLEMENT_TYPE_DES, SETTLEMENT_METHOD, SETTLEMENT_MOD, SETTLEMENT_PROPERTY, SETTLEMENT_BASE_ID, CREATE_DATE, LAST_UPDATE, SP_ID, IS_LINK_ASSESSMENT, SETTLE_TATIO) values ('${SETTLEMENT_ID}', '${SETTLEMENT_ID}', '1', '', '1', '1', '0', '103', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '${sp_id}', '1', '');
+    执行sql语句    insert into prm_apply_bank_account (BANK_ID, BANK_ISN, BANK_NAME, ACCOUNT_NO, BANK_TYPE_CODE, BANK_TYPE_NAME, PROVINCE_ID, CITY_ID, BASE_ID, ATTACH_GROUP_ID, COMPANY_ISN, CREATE_DATE, LAST_UPDATE) values ('${bank_id}', '${bank_id}', '中国招商银行', '0000000000${bank_id}', '9004', '', '14', '431', '${base_id}', '111100000004|8d60631692871102addc0084c8db543e', '${company_id}', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入银行账号信息
+    执行sql语句    insert into prm_bank_account (BANK_ID, BANK_ISN, BANK_NAME, ACCOUNT_NO, BANK_TYPE_CODE, BANK_TYPE_NAME, PROVINCE_ID, CITY_ID, BASE_ID, ATTACH_GROUP_ID, COMPANY_ISN, CREATE_DATE, LAST_UPDATE) values ('${bank_id}', '${bank_id}', '中国招商银行', '0000000000${bank_id}', '9004', '', '14', '431', '${base_id}', '111100000004|8d60631692871102addc0084c8db543e', '${company_id}', to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:33:17', 'dd-mm-yyyy hh24:mi:ss'));
+    执行sql语句    insert into prm_apply_company (COMPANY_ID, CN_NAME, EN_NAME, SHORT_NAME, ORG_CODE, ORG_CODE_ATTACH_ID, COMPANY_ISN, COMPANY_DESC, ADDRESS, POSTCODE, CHILD_FLAG, PARENT_CN_NAME, SUB_FLAG, HEAD_CN_NAME, REG_CAPITAL_CURRENCY, REG_CAPITAL_OTHER_CURRENCY, REG_CAPITAL, LIST_SITUTION, LIST_OTHER_AREA, COMPANY_NATURE, FOREIGN_CAPITAL_RATIO, LAW_MAN, LAW_MAN_ID, LAW_MAN_LICENSE_TYPE, LAW_MAN_OTHER_LICENSE_TYPE, RULE_ATTACH_GROUP_ID, STATUS, SUBMITTER_ID, SUBMITTER_NAME, BASE_ID, LAST_INSTANCE_CM_ID, CREATE_DATE, LAST_UPDATE) values \ ('${company_id}', '${cn_prefix}${cn_suffix}', '', '', '${org_code}', '111100000001|5161e73c3ce3d7bdb407c2d10f6576ad', '${company_id}', '', '', '', '0', '', '0', '', '1', '', '9899998', '1', '', '1', '', '法人代表张三', '43252219861211517X', '1', '', '', 'A', '${staff_id}', '', '${base_id}', '', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'));    #插入公司基本信息。cn_name要和部门名称一致
+    执行sql语句    insert into prm_company (COMPANY_ID, CN_NAME, EN_NAME, SHORT_NAME, ORG_CODE, ORG_CODE_ATTACH_ID, BASE_ID, COMPANY_ISN, COMPANY_DESC, ADDRESS, POSTCODE, CHILD_FLAG, PARENT_CN_NAME, SUB_FLAG, HEAD_CN_NAME, REG_CAPITAL_CURRENCY, REG_CAPITAL_OTHER_CURRENCY, REG_CAPITAL, LIST_SITUTION, LIST_OTHER_AREA, COMPANY_NATURE, FOREIGN_CAPITAL_RATIO, LAW_MAN, LAW_MAN_ID, LAW_MAN_LICENSE_TYPE, LAW_MAN_OTHER_LICENSE_TYPE, RULE_ATTACH_GROUP_ID, STATUS, CREATE_DATE, LAST_UPDATE, UPDATE_SYSTEM_ID, CREATE_SYSTEM_ID) values ('${company_id}', '${cn_prefix}${cn_suffix}', '', '', '${org_code}', '111100000001|5161e73c3ce3d7bdb407c2d10f6576ad', '${base_id}', '${company_id}', '', '', '', '0', '', '0', '', '1', '', '9899998', '1', '', '1', '', '法人代表张三', '43252219861211517X', '1', '', '', 'A', to_date('05-11-2015 15:46:52', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 16:02:01', 'dd-mm-yyyy hh24:mi:ss'), '${base_id}', '${base_id}');
+    执行sql语句    insert into prm_apply_company_operating (OPERATING_ID, COMPANY_ID, LICENSE_NO, LICENSE_DATE, START_DATE, END_DATE, CHECK_DATE, LICENSE_PROVINCE_ID, LICENSE_ADDRESS, CREATE_DATE, LAST_UPDATE, ATTACH_GROUP_ID, BIZ_SCOPE_DESC, OPERATING_ISN) values ('${operating_id}', '${company_id}', 'yy${org_code}', '', to_date('14-07-2015', 'dd-mm-yyyy'), '', '', '14', '', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), '111100000002|0e4d69dbf33ea844373c9d2e6c8559de', '', '${operating_id}');    #插入营业执照信息。营业执照号和组织机构代码号一样
+    执行sql语句    insert into prm_company_operating (OPERATING_ID, LICENSE_NO, LICENSE_DATE, START_DATE, END_DATE, CHECK_DATE, LICENSE_PROVINCE_ID, LICENSE_ADDRESS, BIZ_SCOPE_DESC, CREATE_DATE, LAST_UPDATE, ATTACH_GROUP_ID, COMPANY_ID, OPERATING_ISN) values ('${operating_id}', 'yy${org_code}', null, to_date('14-07-2015', 'dd-mm-yyyy'), null, '', '14', '', '', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '111100000002|0e4d69dbf33ea844373c9d2e6c8559de', '${company_id}', '${operating_id}');
+    执行sql语句    insert into prm_apply_company_tax_reg (TAX_REG_ID, TAX_REG_ISN, TAX_REG_NO, LICENSE_DATE, TAX_TYPE, TAX_QUALIFICATION, BIZ_SCOPE_DESC, ATTACH_GROUP_ID, CREATE_DATE, LAST_UPDATE, COMPANY_ID) values ('${tax_id}', '${tax_id}', 'sw${org_code}', to_date('15-07-2015', 'dd-mm-yyyy'), '1', '0', '', '111100000003|c6fd4ece94ab1d3ec1c11047d4c8e780', to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('07-09-2015 15:23:17', 'dd-mm-yyyy hh24:mi:ss'), '${company_id}');    #插入税务信息。税务登记号和组织机构代码号一样
+    执行sql语句    insert into prm_company_tax_reg (TAX_REG_ID, TAX_REG_ISN, TAX_REG_NO, LICENSE_DATE, TAX_TYPE, TAX_QUALIFICATION, BIZ_SCOPE_DESC, ATTACH_GROUP_ID, CREATE_DATE, LAST_UPDATE, COMPANY_ID) values ('${tax_id}', '${tax_id}', 'sw${org_code}', to_date('15-07-2015', 'dd-mm-yyyy'), '1', '0', '', '111100000003|c6fd4ece94ab1d3ec1c11047d4c8e780', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '${company_id}');
+    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('${account_prefix}${account_apply_id}', '${staff_id}', '${NODE_INSTANCE_ID1}', 'apply_req', '1', '${company_id}', '${company_id}', '', to_date('05-11-2015 15:51:31', 'dd-mm-yyyy hh24:mi:ss'), '', 'sp', '', '', null, '', '1');    #流程信息表
+    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('${account_prefix}${account_apply_id}', '${staff_id}', '${NODE_INSTANCE_ID2}', 'apply_req', '2', '${sp_id}', '${sp_id}', '', to_date('05-11-2015 15:51:31', 'dd-mm-yyyy hh24:mi:ss'), '', 'sp', '', '', null, '', '1');
+    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('zbadmin', '1010240', '${NODE_INSTANCE_ID3}', 'apply_audit', '2', '${sp_id}', '${sp_id}', '1', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '通过', null, '', '1');
+    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('zbadmin', '1010240', '${NODE_INSTANCE_ID4}', 'apply_audit', '1', '${company_id}', '${company_id}', '1', to_date('05-11-2015 15:52:17', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '通过', null, '', '1');
+    Comment    一点接入CP插入子公司确认的流程信息
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('基地平台同步', '-999', '${NODE_INSTANCE_ID5}', 'subcompany_confirm_021', '2', '${sp_id}', '${sp_id}', '', to_date('05-11-2015 15:53:56', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '', null, '', '1');
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('基地平台同步', '-999', '${NODE_INSTANCE_ID6}', 'subcompany_confirm_051', '2', '${sp_id}', '${sp_id}', '', to_date('05-11-2015 15:53:56', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '', null, '', '1');
+    Run Keyword If    '${staff_style}'=='1'    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('zbadmin', '1010240', '${NODE_INSTANCE_ID7}', 'subcompany_confirm_038', '2', '${sp_id}', '${sp_id}', '', to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '通过', null, '', '1');
+    Comment    统谈统签渠道插入游戏确认的流程信息
+    Run Keyword If    '${staff_style}'=='3'    执行sql语句    insert into prm_flow_info (DEAL_MAN, DEAL_MAN_ID, NODE_INSTANCE_ID, NODE_NAME, OWNER_TYPE, OWNER_ID, OWNER_ISN, DEAL_RESULT, DEAL_DATE, FILE_GROUP_ID, OPERATE_BY, DEAL_REASON, DEAL_COMMENT, REVIEW_TIME, REVIEW_SCORE, HAS_THIS_NODE) values ('zbadmin', '1010240', '${NODE_INSTANCE_ID7}', 'subcompany_confirm_038', '2', '${sp_id}', '${sp_id}', '', to_date('05-11-2015 15:54:49', 'dd-mm-yyyy hh24:mi:ss'), '', 'admin', '', '通过', null, '', '1');
+    Set Test Variable    ${account_name}    ${account_prefix}${account_apply_id}
+    Set Test Variable    ${cn_name}    ${cn_prefix}${cn_suffix}
+    Set Test Variable    ${sp_code}    ${sp_id}
+    Run Keyword If    '${staff_style}'=='1'    Set Test Variable    ${yx_code}    ${settlement_code}

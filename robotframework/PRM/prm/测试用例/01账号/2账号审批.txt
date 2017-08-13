@@ -1,0 +1,83 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/01账号/2账号审批.txt
+
+*** Test Cases ***
+01合作账号审批_审批通过
+    [Tags]
+    打开注册页面
+    账号信息设置
+    填写账号信息    手机动漫    公司    账号
+    勾选公司页面单选框
+    非MM账号，填写公司基本必须信息
+    填写公司营业执照信息
+    填写税务登记证信息
+    提交注册且校验提示信息
+    查询数据库是否有新增的账号待审批记录    账号${account_suffix}
+    查询数据库是否有新增的公司待审批记录    账号${account_suffix}    公司${cn_name_suffix}
+    合作伙伴端检查账号状态    账号${account_suffix}
+    登录admin端    sims_admin
+    点击右上角菜单    系统管理->合作伙伴帐号审批
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    待审批
+    管理员端检查账号    账号${account_suffix}    公司${cn_name_suffix}
+    点击审批按钮
+    非游戏MM账号审批    审批通过
+    提交账号审批结果
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    审批通过
+    管理员端检查账号    账号${account_suffix}    公司${cn_name_suffix}
+    查看账号状态    账号${account_suffix}    P    #P：表示审批通过
+    查看公司状态    账号${account_suffix}    公司${cn_name_suffix}    A
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02合作账号审批_审批驳回
+    [Tags]
+    打开注册页面
+    账号信息设置
+    填写账号信息    手机动漫    公司    账号
+    勾选公司页面单选框
+    非MM账号，填写公司基本必须信息
+    填写公司营业执照信息
+    填写税务登记证信息
+    提交注册且校验提示信息
+    登录admin端    sims_admin
+    点击右上角菜单    系统管理->合作伙伴帐号审批
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    待审批
+    点击审批按钮
+    非游戏MM账号审批    审批驳回
+    提交账号审批结果
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    审批驳回
+    管理员端检查账号    账号${account_suffix}    公司${cn_name_suffix}
+    查看账号状态    账号${account_suffix}    R    #P：表示审批通过
+    查看公司状态    账号${account_suffix}    公司${cn_name_suffix}    apply_reject
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03合作账号审批_退回修改
+    [Tags]
+    打开注册页面
+    账号信息设置
+    填写账号信息    手机动漫    公司    账号
+    勾选公司页面单选框
+    非MM账号，填写公司基本必须信息
+    填写公司营业执照信息
+    填写税务登记证信息
+    提交注册且校验提示信息
+    登录admin端    sims_admin
+    点击右上角菜单    系统管理->合作伙伴帐号审批
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    待审批
+    点击审批按钮
+    非游戏MM账号审批    退回修改
+    提交账号审批结果
+    账号审批列表查询账号    账号${account_suffix}    公司${cn_name_suffix}    退回修改
+    管理员端检查账号    账号${account_suffix}    公司${cn_name_suffix}
+    查看账号状态    账号${account_suffix}    D    #P：表示审批通过
+    查看公司状态    账号${account_suffix}    公司${cn_name_suffix}    apply_deny
+    [Teardown]
+
+04校验MM账号审批状态
+    [Documentation]    PRM端查看MM账号的审批状态为“查看”
+    [Tags]
+    插入待审批账号信息    091    13
+    登录PRM管理员端"${url_admin}",登陆名"sims_admin",密码"aaa111"
+    账号审批列表查询账号    自动化有限公司${apply_audit_companyId}
+    检查操作按钮    查看
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,6 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+删除新增同步成功结算考核信息
+    Exec Sql    DELETE FROM prm_exam t WHERE t.base_id='041' AND t.sp_code='QD20140730001' AND t.check_month='201410';    ${prm_oracle_tns}

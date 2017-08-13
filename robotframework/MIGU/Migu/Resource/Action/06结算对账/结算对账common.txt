@@ -1,0 +1,128 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/basic_opr.txt
+Resource          ../../Common/databaseinit.txt
+
+*** Keywords ***
+根据查询条件查询并校验结果
+    [Arguments]    ${check_name}    ${coop_code}
+    展开查询框
+    admin端查询结果校验    ${check_name}    ${coop_code}
+
+选中记录并发送提醒短信
+    click button    id=batchSendCheckAll
+    click button    jquery=input[value='发送提醒短信']
+
+点击进入开票金额详情
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Click Link    jquery=a:contains('${value}')
+    sleep    1s
+    直到元素可见    jquery=div:contains('${text}')
+    直到元素可见    jquery=span:contains('${coop_code}')
+
+返回主页
+    click link    jquery=a:contains('返回')
+
+点击进入话费收入详情页面
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    直到元素可见    jquery=div:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+点击进入非话费收入详情页面
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('(查看详情)')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    直到元素可见    jquery=div:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+点击进入代理收入详情页面
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('(查看详情)')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    直到元素可见    jquery=div:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+进入合作伙伴端二级菜单
+    [Arguments]    ${menu1}    ${menu2}
+    直到元素可见    id=headFrame
+    选择frame    headFrame
+    点击元素    jquery=a:contains('${menu1}')
+    点击元素    jquery=a:contains('${menu2}')
+
+点击进入合作端结算明细
+    [Arguments]    ${value}    ${para1}    ${para2}
+    select frame    content1
+    Click Link    jquery=a:contains('${value}')
+    sleep    1s
+    直到元素可见    jquery=span:contains('${para1}')
+    直到元素可见    jquery=span:contains('${para2}')
+
+点击进入合作端话费收入详情页面
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+点击进入合作端非话费收入详情页面
+    [Arguments]    ${value}    ${text}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+选择当前会话
+    Select Window
+
+点击进入合作端代理收入详情页面
+    [Arguments]    ${value}    ${coop_code}
+    Comment    Click Link    jquery=a[onclick='creditHFDetail_view('800000000002','201612')']:contains('（查看详情）')
+    直到元素可见    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    click Link    jquery=span:contains('${value}')~a:contains('（查看详情）')
+    Comment    直到元素可见    jquery=span:contains('${text}')
+    直到元素可见    jquery=td:contains('${coop_code}')
+
+合作伙伴端返回上级菜单
+    click button    id=returnbtn
+
+合作端检查是否需要进行首页
+    Run Keyword If Element Visible    jquery=a#managerCenter    partner端登录后进入正式页面
+
+合作端发起对账
+    select frame    content1
+    点击元素    jquery=span:contains('发起对账')
+    直到元素可见    jquery=strong:contains('发起对账')
+    文本框输入    id=changeSettleAmount    100.99
+    文本框输入    id=settleReason    发起对账
+    点击元素    id=submitButton
+
+清理对账信息
+    [Arguments]    ${coop_code}
+    删除数据库记录    delete from prm_settlement_info a where a.sp_code='${coop_code}'
+
+点击回复对账
+    [Arguments]    ${result}    ${dealComment}=dealComment
+    点击元素    jquery=a:contains('回复')
+    下拉框输入文字    是否允许再次发起对账：    ${result}
+    文本框输入    id=${dealComment}    回复结果
+    click button    id=submitButton
+
+初始化待对账数据
+    [Arguments]    ${settlement_id}    ${coop_code}    ${coop_type}    ${month}
+    执行sql语句    insert into prm_settlement_info (SETTLEMENT_INFO_ID, SETTLE_MONTH, SP_ID, SP_CODE, BASE_ID, SETTLEMENT_CODE, CN_NAME, INVOICE_AMOUNT, INVOICE_TAX_RATE, FLOW_NODE, REMARK, STATUS, CREATE_DATE, LAST_UPDATE, COOP_TYPE, CHANGE_SETTLE_AMOUNT, FILE_GROUP_ID, SETTL_REASON, CHECK_SETTLE_FLAG, REPLAY_STATUS, SETTLE_DATE, IS_INTERFACE) values ('${settlement_id}', '${month}', null, '${coop_code}', '888', null, 'CP结算', null, null, null, 'CP结算说明', null, to_date('22-12-2016 15:14:41', 'dd-mm-yyyy hh24:mi:ss'), to_date('22-12-2016 15:18:39', 'dd-mm-yyyy hh24:mi:ss'), '${coop_type}', 100.99000000000, null, '发起对账', null, '0', to_date('22-12-2016 15:14:41', 'dd-mm-yyyy hh24:mi:ss'), 'Y');
+
+数据库对账状态检查
+    [Arguments]    ${coop_code}    ${result}
+    查询数据库记录数    select a.check_settle_flag from prm_settlement_info a where a.sp_code='${coop_code}';    ${result}
+
+清理短信信息
+    执行sql语句    delete from prm_settlementInfo_msg_send a;
+
+检查是否标记发送短信
+    [Arguments]    ${coop_type}
+    查询数据库记录数    select count(1) from prm_settlementInfo_msg_send a where a.sp_code='${coop_type}';    1

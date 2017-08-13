@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="GBK"?>
+<Msg>
+	<Header>
+		<Version>0001</Version>
+		<TestFlag>1</TestFlag>
+		<ActivityCode>110001</ActivityCode>
+		<ReqSys>999</ReqSys>
+		<ReqDateTime>20140612112715677</ReqDateTime>
+		<ReqTransID>20140612112715678</ReqTransID>
+		<ActionCode>0</ActionCode>
+        <Sign></Sign>
+		<RcvSys>2001</RcvSys>
+		<RcvDateTime></RcvDateTime>
+		<RcvTransID></RcvTransID>
+		<RspCode></RspCode>
+		<RspDesc></RspDesc>
+	</Header>
+	<Body>
+        <CompanyName></CompanyName>
+        <CompanyNo></CompanyNo>
+	</Body>
+</Msg>

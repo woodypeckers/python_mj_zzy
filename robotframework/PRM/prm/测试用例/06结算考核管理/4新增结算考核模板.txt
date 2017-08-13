@@ -1,0 +1,28 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Common/公用.txt
+Resource          ../../Resource/Action/06结算考核管理/4新增结算单模板.txt
+Resource          ../../Resource/Action/04结算对账/结算对账common.txt
+Resource          ../../Resource/Action/06结算考核管理/结算考核common.txt
+
+*** Test Cases ***
+01新增12582基地默认结算单模板-没有加减分项
+    [Tags]    smoke    ie
+    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    清除结算考核模板    自动化测试结算考核模板    001
+    登录PRM管理员端"${url_admin}",登陆名"admin_12582",密码"aaa111"
+    进入结算考核模板管理页面
+    新增结算单模板
+    检查结算考核模板的状态    自动化测试结算考核模板    001    1
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02 新增12582基地有加减分项的结算单模板
+    [Tags]    smoke    ie
+    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    清除结算考核模板    自动化测试结算考核模板    001
+    登录PRM管理员端"${url_admin}",登陆名"admin_12582",密码"aaa111"
+    进入结算考核模板管理页面
+    新增有加减分项的结算单模板
+    检查结算考核模板的状态    自动化测试结算考核模板    001    1
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,89 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/附件上传.txt
+
+*** Keywords ***
+进入SP端问题咨询页面
+    点击一级菜单    问题咨询
+
+点击新增问题咨询按钮
+    sleep    1s
+    select frame    content
+    直到页面某个元素可见    jquery=a:contains('新增问题咨询')
+    click link    jquery=a:contains('新增问题咨询')
+    unselect Frame
+
+进入问题咨询页面，填写必填字段
+    [Arguments]    ${busineseStyle}
+    select frame    content
+    直到页面某个元素可见    jquery=div:contains('问题咨询')
+    下拉框_通过id定位    busineseStyle    ${busineseStyle}
+    ajax加载完毕
+    下拉框_通过id定位    busineseStyle    请选择
+    Comment    Selenium2Library.Mouse Down    busineseStyle
+    Comment    sleep    10s
+    Comment    Selenium2Library.Mouse Down    relateBusiness
+    Comment    ajax加载完毕
+    Comment    下拉框_通过id定位    busineseStyle    业务咨询
+    sleep    2s
+    下拉框_通过id定位    busineseStyle    ${busineseStyle}
+    直到页面某个元素可见    relateBusiness
+    下拉框_通过id定位    relateBusiness    12582基地
+    input text    xpath=//input[@nullmsg="请输入问题咨询名称"]    新增系统问题
+    input text    xpath=//textarea[@nullmsg="请输入详细描述"]    新增系统问题详细描述
+    链接_通过id定位    submitButton
+
+提交问题咨询成功
+    校验二次确认框提示信息并点击按钮
+    unselect frame
+    sleep    1s
+
+清除已存在的问题咨询
+    删除数据库记录    delete from prm_problem_consult a where a.title='新增系统问题';
+
+检查问题咨询的状态
+    [Arguments]    ${check_status}
+    数据库记录数    select a.status from prm_problem_consult a where a.title='新增系统问题'    ${check_status}
+
+进入问题咨询页面，填写所有字段
+    [Arguments]    ${busineseStyle}
+    select frame    content
+    直到页面某个元素可见    jquery=div:contains('问题咨询')
+    下拉框_通过id定位    busineseStyle    ${busineseStyle}
+    ajax加载完毕
+    下拉框_通过id定位    busineseStyle    请选择
+    Comment    Selenium2Library.Mouse Down    busineseStyle
+    Comment    sleep    10s
+    Comment    Selenium2Library.Mouse Down    relateBusiness
+    Comment    ajax加载完毕
+    Comment    下拉框_通过id定位    busineseStyle    业务咨询
+    sleep    2s
+    下拉框_通过id定位    busineseStyle    ${busineseStyle}
+    直到页面某个元素可见    relateBusiness
+    下拉框_通过id定位    relateBusiness    12582基地
+    input text    xpath=//input[@nullmsg="请输入问题咨询名称"]    新增系统问题
+    input text    xpath=//textarea[@nullmsg="请输入详细描述"]    新增系统问题详细描述
+    文本输入_通过id定位    relateSpCode    CP111111
+    附件上传_通过id定位    problemConsultAttach    prm\\temp\\合作审批.jpg
+    链接_通过id定位    submitButton
+
+查看问题详情
+    unselect frame
+    select Frame    content
+    Comment    下拉框_通过id定位    problemConsultStatus    已邮件通知
+    Comment    点击元素    queryBtn
+    直到页面某个元素可见    jquery=html body div.shadow div.title span.titlespan:contains("查询结果")
+    点击元素    jquery=html body div.shadow div.content div.panel.datagrid div.datagrid-wrap.panel-body.panel-body-noheader.panel-body-noborder div.datagrid-view div.datagrid-view2 div.datagrid-body table.datagrid-btable tbody tr#datagrid-row-r1-2-0.datagrid-row td div.datagrid-cell.datagrid-cell-c1-Opt a:contains("查看")
+    Comment    直到页面某个元素可见    juqery=a:contains("查看")
+    unselect frame
+    select frame    content
+    直到页面某个元素可见    jquery=a:contains("返回")
+    click link    jquery=a:contains("返回")
+
+初始化问题咨询数据
+    数据库操作.删除数据库记录    delete from prm_problem_consult a where a.consult_no='140511001';
+    数据库操作.删除数据库记录    delete from PEND_TASK_REMIND \ a where a.businessid='1010242' and a.remark='9000000021';
+    数据库操作.删除数据库记录    delete from prm_problem_consult_flow_info a where a.owner_id='9000000021';
+    数据库操作.删除数据库记录    insert into prm_problem_consult_flow_info (FLOW_INFO_ID, OWNER_ID, DEAL_MAN, DEAL_MAN_ID, DEAL_TYPE, TRANSFERRED_OBJECT, DEAL_COMMENT, BUSINESE_STYLE, DOMAIN, DEAL_DATE) values ('9000000017', '9000000021', '彭亨康','1010242', 'consult_req', null, null, '1', 'sp', to_date('08-05-2015 16:26:59', 'dd-mm-yyyy hh24:mi:ss'));
+    数据库操作.删除数据库记录    insert into prm_problem_consult \ \ (ID, \ \ \ CONSULT_NO, \ \ \ STATUS, \ \ \ BUSINESE_STYLE, \ \ \ RELATE_BUSINESS, \ \ \ TITLE, \ \ \ PROBLEM_DESC, \ \ \ RELATE_SP_CODE, \ \ \ ACCOUNT_NAME, \ \ \ STAFF_ID, \ \ \ SUBMITER, \ \ \ CN_NAME, \ \ \ MOBILE, \ \ \ EMAIL, \ \ \ FILE_GROUP_ID, \ \ \ TRANSFERRED, \ \ \ SOURCE_RESPONSIBLE_PERSON, \ \ \ RESPONSIBLE_PERSON, \ \ \ DOMAIN, \ \ \ BROWSER, \ \ \ OS_NAME, \ \ \ CREATE_DATE, \ \ \ LAST_UPDATE) values \ \ ('9000000021', \ \ \ '140511001', \ \ \ '0', \ \ \ '2', \ \ \ '001', \ \ \ '新增系统问题', \ \ \ '新增系统问题详细描述', \ \ \ null, \ \ \ '李红军2', \ \ \ '1010242', \ \ \ '李红军', \ \ \ '李红军有限公司', \ \ \ '13988888888', \ \ \ 'lhj@163.com', \ \ \ null, \ \ \ '0', \ \ \ '001', \ \ \ '901', \ \ \ 'sp', \ \ \ 'Internet Explorer:8.0', \ \ \ 'Win7', \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'), \ \ \ to_date('11-05-2015 13:13:31', 'dd-mm-yyyy hh24:mi:ss'));

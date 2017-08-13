@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fields>
+	<amount>##{amount}##</amount>
+	<merchantId>##{merchantId}##</merchantId>
+	<returnCode>$${returnCode}$$</returnCode>
+	<message></message>
+	<type>##{type}##</type>
+	<version>##{version}##</version>	
+	<orderId>##{orderId}##</orderId>
+	<payDate>##{payDate}##</payDate>
+	<reserved1>##{reserved1}##</reserved1>
+	<reserved2>##{reserved2}##</reserved2>
+	<status>##{status}##</status>
+	<orderDate>##{orderDate}##</orderDate>
+	<payNo>$${payNo}$$</payNo>
+	<org_code>##{org_code}##</org_code>
+	<organization_payNo>##{organization_payNo}##</organization_payNo>
+    <hmac>$${hmac}$$</hmac>	
+</fields>

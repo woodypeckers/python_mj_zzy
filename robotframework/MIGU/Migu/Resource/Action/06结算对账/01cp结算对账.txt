@@ -1,0 +1,2 @@
+*** Settings ***
+Resource          结算对账common.txt

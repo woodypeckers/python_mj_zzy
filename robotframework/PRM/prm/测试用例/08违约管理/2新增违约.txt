@@ -1,0 +1,111 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/08违约管理/2新增违约.txt
+
+*** Test Cases ***
+01新增违约，填写必填项，处罚不为终止合作
+    [Tags]    smoke
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    填写违约信息，只填写必填项
+    提交违约
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02新增违约，所有选项全部填写，处罚不为终止合作
+    [Tags]    smoke
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    填写违约信息，只填写必填项
+    填写选填项
+    提交违约
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03新增违约，处罚为终止合作
+    [Tags]    smoke
+    插入动漫基地-手机动漫产品-CP-商用合作信息
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    ${SP_CODE}
+    填写违约信息，只填写必填项
+    处罚为终止合作
+    提交违约
+    检查数据库是否生成一条退出记录    ${SP_CODE}
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04新增违约，处罚为终止合作，终止通知不填写
+    [Tags]    smoke
+    插入动漫基地-手机动漫产品-CP-商用合作信息
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    ${SP_CODE}
+    填写违约信息，只填写必填项
+    处罚为终止合作，终止通知不填写
+    提交违约，检查提示信息    终止通知必填，不超2000英文字符或1000中文字符
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+05新增违约，违约时间不填写
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    违约时间不填写
+    文本框内容输入错误后，校验文本框后面的提示信息    jquery=div#bottomDiv >span>a:contains('提交')    违约时间不能为空！
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+06新增违约，违约现象说明不填写
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    违约现象说明不填写
+    文本框内容输入错误后，校验文本框后面的提示信息    jquery=div#bottomDiv >span>a:contains('提交')    请输入违约现象说明
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+07新增违约，违约定性为空
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    违约定性为空
+    提交违约，检查提示信息    至少要选择一种违约现象
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+08新增违约，违约处罚为空
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    违约处罚为空
+    提交违约，检查提示信息    至少要选择一种违约处罚
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+09新增违约，考核月份为空
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    考核月份为空
+    文本框内容输入错误后，校验文本框后面的提示信息    jquery=div#bottomDiv >span>a:contains('提交')    请选择考核月份！
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+10新增违约，扣减分值为空
+    [Tags]
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    CP20140730004
+    扣减分值为空
+    文本框内容输入错误后，校验文本框后面的提示信息    jquery=div#bottomDiv >span>a:contains('提交')    请填写扣减积分值！
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+11新增违约，处罚为终止合作，终止时间不填写
+    [Tags]
+    插入动漫基地-手机动漫产品-CP-商用合作信息
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入新增违约界面
+    选择合作伙伴    ${SP_CODE}
+    填写违约信息，只填写必填项
+    处罚为终止合作，终止时间不填写
+    提交违约，检查提示信息    请填写终止时间
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,23 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/11信息数据导入/03信用积分导入.txt
+
+*** Test Cases ***
+导入记录全部正确的阅读基地信用积分
+    [Tags]    smoke    noff
+    Comment    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    清除当月该合作伙伴的信用积分
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    进入信用积分导入页面    prm\\template\\信用积分导入模板.xls
+    发布信用积分并检查提示信息    导入成功
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+导入记录全部部分错误的阅读基地信用积分
+    [Tags]    smoke    noff
+    Comment    只能在IE浏览器下面运行的案例在非IE浏览器下面运行，直接失败
+    清除当月该合作伙伴的信用积分
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    进入信用积分导入页面    prm\\template\\信用积分导入模板部分错误.xls
+    进入错误数据页面
+    发布信用积分并检查提示信息    导入成功
+    [Teardown]    teardown_案例运行失败时关闭浏览器

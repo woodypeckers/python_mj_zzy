@@ -1,0 +1,21 @@
+*** Settings ***
+Resource          结算对账common.txt
+
+*** Keywords ***
+查询出待删除的结算单
+    文本框通过文字    模板编号：    ${settle_template_no}
+    点击元素    xpath=//a[text()='查询']    #点击查询按钮
+    ajax加载完毕
+
+删除结算单模板
+    直到页面某个元素可见    jquery=div:contains('${settle_template_no}')
+    链接    删除
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    校验弹出框信息并点击按钮    您确定要删除该模板吗？    确认
+    ajax加载完毕
+    校验弹出框信息并点击按钮    删除模板成功    确认
+    等待一段时间
+
+数据库中查询被删除的结算单模板
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_settle_template t WHERE t.settle_template_id='${settle_template_no}';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    0

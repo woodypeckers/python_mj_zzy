@@ -1,0 +1,9 @@
+{
+    "messageName": "GetTokenReq",
+    "para": {
+        "TransactionID": "yyyyMMddHHmmssNNNNNN",
+        "userName": "$${userName}$$",
+        "userIP": "$${userIP}$$",
+        "hmac": "~~{hmca()}~~"
+    }
+}

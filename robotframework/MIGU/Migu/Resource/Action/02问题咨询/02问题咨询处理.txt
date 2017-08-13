@@ -1,0 +1,29 @@
+*** Settings ***
+Resource          问题咨询common.txt
+
+*** Keywords ***
+问题咨询输入查询条件
+    [Arguments]    ${businessStyle}    ${status}    ${cnName}    ${submitAccount}=${EMPTY}    ${createDateStart}=${EMPTY}    ${createDateEnd}=${EMPTY}
+    点击按钮    清空
+    下拉框    problemConsultBusineseStyle_container    ${businessStyle}
+    下拉框    problemConsultStatus_container    ${status}
+    文本框输入文字    提交人所属公司    ${cnName}
+    Run Keyword If    '${submitAccount}'!=''    文本框输入文字    提交人账号    ${submitAccount}
+    Run Keyword If    '${createDateStart}'!=''    输入日期    problemConsultCreateDateStart    ${createDateStart}
+    Run Keyword If    '${createDateEnd}'!=''    输入日期    problemConsultCreateDateEnd    ${createDateEnd}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${cnName}')
+
+输入问题咨询处理结果
+    [Arguments]    ${text}=您的问题咨询已经处理完毕。原因是XXX    ${dealAttach}=false
+    直到元素可见    jquery=div:contains('服务响应详情')
+    文本域输入文字    处理回复    ${text}
+    Run Keyword If    '${dealAttach}'=='true'    上传附件，输入id    dealAttach    Migu\\attachment\\问题咨询处理附件.jpg
+
+问题咨询处理后数据校验
+    [Arguments]    ${problem_title}
+    ${res1}    数据库查询    SELECT COUNT(*) FROM prm_problem_consult_flow_info t WHERE t.deal_type='consult_req' and t.owner_id IN(SELECT g.id FROM prm_problem_consult g WHERE g.title='${problem_title}' );
+    Should Be Equal As Strings    1    ${res1}
+    ${res2}    数据库查询    SELECT COUNT(*) FROM prm_problem_consult_flow_info t WHERE t.deal_type='consult_complete_email' and \ t.owner_id IN(SELECT g.id FROM prm_problem_consult g WHERE g.title='${problem_title}' );
+    Should Be Equal As Strings    1    ${res2}

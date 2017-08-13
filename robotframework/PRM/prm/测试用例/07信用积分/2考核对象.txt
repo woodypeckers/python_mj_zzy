@@ -1,0 +1,26 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/07信用积分/2导入考核对象.txt
+
+*** Test Cases ***
+01导入动漫基地考核对象
+    [Tags]    smoke    noff
+    删除导入的积分考核对象
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入导入界面    导入积分考核对象    考核对象导入
+    上传导入信息    2014年    5    信用积分考核对象导入模板.xls
+    提交导入信息
+    检查数据库是否有导入的积分考核对象
+    删除导入的积分考核对象
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02删除考核对象_信用积分未计算未发布
+    [Tags]    smoke    noff
+    删除导入的积分考核对象
+    插入动漫基地考核对象
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入信用积分页签    导入积分考核对象
+    查询出考核对象
+    删除考核对象
+    删除导入的积分考核对象
+    [Teardown]    teardown_案例运行失败时关闭浏览器

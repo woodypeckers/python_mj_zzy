@@ -1,0 +1,139 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/06结算考核管理/5结算考核新增同步.txt
+
+*** Test Cases ***
+01报文符合要求
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+02基地+合作编码在PRM不存在
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12345    /Msg/Body/CoopCode
+    检查消息同步结果    012002
+
+03报文每个节点取最大值
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12345678.99    /Msg/Body/FinalScore    #V10
+    修改xml节点的值    结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明    /Msg/Body/Comment    #V1000
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+04考核得分超过10位
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12345678901    /Msg/Body/FinalScore    #V10
+    检查消息同步结果    001003
+
+05考核得分小数点后超过2位
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    11.999    /Msg/Body/FinalScore    #V10
+    检查消息同步结果    001003
+
+06考核结果说明超过1000个字符
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明结算考核考核结果说明    /Msg/Body/Comment    #V10
+    检查消息同步结果    001003
+
+07考核模板附件类型为doc
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.doc    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    doc    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+08考核模板附件类型为docx
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.docx    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    docx    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+09考核模板附件类型为xls
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.xls    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    xls    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+10考核模板附件类型为xlsx
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.xlsx    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    xlsx    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+11考核模板附件类型为pdf
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.pdf    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    pdf    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+12考核模板附件类型为非doc、docx、xls、xlsx、pdf
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    结算考核打分附件.rar    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    rar    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    001003
+
+13必填字段全部填写，选填字段不填写
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Comment
+    修改xml节点的值    \    /Msg/Body/ScoreAttach/FileName
+    修改xml节点的值    \    /Msg/Body/ScoreAttach/FileSaveName
+    修改xml节点的值    \    /Msg/Body/ScoreAttach/FileSize
+    修改xml节点的值    \    /Msg/Body/ScoreAttach/FileType
+    检查消息同步结果    000000
+    删除新增同步成功结算考核信息
+
+14OperCode为空
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/OperCode
+    检查消息同步结果    001003
+
+15BaseId为空
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/BaseId
+    检查消息同步结果    001003
+
+16CoopCode为空
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/CoopCode
+    检查消息同步结果    001003
+
+17CheckMonth为空
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/CheckMonth
+    检查消息同步结果    001003
+
+18FinalScore为空
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/FinalScore
+    检查消息同步结果    001003
+
+19FinalScore不为float
+    读取xml文件    prm\\xml\\SyncExamToPrm .xml
+    修改消息同步报文Header    110019    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    分数:11    /Msg/Body/FinalScore
+    检查消息同步结果    001003

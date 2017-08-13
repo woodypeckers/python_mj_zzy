@@ -1,0 +1,42 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Teardown
+Resource          ../../Resource/Action/04结算对账/3修改结算单模板.txt
+
+*** Test Cases ***
+01修改结算单模板_模板未被使用
+    [Tags]    smoke
+    登录并进入到结算单模板查询页面    username=admin_12582    password=aaa111
+    插入12582基地结算单模板，模板未被使用
+    查询出待修改的结算单
+    进入结算单模板修改页面
+    提交修改后的结算单模板
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02修改结算单模板_模板已被使用，点击修改检查提示信息
+    [Tags]    smoke
+    登录并进入到结算单模板查询页面    username=admin_12582    password=aaa111
+    插入12582基地结算单模板，模板状态为已被使用
+    查询出待修改的结算单
+    结算单已被使用，点击修改按钮，检查提示信息
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03修改结算单模板_模板已被使用，未修改结算单模板类型
+    [Tags]    smoke
+    登录并进入到结算单模板查询页面    username=admin_12582    password=aaa111
+    插入12582基地结算单模板，模板状态为已被使用
+    查询出待修改的结算单
+    结算单已被使用，点击修改按钮，检查提示信息
+    结算单模板类型未修改提交,检查提示信息
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+04改结算单模板_模板已被使用，修改结算单模板类型
+    [Tags]    smoke
+    登录并进入到结算单模板查询页面    username=admin_12582    password=aaa111
+    插入12582基地结算单模板，模板状态为已被使用
+    查询出待修改的结算单
+    结算单已被使用，点击修改按钮，检查提示信息
+    结算单模板类型修改提交,检查提示信息
+    校验数据库里面是否有修改后的结算单模板
+    [Teardown]    teardown_案例运行失败时关闭浏览器

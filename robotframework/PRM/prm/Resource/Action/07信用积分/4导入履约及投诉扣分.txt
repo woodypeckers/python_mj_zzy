@@ -1,0 +1,10 @@
+*** Settings ***
+Resource          信用积分common.txt
+
+*** Keywords ***
+检查数据库是否有导入的履约及投诉扣分
+    ${result}    Exec Sql    SELECT COUNT(*) FROM prm_credit_satisfy t WHERE t.sp_id='0000000004' AND t.check_month='201405' AND t.base_id='051';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+删除导入的履约扣分
+    Exec Sql    DELETE FROM prm_credit_satisfy t WHERE t.sp_id='0000000004' AND t.check_month='201405' AND t.base_id='051';    ${prm_oracle_tns}

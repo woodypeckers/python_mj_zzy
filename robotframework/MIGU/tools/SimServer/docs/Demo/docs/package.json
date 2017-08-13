@@ -1,0 +1,21 @@
+{
+    "name": "Demo文档",
+    "version": "0.0.1",
+    "description": "Demo的安装使用，以及Mock中的具体实现说明",
+    "keywords": [
+        ""
+    ],
+    "homepage": "http://JSLite.io",
+    "author": "aspire",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "licenses": "Apache",
+    "idoc": {
+        "theme": "default",
+        "md": [
+            "readme.md"
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入资质变更页面
+    直到页面某个元素可见    xpath=//a[text()='公司资质管理']
+    链接    公司资质管理
+    Comment    ajax加载完毕
+    选择frame    content
+    链接    资质变更申请
+    Comment    ajax加载完毕
+
+查看公司状态
+    [Arguments]    ${cn_name}    ${status}
+    ${result}    Exec Sql    SELECT t.status FROM prm_apply_company t WHERE t.cn_name='${cn_name}' AND t.status!='end';    ${prm_oracle_tns}
+    Should Be Equal As Strings    ${result}    ${status}
+
+提交资质变更申请
+    点击元素    xpath=//a[@href="javascript:;" and text()="提交"]
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    链接    确认
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    申请提交成功    确认
+    Comment    ajax加载完毕
+
+变更公司中文名称
+    直到页面某个元素可见    xpath=//td[text()='公司中文名称：']
+    点击元素    jquery=td:contains('公司中文名称：')+td:first>input
+    文本框通过文字    公司中文名称：    ${company_name}变更公司中文名称
+
+进入资质变更审批页面
+    进入左侧二级菜单    引入管理    公司资质变更
+
+查询待审批的资质信息
+    文本框通过文字    公司中文名称：    ${company_name}
+    点击元素    xpath=//a[@href='javascript:queryCompanyAlterList();']    #点击查询按钮
+    Comment    ajax加载完毕
+    Sleep    1
+
+审批结果，审批通过
+    [Arguments]    ${alter_audit_companyName}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    Comment    ajax加载完毕
+    下拉框_通过id定位    dealResult    通过
+    文本域    审批意见：    ${alter_audit_companyName}资质变更审批通过
+
+提交资质变更审批结果
+    链接_通过id定位    auditSubmitBtn
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    审批提交成功    确认
+
+审批结果，审批拒绝
+    [Arguments]    ${alter_audit_companyName}
+    点击元素    xpath=//a[text()='审批']    #点击审批按钮
+    Comment    ajax加载完毕
+    下拉框_通过id定位    dealResult    未通过
+    文本域    审批意见：    ${alter_audit_companyName}资质变更审批拒绝
+
+变更组织机构代码
+    直到页面某个元素可见    xpath=//td[text()='组织机构代码：']
+    点击元素    jquery=td:contains('组织机构代码：')+td:first>input
+    文本框通过文字    组织机构代码：    zjdaimabg
+
+提交检查提示信息
+    [Arguments]    ${msg}
+    点击元素    xpath=//a[@href="javascript:;" and text()="提交"]
+    直到页面某个元素可见    xpath=//div[@class='dialog_shadow']
+    校验弹出框信息并点击按钮    ${msg}    确认

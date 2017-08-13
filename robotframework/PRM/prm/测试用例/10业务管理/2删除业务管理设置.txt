@@ -1,0 +1,38 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/10业务管理/2删除业务管理设置.txt
+
+*** Test Cases ***
+01删除一条业务管理设置
+    [Tags]    smoke
+    案例运行前确保数据库中业务管理设置记录为空
+    插入一条业务管理设置记录
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入业务管理设置查询结果页面
+    查询出插入的业务管理设置记录并且删除
+    检查数据库是否有该被删除的业务管理设置记录    SELECT COUNT(*) from prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111' AND t.id='0000000005';
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02批量删除三条业务管理设置
+    [Tags]    smoke
+    案例运行前确保数据库中业务管理设置记录为空
+    插入三条业务管理设置记录
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入业务管理设置查询结果页面
+    查询出插入的三条业务管理设置记录并且删除
+    检查数据库是否有该被删除的业务管理设置记录    SELECT COUNT(*) from \ prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111' AND t.id='0000000005';
+    检查数据库是否有该被删除的业务管理设置记录    SELECT COUNT(*) from \ prm_sp_platform t WHERE t.sp_id='0000000002' AND t.platform_id='1111111111' AND t.id='0000000006';
+    检查数据库是否有该被删除的业务管理设置记录    SELECT COUNT(*) \ from prm_sp_platform t WHERE t.sp_id='0000000003' AND t.platform_id='1111111111' AND t.id='0000000007';
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03没有选择业务管理设置记录就删除
+    [Tags]
+    案例运行前确保数据库中业务管理设置记录为空
+    插入三条业务管理设置记录
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入业务管理设置查询结果页面
+    没有选择业务管理设置记录就删除
+    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000001' AND t.platform_id='1111111111';
+    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000002' AND t.platform_id='1111111111';
+    删除业务管理设置    DELETE FROM prm_sp_platform t WHERE t.sp_id='0000000003' AND t.platform_id='1111111111';
+    [Teardown]    teardown_案例运行失败时关闭浏览器

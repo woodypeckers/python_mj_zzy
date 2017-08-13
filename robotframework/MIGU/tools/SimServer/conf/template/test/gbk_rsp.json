@@ -1,0 +1,19 @@
+{
+    "Request": {
+        "BusiParams": {
+		    "OprCode": "02",
+            "MobNum": "13500000000",
+			"UserID": "ÖÐÎÄ",
+            "VirtulUserID": ""
+        },
+        "BusiCode": "$${BusiCode}$$"
+    },
+    "PubInfo": {
+        "TransactionId": "",
+        "TransactionTime": "",
+		"OpId":"",
+        "OrgId":"",
+        "InterfaceId":"",
+        "InterfaceType":""
+    }
+}

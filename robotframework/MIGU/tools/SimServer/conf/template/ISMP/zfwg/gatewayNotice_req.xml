@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fields>
+	<merchantId>$${merchantId}$$</merchantId>
+    <returnCode>requestId</returnCode>
+    <message>message</message>
+	<type>$${type}$$</type>
+	<version>$${version}$$</version>
+	<amount>$${amount}$$</amount>
+	<orderId>$${merchantOrderId}$$</orderId>
+    <payDate>$${payDate}$$</payDate>
+    <reserved1>reserved1</reserved1>
+	<reserved2>reserved2</reserved2>
+    <status>$${status}$$</status>
+	<orderDate>$${orderDate}$$</orderDate>
+	<hmac>hmac</hmac>
+    <payNo>$${payNo}$$</payNo>
+    <org_code>org_code</org_code>
+    <organization_payNo>10001</organization_payNo>
+	<organization_result_code></organization_result_code>
+    <callbackUrl>http://10.12.8.145:8000/ismp/ismp/getGateway</callbackUrl>
+    <notifyUrl>http://10.12.8.145:8181/ismp/gateway/gatewayNotice</notifyUrl>
+    <payType>$${payType}$$</payType>
+ </fields>

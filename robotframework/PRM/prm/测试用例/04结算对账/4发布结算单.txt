@@ -1,0 +1,33 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Test Teardown
+Resource          ../../Resource/Action/04结算对账/4发布结算单.txt
+
+*** Test Cases ***
+01发布结算单
+    [Documentation]    一条结算单记录，没有结算单明细附件
+    [Tags]    smoke    noff
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入发布及对账页面
+    进入结算单发布基本信息填写页面
+    填写结算单基本信息    月    2015年01月    阅读基地_阅读基地通用结算单模板.xls
+    上载结算单
+    未上传结算单明细附件，确认上载    您确定不上传结算单明细吗？
+    通知方式为邮件和短信，提交
+    查询发布成功的结算单    SELECT COUNT（*） FROM prm_settlement t WHERE t.settle_template_id='JSDMB_YDJD_000000000' AND t.account_period='2015年01月' AND t.account_period_type='月' AND t.sp_code='QD20140730001';
+    删除发布成功的结算单    DELETE FROM prm_settlement t WHERE t.settle_template_id='JSDMB_YDJD_000000000' AND t.account_period='2015年01月' AND t.account_period_type='月' AND t.sp_code='QD20140730001';
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02发布结算单，有结算单明细附件
+    [Tags]    smoke    noff
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_read",密码"aaa111"
+    进入发布及对账页面
+    进入结算单发布基本信息填写页面
+    填写结算单基本信息    月    2015年01月    阅读基地_阅读基地通用结算单模板.xls
+    上传结算单明细附件    彭亨康有限公司_QD20140730001结算单明细附件.rar
+    上载结算单
+    通知方式为邮件和短信，提交
+    查询发布成功的结算单    SELECT COUNT（*） FROM prm_settlement t WHERE t.settle_template_id='JSDMB_YDJD_000000000' AND t.account_period='2015年01月' AND t.account_period_type='月' AND t.sp_code='QD20140730001';
+    删除发布成功的结算单    DELETE FROM prm_settlement t WHERE t.settle_template_id='JSDMB_YDJD_000000000' AND t.account_period='2015年01月' AND t.account_period_type='月' AND t.sp_code='QD20140730001';
+    [Teardown]    teardown_案例运行失败时关闭浏览器

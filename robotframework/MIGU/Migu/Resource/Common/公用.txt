@@ -1,0 +1,270 @@
+*** Settings ***
+Library           ../../MyLibrary/MyTimeLibrary.py
+Library           ../../MyLibrary/OracleLibrary.py
+Resource          basic_opr.txt
+Resource          ../../constant.txt
+Library           String
+Library           Remote    http://10.12.12.157:18001    WITH NAME    rtplt
+Library           ../../MyLibrary/ChangeXml.py
+Library           Collections
+Library           ../../MyLibrary/PostXml.py
+Resource          databaseinit.txt
+Resource          附件上传.txt
+Resource          excel_basic_opr.txt
+Library           ../../MyLibrary/PhkLibrary.py
+Library           OperatingSystem
+Library           Selenium2Library
+Resource          xml_opr.txt
+
+*** Variables ***
+${last_login_account}    ${EMPTY}
+${prm_interface_xml_body}    ${EMPTY}
+${close_browser_per_suite}    False
+${HUB}            ${EMPTY}
+
+*** Keywords ***
+打开admin端
+    [Documentation]    使用ie浏览器打开自动化环境admin端。直接调用此关键字，不需要输入任何参数
+    打开浏览器    ${url_admin}
+    不选择Frame
+    Run Keyword If Element Visible    id=logout    Click Link    id=logout
+    删除所有Cookie
+    跳转到指定Url    ${url_admin}
+    标题必须为    咪咕合作伙伴接入平台
+    最大化浏览器
+
+登录admin端
+    [Arguments]    ${username}    ${password}=aaa111
+    Run Keyword If    '${last_login_account}'=='${username}'    Unselect Frame
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开admin端
+    文本框输入    id=loginName    ${username}
+    点击元素    id=artiPwd
+    文本框输入    id=password    ${password}
+    点击元素    id=loginButton
+    直到元素可见    jquery=span:contains('欢迎您')
+    标题必须为    咪咕合作伙伴接入平台
+    Set Suite Variable    ${last_login_account}    ${username}
+
+进入左侧二级菜单
+    [Arguments]    ${menu1}    ${menu2}
+    直到元素可见    jquery=ul#leftmenu>li>a:contains("${menu1}")
+    执行JavaScript    jQuery('ul#leftmenu>li>a:contains("${menu1}")+ul').attr('style','block');return 0;
+    直到元素可见    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li>a:contains("${menu2}")
+    点击元素    jquery=ul#leftmenu>li>a:contains("${menu1}")+ul>li>a:contains("${menu2}")
+    等待一段时间
+    选择frame    content
+
+检查提示信息
+    [Arguments]    ${dialog_msg}=*
+    [Documentation]    该关键字可用于判断提示框的内容是否正确
+    Wait Until Page Contains Element    jquery=div.dialog_shadow    5s
+    Comment    Element Should Be Visible    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+
+校验二次确认框提示信息且点击按钮
+    [Arguments]    ${dialog_msg}=*    ${button_text}=确认
+    [Documentation]    不想校验内容，则diaglog_msg填*; \ button_text为按钮上的字符串，默认为确认
+    直到元素可见    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+    Run Keyword If    '''${button_text}'''=='确认'    点击二次确认框确认按钮
+    Run Keyword If    '''${button_text}'''=='取消'    点击二次确认框取消按钮
+
+点击二次确认框确认按钮
+    点击元素    jquery=div.dialog-button>p>span>a[name='yes']
+
+点击二次确认框取消按钮
+    点击元素    jquery=div.dialog-button>p>span.button>a[name='no']
+
+打开合作伙伴端
+    [Documentation]    使用ie浏览器打开自动化环境sp端。直接调用此关键字，不需要输入任何参数
+    Open Or Reuse Browser    ${url_sp}    ${browser_type}    \    ${HUB}
+    Wait Until Page Contains    平台
+    Unselect Frame
+    Run Keyword If Element Visible    id=logout    Click Link    id=logout
+    ${cookies}=    Get Cookies
+    Delete All Cookies
+    ${cookies}=    Get Cookies
+    Go To    ${url_sp}
+    Title Should Be    中国移动业务合作伙伴信息服务平台
+    Maximize Browser Window
+    Unselect Frame
+
+输入日期
+    [Arguments]    ${input_id}    ${value}
+    Execute Javascript    window.document.getElementById( "${input_id}").readOnly=false;return 0;
+    Comment    Execute Javascript    jQuery("#${input_id}").removeAttr('disabled');
+    Click Element    id=${input_id}
+    Input Text    id=${input_id}    ${value}
+    Wait Until Page Contains Element    jquery=a.ui-state-default.ui-state-active    10s
+    Click Element    jquery=a.ui-state-default.ui-state-active
+
+浏览器删除cookie并返回空白页面
+    Wait Until Ajax Load Complete    请稍候...
+    Wait Until Ajax Load Complete    请稍待...
+    Wait Until Ajax Load Complete    正在处理，请稍待。。。
+    Unselect Frame
+    Delete All Cookies
+    Go To    about:blank
+
+teardown_案例运行失败时关闭浏览器
+    Run Keyword If Test Failed    Set Suite Variable    ${last_login_account}    ${EMPTY}
+    Run Keyword If Test Failed    截屏
+    Run Keyword If Test Failed    Log Source
+    Comment    Run Keyword If Test Failed    Close Browser If Exist
+    Run Keyword If Test Failed    Delete All Cookies
+    Run Keyword If Test Failed    Close All Browsers
+    Run Keyword If Test Failed    OperatingSystem.Run    taskkill /F /IM iedriverserver.exe
+    Comment    log    ${RunOutPut}
+    Run Keyword If Test Failed    OperatingSystem.Run    taskkill /F /IM chromedriver.exe
+    Comment    log    ${RunOutPut}
+
+teardown_案例集结束时关闭浏览器
+    Run Keyword If    '${close_browser_per_suite}'=='True'    Close Browser If Exist
+
+选择附件
+    [Arguments]    ${id}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    直到元素可见    css=#${id}[type="file"]
+    Choose File    css=#${id}[type="file"]    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s
+
+点击右上角菜单
+    [Arguments]    ${menuchain}
+    ${menu_level_1}    ${menu_level_2}    String.Split String    ${menuchain}    ->
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu a:contains('${menu_level_1}')    timeout=15s
+    Execute Javascript    jQuery("div#headMenu ul.sf-menu a:contains('${menu_level_1}')").parent().attr('class','sfHover');
+    Click Element    jquery=div#headMenu ul.sf-menu a:contains('${menu_level_1}')
+    Wait Until Element Is Visible    jquery=div#headMenu ul.sf-menu ul a:contains('${menu_level_2}')
+    Click Element    jquery=div#headMenu ul.sf-menu ul a:contains('${menu_level_2}')
+    Comment    ajax加载完毕
+    Comment    Execute Javascript    jQuery("div#headMenu ul.sf-menu a:contains('${menu_level_1}')").parent().attr('class','');
+    Comment    Mouse Out    jquery=div#headMenu ul.sf-menu ul a:contains('${menu_level_2}')
+
+打开partner端
+    [Documentation]    使用ie浏览器打开自动化环境admin端。直接调用此关键字，不需要输入任何参数
+    打开浏览器    ${url_partner}
+    不选择Frame
+    Run Keyword If Element Visible    id=logout    Click Link    id=logout
+    删除所有Cookie
+    跳转到指定Url    ${url_partner}
+    标题必须为    合作伙伴社区-咪咕文化
+    最大化浏览器
+
+登录partner端
+    [Arguments]    ${username}    ${password}=aaa111
+    Run Keyword If    '${last_login_account}'=='${username}'    Unselect Frame
+    Run Keyword If    '${last_login_account}'=='${username}'    Return From Keyword
+    打开partner端
+    点击登录按钮
+    文本框输入    id=loginName    ${username}
+    点击元素    id=artiPwd
+    文本框输入    id=password    ${password}
+    执行JavaScript    jQuery("input#loginButton").click()
+    Set Suite Variable    ${last_login_account}    ${username}
+
+模式对话框选择确认
+    等待一段时间
+    ${msg}    Confirm Action
+
+上传附件，输入id
+    [Arguments]    ${id}    ${upload_file}
+    ${abspath}    Get Current Abspath
+    ${fullpath}    OracleLibrary.Join Element By Symbol    ${abspath}    ${upload_file}    \\
+    Run Keyword If    '${browser_type}'=='ie'    Execute Javascript    jQuery("#${id} input[type='file']").attr('style','');
+    Judge File Exist    ${fullpath}
+    Choose File    jquery=#${id} input[type='file']    ${fullpath}
+    Wait Until Page Not Contains Element    css=div.red.uploadpercent    30s
+
+退出partner端且清除cookie
+    [Documentation]    解决不同的partner端账号登录后会显示前一个账号公司合作信息的问题
+    不选择frame
+    Run Keyword If Element Visible    id=content    选择frame    content
+    选择frame    headFrame
+    执行JavaScript    jQuery("#logout").click()
+    不选择frame
+    Run Keyword If Element Visible    id=content    选择frame    content
+    直到元素可见    jquery=a.btn_login
+    不选择frame
+    清除cookie
+
+退出admin端且清除cookie
+    [Documentation]    解决不同的partner端账号登录后会显示前一个账号公司合作信息的问题
+    不选择frame
+    执行JavaScript    jQuery("#logout").click()
+    直到元素可见    id=loginButton
+    清除cookie
+
+admin端查询结果校验
+    [Arguments]    ${text}    ${content}
+    文本框输入文字    ${text}    ${content}
+    点击按钮    查询
+    直到元素可见    jquery=tbody>tr>td:contains('${content}')
+
+partner端查询结果校验
+    [Arguments]    ${text1}    ${text2}
+    直到元素可见    jquery=input#queryText
+    Input Text    jquery=input#queryText    ${text1}
+    Run Keyword If Element Visible    jquery=span.search_btn    点击元素    jquery=span.search_btn
+    Run Keyword If Element Visible    jquery=span#search_btn    点击元素    jquery=span#search_btn
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${text2}')
+
+点击按钮
+    [Arguments]    ${text}
+    [Documentation]    <input id="*****" class="btn1 font_16" type="button" value="****">这样类型的按钮
+    直到元素可见    jquery=input[value='${text}'][type='button']
+    执行JavaScript    jQuery("input[value='${text}'][type='button']").click()
+    等待一段时间    1s
+
+展开查询框
+    Run Keyword If Page Contains Element    jquery=table#searchtable    Execute Javascript    jQuery('table#searchtable').attr('style','display: table;')
+    Run Keyword If Page Contains Element    jquery=table#querytable    Execute Javascript    jQuery('table#querytable').attr('style','display: table;')
+
+收起查询框
+    Execute Javascript    \    jQuery('table#searchtable').attr('style','display: none;')
+
+页面错误提示信息校验
+    [Arguments]    ${text}    ${wrong_message}
+    [Documentation]    输入框没有输入或者输入错误，可以使用该关键字进行校验
+    直到元素可见    jquery=td:contains('${text}')~td span:contains('${wrong_message}')
+
+点击查询列表操作列链接
+    [Arguments]    ${text}
+    执行JavaScript    jQuery("a:contains('${text}')").click()
+
+单选框
+    [Arguments]    ${text}    ${content}
+    点击元素    jquery=td:contains('${text}')~td label:contains('${content}')
+
+partner端登录后进入正式页面
+    [Documentation]    partner端登录后，点击“管理中心”后，可以查看自己公司合作合同等资料的页面成为正式页面
+    直到元素可见    jquery=a#managerCenter
+    点击元素    jquery=a#managerCenter
+
+点击登录按钮
+    [Documentation]    使用ie浏览器打开自动化环境admin端。直接调用此关键字，不需要输入任何参数
+    点击元素    jquery=a.btn_login
+    直到元素可见    id=loginName
+
+查询列表为空校验
+    [Arguments]    ${null_msg}=对不起，没有匹配的数据
+    [Documentation]    支持文本框样式的查询条件输入。 \ 先输入查询条件，然后再文本框里面输入查询内容
+    直到元素可见    jquery=td:contains('${null_msg}')
+
+输入月份
+    [Arguments]    ${input_id}    ${month}
+    [Documentation]    适用于可以直接输入月份的控件。如：结算信息查询条件里面有个结算月，可以直接输入月份查询
+    Input Text    id=${input_id}    ${month}
+
+校验二次确认框提示信息且点击非确认取消按钮
+    [Arguments]    ${dialog_msg}=*    ${button_text}=继续上传
+    [Documentation]    不想校验内容，则diaglog_msg填*; \ button_text为按钮上的字符串，默认为确认
+    直到元素可见    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}
+    Run Keyword If    '''${button_text}'''=='继续上传'    点击二次确认框确认按钮
+    Run Keyword If    '''${button_text}'''=='取消'    点击二次确认框取消按钮

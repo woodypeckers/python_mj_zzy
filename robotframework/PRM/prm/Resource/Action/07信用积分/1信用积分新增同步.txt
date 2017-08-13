@@ -1,0 +1,24 @@
+*** Settings ***
+Resource          信用积分common.txt
+
+*** Keywords ***
+一条信用积分记录，一条分省积分记录，消息内容符合要求
+    ${CURRENT_TIME}    获取当前时间年月日时分秒
+    修改xml节点的值    ${CURRENT_TIME}    /Msg/Body/Credit/ProcessID
+    Comment    修改xml节点的值    1    /Msg/Body/Credit/OperCode
+    Comment    修改xml节点的值    041    /Msg/Body/Credit/BaseId
+    Comment    修改xml节点的值    QD20140730001    /Msg/Body/Credit/CoopCode
+    Comment    修改xml节点的值    201401    /Msg/Body/Credit/CheckMonth
+    Comment    修改xml节点的值    63.11    /Msg/Body/Credit/LastScore
+    Comment    修改xml节点的值    10.99    /Msg/Body/Credit/EncourageScore
+    Comment    修改xml节点的值    15.78    /Msg/Body/Credit/IncreaseScore
+    Comment    修改xml节点的值    5.78    /Msg/Body/Credit/SatisfyScore
+    Comment    修改xml节点的值    10.99    /Msg/Body/Credit/FoulScore
+    Comment    修改xml节点的值    73.11    /Msg/Body/Credit/CreditScore
+    Comment    修改xml节点的值    1    /Msg/Body/Credit/ProvinceCredit/ProvinceId
+    Comment    修改xml节点的值    75.83    /Msg/Body/Credit/ProvinceCredit/LastScore
+    Comment    修改xml节点的值    11.99    /Msg/Body/Credit/ProvinceCredit/EncourageScore
+    Comment    修改xml节点的值    10.78    /Msg/Body/Credit/ProvinceCredit/IncreaseScore
+    Comment    修改xml节点的值    5.78    /Msg/Body/Credit/ProvinceCredit/SatisfyScore
+    Comment    修改xml节点的值    6.99    /Msg/Body/Credit/ProvinceCredit/FoulScore
+    Comment    修改xml节点的值    85.83    /Msg/Body/Credit/ProvinceCredit/CreditScore

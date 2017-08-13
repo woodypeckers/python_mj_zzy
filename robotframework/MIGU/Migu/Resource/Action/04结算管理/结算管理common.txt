@@ -1,0 +1,42 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+进入导入界面
+    [Arguments]    ${text}
+    直到元素可见    jquery=span:contains('${text}')
+    点击元素    jquery=span:contains('${text}')
+    直到元素可见    jquery=a:contains('模板文件下载')
+
+设置导入文件表头
+    [Arguments]    ${title}    ${row}=0
+    [Documentation]    表头默认设置在第一行
+    excel表中插入一行记录    ${title}    ${row}
+
+表中插入一行记录
+    [Arguments]    ${text}    ${row}=1
+    [Documentation]    默认第二行开始插入
+    excel表中插入一行记录    ${text}    ${row}
+
+选择导入文件
+    [Arguments]    ${id}=inforfield    ${path}=Migu\\temp\\test.xls
+    选择附件    ${id}    ${path}
+
+管理员端结算信息输入查询条件
+    [Arguments]    ${settle_yx_code}    ${settle_month}    ${settle_cn}=${EMPTY}    ${settle_code}=${EMPTY}
+    点击按钮    清空
+    文本框输入文字    公司中文名称    ${settle_cn}
+    文本框输入文字    合作编码    ${settle_code}
+    Comment    文本框输入文字    互娱编码    ${settle_yx_code}
+    输入月份    settleMonth    ${settle_month}
+    点击按钮    查询
+    等待一段时间    0.5s
+    直到元素可见    jquery=td:contains('${settle_code}')
+    直到元素可见    jquery=td:contains('${settle_month}')
+
+导入错误结果校验
+    [Arguments]    ${wrong_message}
+    [Documentation]    适用于那种错误原因比较长的错误信息。
+    直到元素可见    jquery=span:contains('错误结果')
+    Run Keyword If Element Visible    jquery=td>div[title='${wrong_message}']    直到元素可见    jquery=td>div[title='${wrong_message}']
+    Run Keyword If Element Visible    jquery=td:contains('${wrong_message}')    直到元素可见    jquery=td:contains('${wrong_message}')

@@ -1,0 +1,22 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/09分层分级/导入分层分级.txt
+
+*** Test Cases ***
+导入完全正确的阅读基地分层分级信息
+    [Tags]    smoke    noff
+    删除导入的分层分级数据    CP20140730002
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    进入分层分级管理页面
+    进入分层分级导入页面并上传文件    发布成功！
+    删除导入的分层分级数据    CP20140730002
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+导入有错误数据的阅读基地分层分级信息
+    [Tags]    smoke    noff
+    删除导入的分层分级数据    QD20140730001
+    登录PRM管理员端"${url_admin}",登陆名"admin_read",密码"aaa111"
+    进入分层分级管理页面
+    进入分层分级导入页面并上传有错误数据的导入文件    发布成功！
+    删除导入的分层分级数据    QD20140730001
+    [Teardown]    teardown_案例运行失败时关闭浏览器

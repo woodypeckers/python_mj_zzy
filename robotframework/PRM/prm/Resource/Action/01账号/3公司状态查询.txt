@@ -1,0 +1,28 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          账号common.txt
+
+*** Keywords ***
+输入公司中文名称，该公司处于流程中
+    [Arguments]    ${business_name}
+    [Documentation]    20140915:公司办公地址：屏蔽；邮政编码：屏蔽；营业执照注册地址：屏蔽；营业执照发证日期：屏蔽；营业执照年检
+    ...    年度：屏蔽；营业执照经营范围描述：屏蔽；组织机构代码附件：必须
+    ${ACCOUNT_APPLY_ID}    获取sequence的nextval    seq_account_apply
+    ${mobile_phone}    数据库查询    SELECT ltrim(to_char(${ACCOUNT_APPLY_ID},'00000000')) AS Id FROM dual;
+    选择frame    mainFrame
+    下拉框通过文字    意向合作业务    ${business_name}
+    文本框通过文字    公司中文名称    流程有限公司
+    文本框通过文字    申请帐号名    账号${ACCOUNT_APPLY_ID}
+    文本框通过文字    请输入密码    aaa111
+    文本框通过文字    请重新输入密码    aaa111
+    文本框通过文字    申请人姓名    自动化测试账号姓名
+    文本框通过文字    EMAIL    phk${ACCOUNT_APPLY_ID}@163.com
+    文本框通过文字    手机号码    139${mobile_phone}
+    链接    下一步
+
+公司处于流程中，检查提示信息
+    [Arguments]    ${dialog_msg}=*
+    Wait Until Page Contains Element    jquery=div.dialog_shadow    5s
+    Comment    Element Should Be Visible    jquery=div.dialog_shadow
+    ${msg}=    Get Element Text    jquery=span.dialog-msg
+    Run Keyword If    '''${dialog_msg}''' != '*'    Should Be Equal    ${msg}    ${dialog_msg}

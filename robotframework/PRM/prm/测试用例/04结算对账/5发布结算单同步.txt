@@ -1,0 +1,389 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/04结算对账/5发布结算单同步.txt
+
+*** Test Cases ***
+01报文符合要求
+    [Tags]    smoke
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    检查消息同步结果    000000
+
+02基地+合作编码在PRM不存在
+    [Tags]    smoke
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12345    /Msg/Body/Settlement/CoopCode
+    检查消息同步结果    000000
+
+03报文每个节点取最大值
+    [Tags]    smoke
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    结算单同步报文每个节点取最大值
+    检查消息同步结果    000000
+
+04ProcessID超过32位
+    [Tags]
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    112345678901234567890123456789012    /Msg/Body/Settlement/ProcessID
+    检查消息同步结果    000000
+
+05SettlementNo超过20位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    112345678901234567890    /Msg/Body/Settlement/SettlementNo
+    检查消息同步结果    000000
+
+06BillingType超过20位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1结算单类型结算单类型    /Msg/Body/Settlement/BillingType
+    检查消息同步结果    000000
+
+07SettlingAmount超过15位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1234567890123456    /Msg/Body/Settlement/SettlingAmount
+    检查消息同步结果    000000
+
+08SubtractAmount超过15位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1234567890123456    /Msg/Body/Settlement/SubtractAmount
+    检查消息同步结果    000000
+
+09ChangeAmout超过15位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1234567890123456    /Msg/Body/Settlement/ChangeAmout
+    检查消息同步结果    000000
+
+10SettledAmount超过15位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1234567890123456    /Msg/Body/Settlement/SettledAmount
+    检查消息同步结果    000000
+
+11SettlingAmount小数点后超过5位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12.123456    /Msg/Body/Settlement/SettlingAmount
+    检查消息同步结果    000000
+
+12SubtractAmount小数点后超过5位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12.123456    /Msg/Body/Settlement/SubtractAmount
+    检查消息同步结果    000000
+
+13ChangeAmout小数点后超过5位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12.123456    /Msg/Body/Settlement/ChangeAmout
+    检查消息同步结果    000000
+
+14SettledAmount小数点后超过5位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    12.123456    /Msg/Body/Settlement/SettledAmount
+    检查消息同步结果    000000
+
+15ExtFieldCnName超过30位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1结算单扩展字段中文名称中文名称    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldCnName
+    检查消息同步结果    000000
+
+16ExtFieldValue超过50位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1结算单扩展字段值结算单扩展字段值结算单扩展字段值值    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldValue
+    检查消息同步结果    000000
+
+17ReconciliationDesc超过1000位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账注意事项对账    /Msg/Body/Settlement/ReconciliationDesc
+    检查消息同步结果    000000
+
+18LinkUrl超过1000位
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    www.211111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111.com    /Msg/Body/Settlement/Link[1]/LinkUrl
+    检查消息同步结果    000000
+
+19必填字段全部填写，选填字段不填写
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    结算单同步，必填字段全部填写，选填字段不填写
+    检查消息同步结果    000000
+    删除同步成功的结算单信息
+
+20ProcessID为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/ProcessID
+    检查消息同步结果    000000
+
+21OperCode为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/OperCode
+    检查消息同步结果    000000
+
+22BaseId为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/BaseId
+    检查消息同步结果    000000
+
+23SettlementNo为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlementNo
+    检查消息同步结果    000000
+
+24CoopCode为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/CoopCode
+    检查消息同步结果    000000
+
+25BillingPeriodType为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/BillingPeriodType
+    检查消息同步结果    000000
+
+26BillingPeriod为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+27BillingType为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/BillingType
+    检查消息同步结果    000000
+
+28IsSuspendSettle为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/IsSuspendSettle
+    检查消息同步结果    000000
+
+29SettledAmount为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/SettledAmount
+    检查消息同步结果    000000
+
+30有扩展字段，ExtFieldCnName为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldCnName
+    检查消息同步结果    000000
+
+31有扩展字段，ExtFieldValue为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/SettlementExtInfo/ExtFieldValue
+    检查消息同步结果    000000
+
+32Status为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    /Msg/Body/Settlement/Status
+    检查消息同步结果    000000
+
+33LinkType为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    Msg/Body/Settlement/Link[1]/LinkType
+    检查消息同步结果    000000
+
+34LinkUrl为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    Msg/Body/Settlement/Link[1]/LinkUrl
+    检查消息同步结果    000000
+
+35账期类型为按季结算，结算账期为2014年1季度
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年1季度    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+36账期类型为按季结算，结算账期为2014年01季
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年01季    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+37账期类型为按季结算，结算账期为2014年01月
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年01月    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+38账期类型为按季结算，结算账期为2014年28周
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    1    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年28周    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+39账期类型为按月结算，结算账期为2014年1月
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    2    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年1月    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+40账期类型为按月结算，结算账期为2014年13月
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    2    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年13月    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+41账期类型为按月结算，结算账期为2014年24周
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    2    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年24周    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+42账期类型为按周结算，结算账期为2014年1周
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    3    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年1周    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+43账期类型为按周结算，结算账期为2014年54周
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    3    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年54周    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+44账期类型为按周结算，结算账期为2014年12月
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    3    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年12月    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+45账期类型为按日结算，结算账期为2014年12月1日
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    4    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年12月1日    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+46账期类型为按日结算，结算账期为2014年1月11日
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    4    Msg/Body/Settlement/BillingPeriodType
+    修改xml节点的值    2014年1月11日    Msg/Body/Settlement/BillingPeriod
+    检查消息同步结果    000000
+
+47Link全部为空
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    \    Msg/Body/Settlement/Link[1]/LinkType
+    修改xml节点的值    \    Msg/Body/Settlement/Link[1]/LinkUrl
+    修改xml节点的值    \    Msg/Body/Settlement/Link[2]/LinkType
+    修改xml节点的值    \    Msg/Body/Settlement/Link[2]/LinkUrl
+    修改xml节点的值    \    Msg/Body/Settlement/Link[3]/LinkType
+    修改xml节点的值    \    Msg/Body/Settlement/Link[3]/LinkUrl
+    检查消息同步结果    000000
+
+48状态为已结束
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    2    Msg/Body/Settlement/Status
+    检查消息同步结果    000000
+
+49SettlingAmount不为float
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    应结金额（元）:11元    /Msg/Body/Settlement/SettlingAmount
+    检查消息同步结果    000000
+
+50SubtractAmount不为float
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    核减金额（元）:11元    /Msg/Body/Settlement/SubtractAmount
+    检查消息同步结果    000000
+
+51ChangeAmout不为float
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    调帐金额（元）:11元    /Msg/Body/Settlement/ChangeAmout
+    检查消息同步结果    000000
+
+51SettledAmount不为float
+    删除同步成功的结算单信息
+    读取xml文件    prm\\xml\\SyncSettleToPrm.xml
+    修改消息同步报文Header    110011    999    #需填写消息号和发送同步消息的系统编码
+    修改xml节点的值    实结金额（元）:11元    /Msg/Body/Settlement/SettledAmount
+    检查消息同步结果    000000

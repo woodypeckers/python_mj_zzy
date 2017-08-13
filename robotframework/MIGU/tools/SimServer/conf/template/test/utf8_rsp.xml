@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Response>
+<resultInfos>
+<returnCode>$${Infos_returnCode}$$</returnCode>
+<resultInfo>
+    <contentId>##{contentId}##</contentId>
+    <contentName>##{contentName}##</contentName>
+    <cpId>##{cpId}##</cpId>
+    <cpName>##{cpName}##</cpName>
+    <processTime>20141010103801</processTime>
+    <returnCode>$${Info_returnCode}$$</returnCode>
+    <apkType>0</apkType>
+</resultInfo>
+</resultInfos>
+</Response>

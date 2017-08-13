@@ -1,0 +1,15 @@
+{
+    "Response": {
+        "ErrorInfo": {
+            "Code": "$${Code}$$",
+            "Message": "$${Message}$$",
+            "TransactionId": "##{TransactionId}##",
+            "TransactionTime": "##{TransactionTime}##",
+            "TransIDH": "##{TransactionId}##",
+            "TransAccount": "201506",
+            "BusiCode": "OI_PaymentOrReturnBill"
+        },
+        "RetInfo": {            
+        }
+    }
+}

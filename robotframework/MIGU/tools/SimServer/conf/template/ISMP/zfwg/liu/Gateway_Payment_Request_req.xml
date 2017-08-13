@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fields>
+	<Reserved1></Reserved1>
+	<Reserved2></Reserved2>
+	<SHRULE></SHRULE>
+	<amount>$${amount}$$</amount>
+	<callbackUrl>$${callbackUrl}$$</callbackUrl>
+	<channelId>$${channelId}$$</channelId>
+	<characterSet>$${characterSet}$$</characterSet>
+	<currency>$${currency}$$</currency>
+	<merAcDate>$${merAcDate}$$</merAcDate>
+	<merchantAbbr>$${merchantAbbr}$$</merchantAbbr>
+	<merchantId>$${merchantId}$$</merchantId>
+	<merchantOrderId>$${merchantOrderId}$$</merchantOrderId>
+	<notifyUrl>$${notifyUrl}$$</notifyUrl>
+	<openid></openid>
+	<orderDate>$${orderDate}$$</orderDate>
+	<payType>$${payType}$$</payType>
+	<period>$${period}$$</period>
+	<periodUnit>$${periodUnit}$$</periodUnit>
+	<productDesc>$${productDesc}$$</productDesc>
+	<productId>$${productId}$$</productId>
+	<productName>$${productName}$$</productName>
+	<productNum></productNum>
+	<requestId>20151110133848100004</requestId>
+	<showUrl></showUrl>
+	<type>$${type}$$</type>
+	<version>$${version}$$</version>
+	<hmac>$${hmac}$$</hmac>
+</fields>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<fields>
+	<Reserved1></Reserved1>
+	<Reserved2></Reserved2>
+	<SHRULE></SHRULE>
+	<amount>$${amount}$$</amount>
+	<callbackUrl>$${callbackUrl}$$</callbackUrl>
+	<channelId>$${channelId}$$</channelId>
+	<characterSet>$${characterSet}$$</characterSet>
+	<currency>$${currency}$$</currency>
+	<merAcDate>$${merAcDate}$$</merAcDate>
+	<merchantAbbr>$${merchantAbbr}$$</merchantAbbr>
+	<merchantId>$${merchantId}$$</merchantId>
+	<merchantOrderId>$${merchantOrderId}$$</merchantOrderId>
+	<notifyUrl>$${notifyUrl}$$</notifyUrl>
+	<openid></openid>
+	<orderDate>$${orderDate}$$</orderDate>
+	<payType>$${payType}$$</payType>
+	<period>$${period}$$</period>
+	<periodUnit>$${periodUnit}$$</periodUnit>
+	<productDesc>$${productDesc}$$</productDesc>
+	<productId>$${productId}$$</productId>
+	<productName>$${productName}$$</productName>
+	<productNum></productNum>
+	<requestId>$${requestId}$$</requestId>
+	<showUrl></showUrl>
+	<type>$${type}$$</type>
+	<version>$${version}$$</version>
+	<hmac>$${hmac}$$</hmac>
+</fields>

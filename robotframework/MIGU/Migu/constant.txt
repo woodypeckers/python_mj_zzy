@@ -1,0 +1,14 @@
+*** Settings ***
+Documentation     设置一些常用的参数信息，这些参数一般来说是不会发生变化的。 如：数据库地址、首页地址等
+
+*** Variables ***
+${browser_type}    ie
+${title}          中国移动业务合作伙伴信息服务平台
+${base_name}      游戏及12580基地
+${upload_file_windows_title_ip}    10.12.3.24
+${migu_oracle_tns}    migu_auto/migu_prm_auto@10.12.3.197:1521/ora11g
+${url_admin}      http://10.12.12.157:18092/admin
+${url_partner}    http://10.12.12.157:18092/head.html
+${url_migu_base_simulator}    http://10.12.12.247:9052
+${url_sims_simulator}    http://10.12.12.247:9002
+${close_browser_per_suite}    True

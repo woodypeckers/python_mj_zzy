@@ -1,0 +1,13 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.monternet.com/ismp/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <sch:TransactionID xsi:type="xsd:string">201509161456301000000</sch:TransactionID>
+    </soapenv:Header>
+    <soapenv:Body>
+        <sch:OrderServInfoResp xsi:type="sch:ResponseType">
+            <MsgType xsi:type="xsd:string">Response</MsgType>
+            <Version xsi:type="xsd:string">$${Version}$$</Version>
+            <hRet xsi:type="xsd:integer">$${hRet}$$</hRet>
+        </sch:OrderServInfoResp>
+    </soapenv:Body>
+</soapenv:Envelope>

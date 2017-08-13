@@ -1,0 +1,350 @@
+*** Settings ***
+Resource          ../Common/公用.txt
+Resource          ../Common/附件上传.txt
+Resource          ../Common/数据库操作.txt
+Library           ../../MyLibrary/MytoolLibrary.py
+
+*** Keywords ***
+合作伙伴合作申请_数据清除
+    Comment    删除附件
+    Exec Sql    delete from attachment_file t where t.attach_group_id in (select attach_group_id from prm_apply_bank_account t where t.bank_id in(select bank_isn from PRM_APPLY_SP where info_header_name = '信息安全_信息安全责任人'));    ${prm_oracle_tns}
+    Comment    删除银行信息
+    Exec Sql    delete from prm_apply_bank_account \ where company_isn in (select company_id from PRM_COMPANY where cn_name = '郭红梅有限公司')and account_no='12345';    ${prm_oracle_tns}
+    Comment    删除业务联系人业务负责人
+    Exec Sql    delete from prm_apply_contact \ where owner_id in (select sp_isn from PRM_APPLY_SP \ where company_id in (select company_id \ from PRM_COMPANY where cn_name = '郭红梅有限公司'))and name in ('业务负责人_姓名','业务联系人_姓名');    ${prm_oracle_tns}
+    Comment    删除安全责任人
+    Exec Sql    delete from PRM_APPLY_SP \ where company_id in (select company_id from PRM_COMPANY where cn_name = '郭红梅有限公司') and info_header_name='信息安全_信息安全责任人';    ${prm_oracle_tns}
+
+输入合作申请资料_输入必须信息
+    Select Frame    content
+    comment    合作层级基本资料
+    下拉框通过文字    合作基地    阅读基地
+    下拉框通过文字    合作类型    CP
+    下拉框通过文字    合作产品    手机报
+    comment    业务负责人
+    链接    下一步
+    ajax加载完毕
+    文本框通过文字    姓名    业务负责人_姓名
+    文本框通过文字    固定电话    0755-88888888
+    文本框通过文字    移动电话    13800000000
+    文本框通过文字    Email    123@126.com
+    文本框通过文字    邮政编码    111111
+    文本域    通讯地址    深圳
+    comment    业务联系人
+    Input Text    id=spBizContactName    业务联系人_姓名
+    Input Text    id=spBizContactPhone    0755-88888888
+    Input Text    id=spBizContactMobile    13800000000
+    Input Text    id=spBizContactEmail    123@123.com
+    Input Text    id=spBizContactFax    0755-88888888
+    Input Text    id=spBizContactPostCode    980701
+    Input Text    id=spBizContactPostAddress    广东省深圳市07-C
+    comment    银行账号信息
+    文本框通过文字    开户银行    银行卡号所属银行
+    文本框通过文字    银行账号    12345
+    下拉框通过文字    银行类别    招商银行
+    Select From List    id=spBankAccountProvinceId    广东
+    wait for condition    return window.jQuery.active == 0;    5s
+    Select From List    id=spBankAccountCityId    深圳
+    附件上传_通过id定位    spBankAccountAttach    prm\\temp\\开户银行许可证.jpg
+    comment    纳税属性
+    下拉框通过文字    纳税资质    增值税一般纳税人
+    文本框通过文字    税码    111111
+    文本框通过文字    增值税税率(%)    10
+    comment    信息安全相关资料
+    文本框通过文字    信息安全责任人    信息安全_信息安全责任人
+    文本框通过文字    安全责任人手机号    13800000000
+    Unselect Frame
+
+提交合作申请
+    Select Frame    content
+    Click Link    提交
+    ajax加载完毕
+    校验弹出框信息并点击按钮    新增合作申请提交成功    确认
+    ajax加载完毕
+    Unselect Frame
+
+合作伙伴合作申请_查询新增的合作申请
+    [Arguments]    ${合作基地}    ${合作类型}    ${产品名称}    ${状态}
+    Select Frame    content
+    下拉框通过文字    合作基地    ${合作基地}
+    下拉框通过文字    合作类型    ${合作类型}
+    下拉框通过文字    产品名称    ${产品名称}
+    下拉框通过文字    状态    ${状态}
+    链接    查询
+    ajax加载完毕
+    链接    查看
+    ajax加载完毕
+    Unselect Frame
+
+输入合作申请资料_输入全量信息
+    Select Frame    content
+    Comment    合作层级基本资料
+    Select From List    id=spBaseId    ${base_name}
+    ajax加载完毕
+    Select From List    id=spCoopType    CP
+    ajax加载完毕
+    Select From List    id=spProductId    12580前向业务
+    ajax加载完毕
+    Comment    业务负责人
+    Input Text    id=spBizOwnerName    负责人王小小五
+    Input Text    id=spBizOwnerPhone    0755-88888888
+    Input Text    id=spBizOwnerMobile    13800000000
+    Input Text    id=spBizOwnerEmail    123@123.com
+    Input Text    id=spBizOwnerFax    0755-88888888
+    Input Text    id=spBizOwnerPostCode    980701
+    Input Text    id=spBizOwnerPostAddress    广东省深圳市07-C
+    Comment    业务联系人
+    Input Text    id=spBizContactName    联系人张小小三
+    Input Text    id=spBizContactPhone    0755-88888888
+    Input Text    id=spBizContactMobile    13800000000
+    Input Text    id=spBizContactEmail    123@123.com
+    Input Text    id=spBizContactFax    0755-88888888
+    Input Text    id=spBizContactPostCode    980701
+    Input Text    id=spBizContactPostAddress    广东省深圳市07-C
+    Comment    银行账号信息
+    Input Text    id=spBankAccountBankName    银行卡号所属银行
+    Input Text    id=pBankAccountAccountNo    12345
+    Select From List    id=spBankAccountBankTypeCode    其他银行
+    Wait For Condition    return window.jQuery.active == 0;    5s
+    Input Text    id=spBankAccountBankTypeName    自动化测试银行
+    上传附件_IE_开户银行许可证    d:\\开户银行许可证.jpg
+    Comment    上传附件_开户银行许可证    c:\\1.gif
+    Select From List    id=spBankAccountProvinceId    浙江
+    Wait For Condition    return window.jQuery.active == 0;    5s
+    Select From List    id=spBankAccountCityId    嘉兴
+    Comment    纳税属性
+    Select From List    id=spTaxQualification    增值税一般纳税人
+    Input Text    id=spTaxCode    111111
+    Input Text    id=spTaxRate    10
+    Comment    信息安全相关资料
+    Input Text    id=spInfoHeaderName    李小小四
+    Input Text    id=spInfoHeaderMobile    13800000000
+    上传附件_IE_信息安全保障措施    D:\\信息安全保障措施.jpg
+    上传附件_IE_信息安全承诺书    D:\\信息安全承诺书.jpg
+    Comment    两个合作申请附件
+    Click Element    id=addRowSpan
+    Click Element    id=addRowSpan
+    Input Text    id=fileRemark0    合作申请附件1
+    上传附件_IE_合作申请附件1    d:\\合作申请附件1.jpg
+    Input Text    id=fileRemark1    合作申请附件2
+    上传附件_IE_合作申请附件2    d:\\合作申请附件2.jpg
+    Unselect Frame
+
+进入合作申请页面
+    Select Frame    content
+    Click Link    新增合作申请
+    ajax加载完毕
+    Unselect Frame
+    Select Frame    content
+    Wait Until Element Is Visible    id=spBaseId    5s
+    Unselect Frame
+    ajax加载完毕
+
+新增合作申请数据库校验
+    comment    合作资料申请主表校验
+    数据库查询返回记录数校验    select count(*) from PRM_APPLY_SP where company_id in (select company_id from PRM_COMPANY where cn_name='郭红梅有限公司') and info_header_name='信息安全_信息安全责任人' and base_id='041'    1
+    comment    合作资料负责人及业务联系人校验
+    数据库查询返回记录数校验    select count(*) from prm_apply_contact where owner_id in (select sp_isn from PRM_APPLY_SP where info_header_name='信息安全_信息安全责任人') and name in ('业务负责人_姓名','业务联系人_姓名')    2
+    comment    银行信息校验
+    数据库查询返回记录数校验    select count(*) from prm_apply_bank_account where company_isn in (select company_id from PRM_COMPANY where cn_name='郭红梅有限公司') and account_no='12345'    1
+
+数据库查询返回记录数校验
+    [Arguments]    ${sql}    ${expected_count}
+    数据库记录数    ${sql}    ${expected_count}
+
+生成待审批的合作信息
+    [Arguments]    ${company_name}    ${sp_code}    ${status}
+    删除数据库记录    delete from prm_apply_contact a where a.owner_id \ in (select b.sp_id from prm_apply_sp b where b.sp_code like '${sp_code}');
+    删除数据库记录    delete from prm_apply_sp a where a.company_id in (select b.company_id from prm_company b where b.cn_name like '${company_name}') and a.status like 'apply_%';
+    Exec Call Proc    ${prm_oracle_tns}    p_add_apply_sp    ${company_name}|${sp_code}|${status}
+
+点击待审批合作记录进入待审批页面
+    [Arguments]    ${公司名称}    ${menu1}    ${menu2}
+    进入左侧二级菜单    ${menu1}    ${menu2}
+    Comment    Wait Until Element Is Visible    jquery=a:contains("${menu2}")
+    点击元素    jquery=td:contains("公司中文名称")+td:first>input
+    Input text    id=spCnName    ${公司名称}
+    Click Element    jquery=a:contains("查询")
+    ajax加载完毕
+    Unselect Frame
+    select Frame    content
+    Click Element    jquery=a:contains("审批")
+    ajax加载完毕
+    Unselect Frame
+
+审批待受理合作并关闭浏览器
+    [Arguments]    ${result}
+    Select Frame    id=content
+    Wait Until Page Contains    合作申请信息
+    Select From List    id=flowInfoDealResult    ${result}
+    Wait For Condition    return window.jQuery.active == 0;    5s
+    Click Element    id=flowInfoDealComment
+    input text    id=flowInfoDealComment    ok
+    Click Link    //a[contains(text(),'提交')]
+    ajax加载完毕
+    Unselect Frame
+    Select Frame    id=content
+    校验弹出框信息并点击按钮    受理成功    确认
+    ajax加载完毕
+
+检查数据库对应合作的状态
+    [Arguments]    ${sp_code}    ${sp_status}
+    数据库记录数    select a.status from prm_apply_sp a where a.sp_code='${sp_code}'    ${sp_status}
+
+审批待评审合作并关闭浏览器
+    [Arguments]    ${result}
+    选择frame    content
+    Wait Until Page Contains    合作申请信息
+    ${sysdate}    数据库查询    select to_char(sysdate,'YYYYMMDD') from dual;
+    文本输入_通过id定位    flowInfoReviewTime    ${sysdate}
+    文本输入_通过id定位    flowInfoReviewScore    90
+    下拉框_通过id定位    flowInfoDealResult    ${result}
+    附件上传_通过id定位    fileGroupId    prm\\temp\\合作审批.jpg
+    点击元素    submitButton
+    校验弹出框信息并点击按钮    评审成功    确认
+    ajax加载完毕
+
+审批待决策合作并关闭浏览器
+    [Arguments]    ${result}
+    选择frame    content
+    Wait Until Page Contains    合作申请信息
+    文本输入_通过id定位    flowInfoDealReason    11111
+    下拉框_通过id定位    flowInfoDealResult    ${result}
+    文本输入_通过id定位    flowInfoDealComment    ok
+    附件上传_通过id定位    fileGroupId    prm\\temp\\合作审批.jpg
+    点击元素    submitButton
+    校验弹出框信息并点击按钮    决策成功    确认
+    ajax加载完毕
+
+审批待签约合作并关闭浏览器
+    选择frame    content
+    Wait Until Page Contains    合作申请信息
+    文本输入_通过id定位    contractNo    HT999999
+    文本输入_通过id定位    contractName    李红军合作审批合同
+    ${sysdate}    数据库查询    select to_char(sysdate,'YYYY-MM-DD') from dual;
+    输入日期    signDate    ${sysdate}
+    连续两次日期输入之间sleep0.2s
+    输入日期    startDate    ${sysdate}
+    连续两次日期输入之间sleep0.2s
+    输入日期    endDate    ${sysdate}
+    文本输入_通过id定位    amount    9999
+    文本输入_通过id定位    sponsor    测试部
+    文本输入_通过id定位    contact    lihj01
+    文本输入_通过id定位    signedMan    李红军
+    文本输入_通过id定位    lawMan    李红军02
+    文本输入_通过id定位    remark    测试
+    下拉框_通过id定位    spSpSettlementSettlementType    固定分成
+    下拉框_通过id定位    spSpSettlementSettlementProperty    分省结算
+    下拉框_通过id定位    spSpSettlementSettlementMod    应收结算
+    下拉框_通过id定位    spSpSettlementIsLinkAssessment    是
+    下拉框_通过id定位    spSpSettlementSettlementMethod    分批付款
+    下拉框_通过id定位    spBalCycle    按月结算
+    文本输入_通过id定位    spContractSettleTatio    10
+    点击元素    submitButton
+    校验弹出框信息并点击按钮    合作签约成功    确认
+    ajax加载完毕
+
+检查合作正式表状态
+    [Arguments]    ${sp_code}    ${sp_status}
+    数据库记录数    select a.status from prm_sp a where a.sp_code='${sp_code}'    ${sp_status}
+
+清理合作正式表数据
+    [Arguments]    ${sp_code}
+    删除数据库记录    delete from prm_contact a where a.owner_id \ in (select b.sp_id from prm_sp b where b.sp_code like '${sp_code}');
+    删除数据库记录    delete from prm_sp_contract a where a.sp_id in \ (select sp_id from prm_sp where sp_code like '${sp_code}');
+    删除数据库记录    delete from prm_sp a where a.sp_code like '${sp_code}'
+    删除数据库记录    delete from prm_apply_contact a where a.owner_id \ in (select b.sp_id from prm_apply_sp b where b.sp_code like '${sp_code}');
+    删除数据库记录    delete from prm_apply_sp a where a.sp_code like '${sp_code}'
+
+新增商用合作
+    [Arguments]    ${company_name}    ${sp_code}    ${status}    ${sp_login_name}
+    Exec Call Proc    ${prm_oracle_tns}    p_add_sp    ${company_name}|${sp_code}|${status}|${sp_login_name}
+    [Teardown]
+
+输入查询条件查询需要变更的合作
+    选择frame    content
+    Wait Until Element Is Visible    id=spBaseId    5s
+    下拉框_通过id定位    spBaseId    12580基地
+    下拉框_通过id定位    spCoopType    SP
+    下拉框_通过id定位    spProductId    12580
+    Click Element    jquery=a:contains("查询")
+    ajax加载完毕
+    Comment    Unselect Frame
+    Comment    Select Frame    content
+    Click Element    jquery=a:contains("变更")
+    Unselect Frame
+    ajax加载完毕
+
+进入合作变更页面修改部分字段
+    选择frame    content
+    Comment    业务负责人
+    文本输入_通过id定位    spBizOwnerName    李红军-业务负责人01
+    文本输入_通过id定位    spBizOwnerPostAddress    广东省深圳市
+    Run Keyword If    '${browser_type}'=='ff'    反复选择银行归属省
+    点击元素    submitButton
+    ajax加载完毕
+    校验弹出框信息并点击按钮    变更合作申请提交成功    确认
+    ajax加载完毕
+
+检查合作申请表对应的状态
+    [Arguments]    ${sp_code}    ${status}
+    数据库记录数    select count(*) from prm_apply_sp where sp_code='${sp_code}' and status='${status}';    1
+
+进入合作变更页面修改全部字段
+    选择frame    content
+    Comment    业务负责人
+    文本输入_通过id定位    spBizOwnerName    李红军-业务负责人01
+    文本输入_通过id定位    spBizOwnerPhone    0755-8883223
+    文本输入_通过id定位    spBizOwnerMobile    13510486733
+    文本输入_通过id定位    spBizOwnerEmail    l22@sina.com
+    文本输入_通过id定位    spBizOwnerFax    0755-8883222
+    文本输入_通过id定位    spBizOwnerPostCode    123456
+    文本输入_通过id定位    spBizOwnerPostAddress    广东省深圳市
+    Comment    业务联系人
+    文本输入_通过id定位    spBizContactName    李红军-业务联系人01
+    文本输入_通过id定位    spBizContactPhone    0755-8823223
+    文本输入_通过id定位    spBizContactMobile    13510486733
+    文本输入_通过id定位    spBizContactEmail    l33@sina.com
+    文本输入_通过id定位    spBizContactPostCode    456789
+    文本输入_通过id定位    spBizContactPostAddress    广东省深圳市
+    Comment    银行账号信息
+    文本输入_通过id定位    spBankAccountBankName    招商银行
+    文本输入_通过id定位    pBankAccountAccountNo    6677889911122
+    下拉框_通过id定位    spBankAccountBankTypeCode    招商银行
+    Run Keyword If    '${browser_type}'=='ff'    反复选择银行归属省
+    下拉框_通过id定位    spBankAccountProvinceId    广东
+    下拉框_通过id定位    spBankAccountCityId    深圳
+    Comment    纳税属性
+    下拉框_通过id定位    spTaxQualification    增值税小规模纳税人
+    文本输入_通过id定位    spTaxCode    22
+    文本输入_通过id定位    spTaxRate    90
+    Comment    信息安全相关资料
+    文本输入_通过id定位    spInfoHeaderName    李红军-信息安全人01
+    文本输入_通过id定位    spInfoHeaderMobile    13510486766
+    附件上传_通过id定位    infoAttach    prm\\temp\\合作审批.jpg
+    附件上传_通过id定位    infoCommitAttach    prm\\temp\\合作审批.jpg
+    点击元素    submitButton
+    ajax加载完毕
+    校验弹出框信息并点击按钮    变更合作申请提交成功    确认
+    ajax加载完毕
+    Unselect Frame
+
+审批变更的合作信息
+    [Arguments]    ${result}
+    Select Frame    content
+    comment    审批意见
+    下拉框_通过id定位    flowInfoDealResult    ${result}
+    文本输入_通过id定位    dealComment    ok
+    附件上传_通过id定位    auditUploadFile    prm\\temp\\合作审批.jpg
+    点击元素    submitButton
+    ajax加载完毕
+    Unselect Frame
+    Select Frame    content
+    校验弹出框信息并点击按钮    合作申请变更审批成功    确认
+    ajax加载完毕
+
+反复选择银行归属省
+    下拉框_通过id定位    spBankAccountProvinceId    广东
+    ajax加载完毕
+    下拉框_通过id定位    spBankAccountProvinceId    湖南
+    下拉框_通过id定位    spBankAccountCityId    长沙

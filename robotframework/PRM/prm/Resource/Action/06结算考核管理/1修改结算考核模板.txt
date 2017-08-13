@@ -1,0 +1,58 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+选择一条未使用的结算考核模板进行修改
+    Comment    select Frame    content
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    点击元素    queryBtn
+    Comment    ajax加载完毕
+    等待一段时间    2
+    点击元素    xpath=//a[text()="修改"]
+    Comment    unselect Frame
+    Comment    ajax加载完毕
+    Comment    select Frame    content
+    comment    基本信息
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    comment    项目打分
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].templateItemName"]    自动化测试年度考评项
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateItemName"]    第一季度考核
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateScoreLimit"]    20
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateItemDesc"]    等级为A，得20；等级为B，得10;等级为C，等5.
+    点击元素    submitBtn
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    修改结算考核模板成功
+    Comment    Click Element    jquery=div.bottom_div>span.button>a:contains('返回')
+    go to    http://10.12.12.157:18080/prm_admin/
+
+选择一条已被使用的结算考核模板进行修改
+    删除修改后的结算考核模板信息
+    Comment    select Frame    content
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板
+    点击元素    queryBtn
+    等待一段时间    2
+    点击元素    xpath=//a[text()="修改"]
+    校验弹出框信息并点击按钮    考核模板已经被使用过，修改模板将生成新的模板！
+    Comment    ajax加载完毕
+    Comment    unselect Frame
+    Comment    select Frame    content
+    comment    基本信息
+    文本输入_通过id定位    examTemplateTemplateName    自动化测试结算考核模板-新
+    comment    项目打分
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].templateItemName"]    自动化测试年度考评项
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateItemName"]    第一季度考核
+    input text    xpath=//input[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateScoreLimit"]    20
+    input text    xpath=//textarea[@name="examTemplate.examTemplateItemList[0].childrenList[0].templateItemDesc"]    等级为A，得20；等级为B，得10;等级为C，等5.
+    点击元素    submitBtn
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    修改结算考核模板成功
+
+检查修改后的结算考核模板状态
+    [Arguments]    ${check_VALID_FLAG}
+    ${VALID_FLAG}    数据库查询    select VALID_FLAG from prm_exam_template a where a.template_name = '自动化测试结算考核模板-新' and base_id='001';
+    Should Be Equal    ${VALID_FLAG}    ${check_VALID_FLAG}
+    删除数据库记录    delete \ from prm_exam_template a where a.template_name = '自动化测试结算考核模板-新' and base_id='001';
+
+删除修改后的结算考核模板信息
+    删除数据库记录    delete from prm_exam_template a where a.template_name='自动化测试结算考核模板-新' and a.base_id='001'

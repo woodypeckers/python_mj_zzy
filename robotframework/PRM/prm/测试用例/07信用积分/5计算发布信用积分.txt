@@ -1,0 +1,15 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/07信用积分/5计算发布信用积分.txt
+
+*** Test Cases ***
+05计算信用积分
+    [Documentation]    计算动漫基地-手机动漫产品-CP 2014年5月的信用积分。只计算一个SP，SP_ID是：0000000004，计算完成后删除计算的记录
+    [Tags]    smoke    noff
+    删除初始化信用积分计算发布数据及计算产生的数据
+    初始化信用积分计算发布数据
+    登录PRM管理员端"http://10.12.12.157:18080/prm_admin/portal/login.jsp",登陆名"admin_flash",密码"aaa111"
+    进入信用积分计算发布页面
+    计算发布信用积分
+    删除初始化信用积分计算发布数据及计算产生的数据
+    [Teardown]    teardown_案例运行失败时关闭浏览器

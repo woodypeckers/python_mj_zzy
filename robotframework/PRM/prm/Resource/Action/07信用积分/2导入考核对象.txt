@@ -1,0 +1,26 @@
+*** Settings ***
+Resource          信用积分common.txt
+
+*** Keywords ***
+检查数据库是否有导入的积分考核对象
+    ${result}    Exec Sql    SELECT count(*) FROM prm_credit_sp t WHERE t.sp_id='0000000004' AND t.check_month='201405' AND t.base_id='051';    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    1
+
+删除导入的积分考核对象
+    Exec Sql    DELETE FROM prm_credit_sp t WHERE t.sp_id='0000000004' AND t.check_month='201405' AND t.base_id='051';    ${prm_oracle_tns}
+
+插入动漫基地考核对象
+    ${PRM_CREDIT_SP_ID}    获取sequence的nextval    seq_prm_credit_sp_id
+    Exec Sql    insert into prm_credit_sp (PRM_CREDIT_SP_ID, SP_ID, CHECK_MONTH, BASE_ID, SCORE) values ('${PRM_CREDIT_SP_ID}', '0000000004', '201405', '051', 90.00);    ${prm_oracle_tns}
+
+查询出考核对象
+    文本框通过文字    合作编码：    CP20140730004
+    点击元素    id=queryBtn
+    ajax加载完毕
+
+删除考核对象
+    Run Keyword If    '${browser_type}'=='phantomjs'    Execute Javascript    window.confirm = function(msg){return true;};
+    点击元素    xpath=//a[contains(text(),'删除')]
+    校验弹出框信息并点击按钮    您确认要删除吗？    确认
+    校验弹出框信息并点击按钮    删除成功    确认
+    ajax加载完毕

@@ -1,0 +1,19 @@
+{
+    "Request": {
+        "BusiParams": {
+		    "OprCode": "02",
+            "MobNum": "$${MobNum}$$",
+			"UserID": "$${UserID}$$",
+            "VirtulUserID": ""
+        },
+        "BusiReqCode": "0"
+    },
+    "PubInfo": {
+        "TransactionId": "12345",
+        "TransactionTime": "",
+		"OpId":"",
+        "OrgId":"",
+        "InterfaceId":"",
+        "InterfaceType":"中文"
+    }
+}

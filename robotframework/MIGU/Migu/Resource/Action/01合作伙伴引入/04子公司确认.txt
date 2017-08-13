@@ -1,0 +1,2 @@
+*** Settings ***
+Resource          合作伙伴引入common.txt

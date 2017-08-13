@@ -1,0 +1,47 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/数据库操作.txt
+
+*** Keywords ***
+进入合作级信息导入页面并上传附件
+    [Arguments]    ${upload_file}
+    不选择frame
+    点击右上角菜单    信息数据导入->合作级信息导入
+    选择frame    content
+    sleep    1s
+    直到页面某个元素可见    jquery=span:contains("导入")
+    Comment    Mouse Over    xpath=//td[text()='合作信息导入：']
+    focus    textfield11
+    选择附件    textfield11    ${upload_file}
+    链接    上传文件
+    Comment    ajax加载完毕
+
+清除相关合作信息
+    [Arguments]    ${sp_code}
+    删除数据库记录    delete from prm_sp a where a.sp_code='${sp_code}'
+    删除数据库记录    delete from prm_apply_sp a where a.sp_code='${sp_code}'
+
+发布导入文件并检查提示信息
+    [Arguments]    ${check_content}
+    直到页面某个元素可见    xpath=//a[contains(text(),"提交")]
+    sleep    1s
+    链接    提交
+    sleep    1s
+    Run Keyword If    '${browser_type}'!='phantomjs'    Confirm Action
+    comment    ${mec}    关闭对话框    来自网页的消息
+    校验弹出框信息并点击按钮    ${check_content}    确认
+    直到页面某个元素可见    xpath=//a[contains(text(),"返回")]
+    链接    返回
+    Comment    unselect Frame
+
+检查数据库中合作的状态
+    [Arguments]    ${sp_code}    ${check_status}
+    ${result}    数据库查询    select a.status from prm_sp a where a.sp_code='${sp_code}'
+    Should Be Equal    ${result}    ${check_status}
+    删除数据库记录    delete from prm_sp a where a.sp_code='${sp_code}'
+    删除数据库记录    delete from prm_apply_sp a where a.sp_code='${sp_code}'
+
+进入错误结果页面并点击忽略错误
+    直到页面某个元素可见    xpath=//a[contains(text(),"忽略错误")]
+    链接    忽略错误
+    Comment    ajax加载完毕

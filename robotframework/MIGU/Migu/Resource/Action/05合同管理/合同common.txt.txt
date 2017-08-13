@@ -1,0 +1,146 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+Resource          ../../Common/databaseinit.txt
+Resource          ../../Common/excel_basic_opr.txt
+
+*** Keywords ***
+选择合作伙伴
+    [Arguments]    ${spCode}
+    直到元素可见    id=button3
+    Comment    Click Element    Xpath=/html/body/div[3]/form/div[1]/table/tbody/tr[2]/td[2]/input[@value="选择"]
+    Click Element    Xpath=//input[@id="button3" and @onclick="selectSp();" and @value="选择"]
+    ajax加载完毕
+    ${title}    Get Window Titles
+    ${ids}=    Get Window Identifiers
+    sleep    1s
+    Select Window    选择合作公司
+    文本框输入    id=spCode    ${spCode}
+    点击按钮    查询
+    focus    Xpath=//input[@name='spSelect']
+    点击元素    Xpath=//input[@name='spSelect']
+    点击元素    Xpath=/html/body/div[3]/div[5]/input[1][@value="确认"]
+    Select Window
+    Sleep    1s
+
+点击新增合同
+    直到元素可见    id=toAdd
+    点击元素    id=toAdd
+
+输入合同编号
+    [Arguments]    ${contracNo}
+    focus    id=contractNo
+    Click Element    id=contractNo
+    文本框输入    id=contractNo    ${contracNo}
+
+输入合同名称
+    [Arguments]    ${contractName}
+    文本框输入    id=contractName    ${contractName}
+
+输入签订时间
+    [Arguments]    ${signDate}
+    输入日期    signDate    ${signDate}
+
+输入有效起始时间
+    [Arguments]    ${startDate}
+    输入日期    startDate    ${startDate}
+
+输入有效结束时间
+    [Arguments]    ${endDate}
+    输入日期    endDate    ${endDate}
+    sleep    0.5s
+
+点击提交
+    点击元素    Xpath=//*[@value="提交"]
+
+输入合同金额
+    [Arguments]    ${amount}
+    input text    id=amount    ${amount}
+
+输入主管部门
+    [Arguments]    ${sponsor}
+    文本框输入    id=sponsor    ${sponsor}
+
+输入签署人
+    [Arguments]    ${signedMan}
+    input text    id=signedMan    ${signedMan}
+
+输入法人
+    [Arguments]    ${lawMan}
+    input text    id=lawMan    ${lawMan}
+
+输入联系人
+    [Arguments]    ${contact}
+    input text    id=contact    ${contact}
+
+输入备注
+    [Arguments]    ${remark}
+    input text    id=remark    ${remark}
+
+上传合同附件
+    [Arguments]    ${upload_path}
+    直到元素可见    id=uploadBtn_fileGroupId
+    上传附件，输入id    uploadBtn_fileGroupId    ${upload_path}
+
+选择关联合同
+    [Arguments]    ${contact_no}
+    直到元素可见    id=button3
+    Click Element    Xpath=/html/body/div[3]/form/div[1]/table/tbody/tr[5]/td[2]/input[@value="选择"]
+    ajax加载完毕
+    ${title}    Get Window Titles
+    ${ids}=    Get Window Identifiers
+    sleep    1s
+    Select Window    选择关联合同
+    文本框输入    id=contractNo    ${contact_no}
+    点击按钮    查询
+    Comment    focus    Xpath=/html/body/div[3]/div[4]/div/table/thead/tr/th[2]/input[@id="contractIdAll"]
+    点击元素    Xpath=/html/body/div[3]/div[4]/div/table/thead/tr/th[2]/input[@id="contractIdAll"]
+    Sleep    1s
+    点击按钮    确认
+    Sleep    1s
+
+查询合同编码
+    [Arguments]    ${contractNo}
+    文本框输入    id=contractNo    ${contractNo}
+    点击查询按钮
+
+点击查询按钮
+    click button    id=queryBtn
+
+查看合同详情
+    [Arguments]    ${text}
+    Execute Javascript    jQuery("a:contains('${text}')").click()
+    直到元素可见    jquery=div:contains('合作基本信息')
+    直到元素可见    jquery=div:contains('合同信息')
+    直到元素可见    jquery=div:contains('流程跟踪')
+    click button    //*[@id="button3"and@value="返回"]
+
+勾选记录并点击续签通知
+    click button    id=contractIdAll
+    click button    Xpath=//input[@value="续签通知"]
+    click button    Xpath=//input[@value="发送"]
+
+输入终止时间
+    [Arguments]    ${endDate}
+    输入日期    endDate    ${endDate}
+
+输入终止原因
+    [Arguments]    ${endReason}
+    文本框输入    id=endReason    ${endReason}
+
+清除合同终止状态
+    [Arguments]    ${contract_no}
+    执行SQL语句    update prm_sp_contract a set a.status=1, a.terminal_date='',a.end_reason='' \ where a.contract_no='${contract_no}'
+
+合同状态检查
+    [Arguments]    ${contract_no}
+    查询数据库记录数    select a.status from prm_sp_contract a where a.contract_no='${contract_no}';    7
+    [Teardown]
+
+点击返回
+    select window
+    click button    xpath=//a[text()='返回']
+
+检查数据库合同是否导入
+    [Arguments]    ${contract_no}    ${number}
+    ${res}    数据库查询    SELECT count(*) FROM prm_sp_contract a where a.contract_no='${contract_no}';
+    Should Be Equal    ${number}    ${res}

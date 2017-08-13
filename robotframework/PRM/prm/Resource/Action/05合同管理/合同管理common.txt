@@ -1,0 +1,32 @@
+*** Settings ***
+Resource          ../../Common/公用.txt
+
+*** Keywords ***
+使用sims_admin登录系统,并进入合同管理页面
+    使用sims_admin登录系统
+    进入合同管理页面
+
+进入合同管理页面
+    进入左侧二级菜单    合同管理    合同管理
+    ajax加载完毕
+
+清理相关合同信息
+    [Arguments]    ${contract_no}
+    删除数据库记录    delete from prm_sp_contract a where a.contract_no='${contract_no}'
+
+初始化相关合同数据
+    exec sql    insert into prm_sp_contract \ \ (CONTRACT_ID, \ \ \ SP_ID, \ \ \ CONTRACT_NO, \ \ \ CONTRACT_NAME, \ \ \ CONTRACT_EDITION_ID, \ \ \ FILE_GROUP_ID, \ \ \ SIGN_DATE, \ \ \ START_DATE, \ \ \ END_DATE, \ \ \ TASK_FLAG, \ \ \ LAW_MAN, \ \ \ REMARK, \ \ \ NOTIFY_RENEW_FLAG, \ \ \ OWNER_TYPE, \ \ \ CONTACT_DEADLINE, \ \ \ DELAY_DEADLINE, \ \ \ SIGNED_MAN, \ \ \ SETTLE_TATIO, \ \ \ CONTACT, \ \ \ CREATE_DATE, \ \ \ LAST_UPDATE, \ \ \ STATUS, \ \ \ IS_RENEW, \ \ \ RENEW_LAST, \ \ \ TERMINAL_DATE, \ \ \ AMOUNT, \ \ \ SPONSOR, \ \ \ BATCH_ID) values \ \ ('0999999999', \ \ \ '0000000001', \ \ \ 'HT-878877', \ \ \ '李红军-合作', \ \ \ null, \ \ \ null, \ \ \ sysdate, \ \ \ sysdate, \ \ \ sysdate+180, \ \ \ null, \ \ \ '法人', \ \ \ '通过', \ \ \ '0', \ \ \ '1', \ \ \ null, \ \ \ null, \ \ \ '签署人', \ \ \ '20', \ \ \ '联系人', \ \ \ sysdate, \ \ \ sysdate, \ \ \ '1', \ \ \ '0', \ \ \ null, \ \ \ null, \ \ \ 11.00, \ \ \ '测试', \ \ \ null);    ${prm_oracle_tns}
+
+检查合同状态
+    [Arguments]    ${check_status}
+    ${result}    数据库查询    select a.status from prm_sp_contract a where a.contract_no='HT-878877' and a.sp_id='0000000001';
+    Should Be Equal    ${result}    ${check_status}
+
+选择待处理的合同记录
+    comment    查询
+    文本输入_通过id定位    contractNo    HT-878877
+    文本输入_通过id定位    spCode    QD20140730001
+    点击元素    queryBtn
+    ajax加载完毕
+    focus    Xpath=//input[@name='checkId']
+    Click Element    Xpath=//input[@name='checkId']

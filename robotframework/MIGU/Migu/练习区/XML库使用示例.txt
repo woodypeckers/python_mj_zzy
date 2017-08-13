@@ -1,0 +1,62 @@
+*** Settings ***
+Documentation     需要robotframework2.8.6的修订版安装后，即可执行此案例
+...               easy_install \ http://10.1.3.252:10000/dist/robotframework-2.8.6-py2.7-win32.egg.zip
+...
+...               RF主要修改：
+...               1.缺省即使用lxml库
+...               2.增加to string方法， 以方便最后在内存中encoding成GBK编码
+Library           XML
+
+*** Variables ***
+${xml_root}       ${EMPTY}
+
+*** Test Cases ***
+常见的XML操作
+    XML文件读取    Prm\\xml\\AddCnSimsToPrm.xml
+    ${node_value}=    XML获取节点值    //Version
+    XML添加节点    //Msg/Header    <abc/>
+    XML节点值设置    //Msg/Header/abc    陈振武
+    XML打印到日志
+    XML.Save Xml    ${xml_root}    Prm\\xml\\AddCnSimsToPrm_GBK.xml    encoding=GBK
+    XML删除节点    //Msg/Header/abc
+    XML打印到日志
+    ${gbk_string}=    XML转换成字符串    encoding=GBK
+
+*** Keywords ***
+XML文件读取
+    [Arguments]    ${xml_filename}
+    ${root}    XML.Parse Xml    ${xml_filename}
+    Set Test Variable    ${xml_root}    ${root}
+
+XML获取节点值
+    [Arguments]    ${nodeXpath}
+    ${root}    Get Variable Value    ${xml_root}
+    ${nodeValue}    XML.Get Element Text    ${root}    ${nodeXpath}
+    [Return]    ${nodeValue}
+
+XML添加节点
+    [Arguments]    ${父节点xpath}    ${子节点str}    ${index}=-1
+    [Documentation]    ${子节点str}例如： <somenode/>
+    ${root}    Get Variable Value    ${xml_root}
+    XML.Add Element    ${root}    ${子节点str}    ${index}    ${父节点xpath}
+    Set Test Variable    ${xml_root}    ${root}
+
+XML节点值设置
+    [Arguments]    ${nodeXpath}    ${nodeValue}
+    ${root}    Get Variable Value    ${xml_root}
+    XML.Set Element Text    ${root}    ${nodeValue}    \    ${nodeXpath}
+    Set Test Variable    ${xml_root}    ${root}
+
+XML删除节点
+    [Arguments]    ${nodeXPath}
+    ${root}    Get Variable Value    ${xml_root}
+    XML.Remove Element    ${root}    ${nodeXPath}
+    Set Test Variable    ${xml_root}    ${root}
+
+XML打印到日志
+    XML.Log Element    ${xml_root}
+
+XML转换成字符串
+    [Arguments]    ${encoding}=UTF-8
+    ${root}    Get Variable Value    ${xml_root}
+    ${somestr}=    XML.to string    ${root}    encoding=${encoding}

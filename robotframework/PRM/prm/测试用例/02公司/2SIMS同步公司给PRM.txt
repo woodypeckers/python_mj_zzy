@@ -1,0 +1,30 @@
+*** Settings ***
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Action/02公司/2SIMS同步公司给PRM.txt
+
+*** Test Cases ***
+01SIMS新增公司，同步给PRM
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\AddCnSimsToPrm.xml
+    修改消息同步报文Header    010002    999    #需填写消息号和发送同步消息的系统编码
+    修改SIMS新增公司同步给PRM的xml文件
+    检查Sims公司信息同步给PRM的结果    000000
+    查看数据库是否有SIMS同步给PRM的公司记录
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+02SIMS变更公司，同步给PRM
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\AlterCnSimsToPrm.xml
+    修改消息同步报文Header    010002    999    #需填写消息号和发送同步消息的系统编码
+    修改SIMS变更公司同步给PRM的xml文件
+    检查Sims公司信息同步给PRM的结果    000000
+    查看数据库是否有SIMS同步给PRM的变更的公司记录
+    [Teardown]    teardown_案例运行失败时关闭浏览器
+
+03SIMS新增公司同步给PRM的报文中缺少节点
+    [Tags]    smoke
+    读取xml文件    prm\\xml\\AddCnSimsToPrm.xml
+    修改消息同步报文Header    010002    999    #需填写消息号和发送同步消息的系统编码
+    SIMS新增公司同步给PRM的报文中缺少节点
+    检查消息同步结果    012999
+    [Teardown]    teardown_案例运行失败时关闭浏览器

@@ -1,0 +1,50 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    teardown_案例集结束时关闭浏览器
+Resource          ../../Resource/Common/公用.txt
+Resource          ../../Resource/Action/04结算对账/结算对账common.txt
+Resource          ../../Resource/Action/06结算考核管理/结算考核common.txt
+Resource          ../../Resource/Action/06结算考核管理/2删除结算单模板.txt
+
+*** Test Cases ***
+01 删除未使用的结算考核模板
+    [Tags]    smoke
+    [Setup]    01_setup_准备一条未使用过的结算考核模板    模板名称=自动化测试结算考核模板    base_id=001
+    登录PRM管理员端"${url_admin}",登陆名"admin_12582",密码"aaa111"
+    进入结算考核模板管理页面
+    删除未使用的结算单模板    提示信息=删除结算考核模板成功
+    检查结算考核模板是否被删除    0
+    [Teardown]    01_teardown    模板名称=自动化测试结算考核模板    base_id=001
+
+02 删除已使用的结算模板给出提示
+    [Tags]    smoke
+    [Setup]    02_setup_准备一条已使用的结算考核模板    模板名称=自动化测试结算考核模板    base_id=001
+    登录PRM管理员端"${url_admin}",登陆名"admin_12582",密码"aaa111"
+    进入结算考核模板管理页面
+    删除已使用的结算单模板给出提示    提示信息=模板已经被用于结算考核，不能删除！
+    检查结算考核模板的状态    模板名称=自动化测试结算考核模板    base_id=001    待检查的VALID_FLAG=1
+    [Teardown]    02_teardown    模板名称=自动化测试结算考核模板    base_id=001
+
+*** Keywords ***
+01_setup_准备一条未使用过的结算考核模板
+    [Arguments]    ${模板名称}    ${base_id}
+    清除结算考核模板    template_name=${模板名称}    base_id=${base_id}
+    插入一条结算考核模板信息    template_name=${模板名称}    base_id=${base_id}
+
+01_teardown
+    [Arguments]    ${模板名称}    ${base_id}
+    清除结算考核模板    template_name=${模板名称}    base_id=${base_id}
+    teardown_案例运行失败时关闭浏览器
+
+02_setup_准备一条已使用的结算考核模板
+    [Arguments]    ${模板名称}    ${base_id}
+    删除对应的结算考核信息
+    清除结算考核模板    template_name=${模板名称}    base_id=${base_id}
+    插入一条结算考核模板信息    template_name=${模板名称}    base_id=${base_id}
+    插入一条结算考核信息与模板关联
+
+02_teardown
+    [Arguments]    ${模板名称}    ${base_id}
+    删除对应的结算考核信息
+    清除结算考核模板    template_name=${模板名称}    base_id=${base_id}
+    teardown_案例运行失败时关闭浏览器

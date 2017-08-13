@@ -1,0 +1,17 @@
+*** Settings ***
+Resource          ../../Common/数据库操作.txt
+Resource          ../../Common/公用.txt
+Resource          ../../Common/附件上传.txt
+
+*** Keywords ***
+失效结算考核模板
+    [Arguments]    ${模板名称}    ${提示信息}=失效结算考核模板成功
+    Comment    select Frame    content
+    文本输入_通过id定位    examTemplateTemplateName    ${模板名称}
+    点击元素    queryBtn
+    Comment    ajax加载完毕
+    Wait Until Element Is Visible    xpath=//table//td/div/a[text()='${模板名称}']    10s
+    点击元素    xpath=//table//td/div/a[text()='${模板名称}']/ancestor::tr//a[text()="失效"]
+    Comment    ajax加载完毕
+    校验弹出框信息并点击按钮    ${提示信息}
+    go to    http://10.12.12.157:18080/prm_admin/

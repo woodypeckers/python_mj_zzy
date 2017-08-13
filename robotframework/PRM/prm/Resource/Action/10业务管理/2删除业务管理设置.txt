@@ -1,0 +1,37 @@
+*** Settings ***
+Resource          业务管理common.txt
+
+*** Keywords ***
+插入一条业务管理设置记录
+    Exec Sql    insert into prm_sp_platform (ID, SP_ID, PLATFORM_ID, CREATE_DATE, OPERATE_ID) values ('0000000005', '0000000001', '1111111111', to_date('20-01-2015 14:16:54', 'dd-mm-yyyy hh24:mi:ss'), '1010249');    ${prm_oracle_tns}
+
+查询出插入的业务管理设置记录并且删除
+    文本框通过文字    合作编码    QD20140730001
+    链接    查询
+    ajax加载完毕
+    单选框    xpath=//input[@value='0000000005']
+    链接    批量删除设置
+    链接    确认
+    校验二次确认框提示信息并点击按钮    批量删除成功
+
+检查数据库是否有该被删除的业务管理设置记录
+    [Arguments]    ${sql}
+    ${result}    Exec Sql    ${sql}    ${prm_oracle_tns}
+    Should Be Equal As Integers    ${result}    0
+
+查询出插入的三条业务管理设置记录并且删除
+    单选框    xpath=//input[@value='0000000005']
+    单选框    xpath=//input[@value='0000000006']
+    单选框    xpath=//input[@value='0000000007']
+    链接    批量删除设置
+    链接    确认
+    校验二次确认框提示信息并点击按钮    批量删除成功
+
+没有选择业务管理设置记录就删除
+    链接    批量删除设置
+    校验二次确认框提示信息并点击按钮    请先选中一条或多条合作再进行批量删除设置！
+
+插入三条业务管理设置记录
+    Exec Sql    insert into prm_sp_platform (ID, SP_ID, PLATFORM_ID, CREATE_DATE, OPERATE_ID) values ('0000000005', '0000000001', '1111111111', to_date('20-01-2015 14:16:54', 'dd-mm-yyyy hh24:mi:ss'), '1010249');    ${prm_oracle_tns}
+    Exec Sql    insert into prm_sp_platform (ID, SP_ID, PLATFORM_ID, CREATE_DATE, OPERATE_ID) values ('0000000006', '0000000002', '1111111111', to_date('20-01-2015 14:16:54', 'dd-mm-yyyy hh24:mi:ss'), '1010249');    ${prm_oracle_tns}
+    Exec Sql    insert into prm_sp_platform (ID, SP_ID, PLATFORM_ID, CREATE_DATE, OPERATE_ID) values ('0000000007', '0000000003', '1111111111', to_date('20-01-2015 14:16:54', 'dd-mm-yyyy hh24:mi:ss'), '1010249');    ${prm_oracle_tns}

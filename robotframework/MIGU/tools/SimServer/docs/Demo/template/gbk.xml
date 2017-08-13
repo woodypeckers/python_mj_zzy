@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="GBK" ?>
+<Request>
+<apkInfo>
+    <contentId>123456789012</contentId>
+    <contentName>愤怒的小鸟</contentName>
+    <cpId>123456</cpId>
+    <cpName>南京市游戏设计有限责任公司</cpName>
+    <contentType>01</contentType>
+    <filePath>FTP://192.168.0.1/XXX.apk</filePath>
+    <notifyURL>http://ip:port/webservice/interfaces/XXX</notifyURL>
+    <priorityLevel>1</priorityLevel>
+</apkInfo>
+</Request>
