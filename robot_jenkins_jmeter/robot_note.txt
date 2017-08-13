@@ -1,0 +1,57 @@
+自动化地址：https://10.12.3.111:8443/svn/SIMS_TEST/trunk 
+http://blog.csdn.net/u011757108/article/details/62428484 --select选择框
+http://blog.csdn.net/hapasm/article/details/53583313--select选择框
+http://www.cnblogs.com/Leo_wl/p/3288402.html   python--链接oracle数据库
+https://jingyan.baidu.com/article/7e4409533fd4092fc1e2ef46.html--这是jmeter
+
+
+--jenkins 集成robot插件，用pybot --arguementflie argfile.txt（为在ride中执行了哪些用例，在jenkins中，跑相同的，并不是所有用例）
+
+%{path}，%{JAVA_HOME} ...系统变量
+&{dict}  dictionary 字典
+@{list_1}  list
+${user1}  标量
+
+系统关键字：
+Set Browser Implicit Wait  10s   智能等待
+set log level
+log
+log mary
+create list 
+create dictionary
+Input Text Into Prompt 输入文本到提示符
+Input Text
+open/close Browser 打开、关闭浏览器
+click系列，button，link
+page should contain 验证页面是否存在
+验证title
+run keyword 用给定的参数执行给定关键字，它可以是变量，因此可以动态设置，例如从另一个关键字的返回值或从命令行设置。
+set variable 字符串:3.1，数字 : ${3.1}
+set variable if 条件判断
+get length  返回长度
+get time 返回时间
+evaluate  运算 #evalute的作用实际上是把表达式放到Python里运行
+comment  --作用：相当于显示日志   --将日志文件中给定的消息作为关键字参数显示。 但由于它们在日志中可见，因此该关键字可用于显示简单消息
+
+scalar的高级用法， 多个定量及赋值
+list 变量 ，可以灵活变换，具体见Learn RIDE.测试套件.测试套.case13_List变量
+
+for循环
+:FOR ${i} in range 10
+	log i= ${i}
+:FOR ${i} IN RANGE 2 10 2 
+	log i= ${i}
+	
+这里没有while循环
+
+capture page screenshot  截图
+File Should Exist 截图存放
+文件名参数指定将截图写入的文件的名称。如果没有文件名，屏幕截图被保存到文件中，在机器人框架日志文件被写入的目录下。如果不以绝对格式给出文件名，则该文件名也被认为与同一目录相对应。如果给定绝对路径或相对路径，但路径不存在，它将被创建。
+
+should be true
+convert to list 转换成list
+get from list  通过索引反正指定的值  通过索引--返回值
+get index from list 返回列表中“值”第一次出现的索引。 通过值--返回索引
+
+append to list
+insert into list 

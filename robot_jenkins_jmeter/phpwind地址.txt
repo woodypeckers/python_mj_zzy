@@ -1,0 +1,4 @@
+恭喜您，您的 PHPWind Forums v7.3.2 已经安装成功！ 系统前台地址： http://localhost/phpwind/index.php
+系统后台地址： http://localhost/phpwind/admin.php
+PW官方论坛： http://www.phpwind.net
+ 
