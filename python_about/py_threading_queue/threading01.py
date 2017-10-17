@@ -16,7 +16,6 @@ def main01():
 
     for i in nl:
         t = threading.Thread(target=loop, args=(i, loop_list[i]))#Tread类
-        """18行，报错"""
         threads.append(t)
 
     for i in nl:

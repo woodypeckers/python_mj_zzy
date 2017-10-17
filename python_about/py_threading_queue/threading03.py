@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 from time import sleep,ctime
 import threading
-# from threading import Thread
+from threading import Thread
 
 loop_list = [4,2]
 class MyThread(object):
     def __init__(self, func, args, name=''):
-        threading.Thread.__init__(self)
+        threading.Thread.__init__()
         self.name = name
         self.func = func
         self.name = name
+        self.args = args
 
     def run(self):
         apply(self.func, self.args)

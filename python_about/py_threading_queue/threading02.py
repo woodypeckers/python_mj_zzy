@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from time import sleep,ctime
 import threading
-# from threading import Thread
+from threading import Thread
 
 loop_list = [4,2]
 class ThreadFunc(object):
