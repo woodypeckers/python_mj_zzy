@@ -6,7 +6,7 @@ import random,string
 def guess_num():
     num = random.randint(40,45)
     while True:
-        user_name = raw_input("请输入40到50之间的正整数：")
+        user_name = raw_input("请输入40到45之间的正整数：")
         if string.upper(user_name) in ("Q","QUIT"):
             break
 
@@ -18,5 +18,4 @@ def guess_num():
 
 
 if __name__ == "__main__":
-    # guess_num()
-    sum()
+    guess_num()

@@ -38,10 +38,10 @@ def if_else():
 
 
 if __name__ == "__main__":
-    user()
-    user_int()
+    # user()
+    # user_int()
     for_01()
-    range_01()
-    if_else()
+    # range_01()
+    # if_else()
 
 

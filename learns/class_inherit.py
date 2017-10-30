@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 class Student(object):
-
     def __init__(self, name, age):
         self.name = name
         self.age = age
@@ -15,8 +14,8 @@ class MiddleStundent(Student):
     def lol(self):
         print "A  MiddleStundent name is %s,age is %s" % (self.name,self.age)
 
-class PrimaryStudent(Student):
 
+class PrimaryStudent(Student):
     def __init__(self, name, age, playing):
         self.name = name
         self.age = age

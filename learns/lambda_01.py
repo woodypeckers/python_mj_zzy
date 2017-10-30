@@ -23,6 +23,7 @@ class Lambda(object):
         list3 = ["APPLE", 'Banana', 'Orange', 122]
         """#判断实例类型为string,实现转换"""
         list4 = [s.lower() for s in list3 if isinstance(s, str)]
+        print list4
         return list4
 
     def list5(self):

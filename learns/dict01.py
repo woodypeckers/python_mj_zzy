@@ -28,7 +28,7 @@ class DictTest(object):
 if __name__ == '__main__':
     # DictTest().dict1a()#直接写，或者用句柄
     obj = DictTest()
-    obj.dict1a()
-    obj.dict2a()
+    # obj.dict1a()
+    # obj.dict2a()
     obj.dict3a()
     # obj.dict4a()
