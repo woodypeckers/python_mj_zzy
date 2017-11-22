@@ -39,11 +39,11 @@ import logging
 #======================================================
 import os
 def remove_dir(dir):
-    dir = dir.replace('\\', '/')
-    if(os.path.isdir(dir)):
+    dir = dir.replace('\\', '/')#\\替换成/
+    if(os.path.isdir(dir)):#isdir()括号内是一个存在的目录，则返回True。否则返回False。
         for p in os.listdir(dir):#os.listdir列出当前路径下的文件夹
             remove_dir(os.path.join(dir,p))#os.remove删除掉文件
-        if(os.path.exists(dir)):
+        if(os.path.exists(dir)):#os.path.exists() 用于判断变量、文件等是否存在
             os.rmdir(dir)#os.rmdir(path)删除目录 path，要求path必须是个空目录,否则抛出OSError错误
     else:
         if(os.path.exists(dir)):
@@ -52,6 +52,15 @@ def remove_dir(dir):
 remove_dir(r'D:/python_zhanyong/git_branch_mj/a01/a02') #函数使用
 print 'ok'
 
+''' 可查看http://book.51cto.com/art/201405/440067.htm   
+os.path.join(path1[, path2[, ...]])  
+将多个路径组合后返回，第一个绝对路径之前的参数将被忽略。
+>>> os.path.join('c:\\', 'csv', 'test.csv')   
+'c:\\csv\\test.csv'   
+>>> os.path.join('windows\temp', 'c:\\', 'csv', 'test.csv')   
+'c:\\csv\\test.csv'   
+>>> os.path.join('/home/aa','/home/aa/bb','/home/aa/bb/c')   
+'/home/aa/bb/c'   '''
 #==========================================================
 #方法2：利用python的成熟的模块
 import shutil

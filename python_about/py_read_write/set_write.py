@@ -6,7 +6,7 @@ print a
 
 f = open("numbers.txt",'w')
 for i in range(5):
-    f.write("%d,"%i)
+    f.write("%d,"%i)#%d整数，#%f浮点数，#%s字符串...https://www.cnblogs.com/plwang1990/p/3757549.html
 f.close()
 
 f = open("numbers.txt",'r')

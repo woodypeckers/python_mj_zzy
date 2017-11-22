@@ -18,12 +18,12 @@ class mythread(threading.Thread):
         threading.Thread.__init__(self,name=threadname)
     def run(self):
         global x
-        lock.acquire()
+        lock.acquire()#获得锁
         for i in range(3):
             x = x+1
         time.sleep(1)
         print x
-        lock.release()
+        lock.release()#释放锁
 
 if __name__ == '__main__':
     lock = threading.RLock()
