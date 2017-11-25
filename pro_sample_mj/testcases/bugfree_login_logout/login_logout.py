@@ -3,9 +3,9 @@
 # author:mj
 import unittest, os,time
 from selenium import webdriver
-from lib.utils import read_excel
-from config import *
-from testcases.bussiness_common_steps.bussiness_common_steps import *
+from pro_sample_mj.lib.utils import read_excel
+from pro_sample_mj.config import *
+from pro_sample_mj.testcases.bussiness_common_steps.bussiness_common_steps import *
 
 
 class Login_logout_parameter(unittest.TestCase):

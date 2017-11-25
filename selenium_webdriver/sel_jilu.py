@@ -49,7 +49,6 @@ class Bf(unittest.TestCase):
         print "当前窗口：",driver.get_window_position(),driver.get_window_size()#position 位置 #size大小
         self.assertEqual(u"头",driver.title)#判断title
         self.assertSequenceEqual()#序列相同
-        self.assert
         self.assertEqual(u"admin", driver.find_element_by_id("LoginForm_username").text)#验证输入
 
         print driver.find_element_by_css_selector("BODY").text #css
@@ -68,8 +67,6 @@ class Bf(unittest.TestCase):
         ActionChains(driver).move_to_element_with_offset(link1).perform()#??????
         ActionChains(driver).move_to_element(link1).perform()
         ActionChains(driver).double_click(link1).perform()  #双击操作
-        ActionChains(driver).drag_and_drop(element, target).perform()  #鼠标拖放操作
-        """#如何使用(element, target)???"""
 
         title = self.driver.title
         try:

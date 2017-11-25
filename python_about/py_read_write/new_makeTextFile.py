@@ -25,6 +25,7 @@ except IOError,e:
      print "ERROR:%s already exists" % e
 else:
     print "\nEnter lines ('.'by itself to quit).\n"#一直输入， 每一行以“.”结束
+	
     while True:  #循环到终止输入
         entry = raw_input('writing:')
         if entry == '.':

@@ -3,8 +3,8 @@
 import  time
 import unittest
 from selenium import webdriver
-from testcases.bussiness_common_steps.bussiness_common_steps import *
-from config import *
+from pro_sample_mj.testcases.bussiness_common_steps.bussiness_common_steps import *
+from pro_sample_mj.config import *
 
 class BugfreeImport(unittest.TestCase):
     def setUp(self):
