@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from time import sleep,ctime
 import threading
-from threading import Thread
+from mythread_sample import mythread
 
 loop_list = [4,2]
 class MyThread(object):
@@ -27,7 +27,7 @@ def main03():
     nls = range(len(loop_list))
 
     for i in nls:
-        t = MyThread(loop, (i, loop_list[i]), loop.__name__)
+        t = mythread(loop, (i, loop_list[i]), loop.__name__)
         threads.append(t)
 
     for i in nls:

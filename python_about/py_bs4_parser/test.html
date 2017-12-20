@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head profile="http://www.w3.org/2005/10/profile">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel='icon' href='/ranzhi/www/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/ranzhi/www/favicon.ico' type='image/x-icon' />
+  <title>待办 - 然之协同</title>
+<script language='Javascript'>var config={"webRoot":"\/ranzhi\/www\/","appName":"sys","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/ranzhi\/www\/theme\/","currentModule":"my","currentMethod":"company","clientLang":"zh-cn","requiredFields":"","save":"\u4fdd\u5b58","router":"\/ranzhi\/www\/sys\/index.php","runMode":"front","timeout":30000,"pingInterval":60}
+</script>
+<script language='Javascript'>if(typeof(v) != "object") v = {};v.entryID = "superadmin";</script>
+<script language='Javascript'>v.entryID = "dashboard";</script>
+<link rel='stylesheet' href='/ranzhi/www/theme/default/all.css?v=3.4' type='text/css' media='screen' />
+<script src='/ranzhi/www/js/all.js?v=3.4' type='text/javascript'></script>
+<style>.with-side {position: relative; padding-left: 260px;}
+.side {position: absolute; left: 0; top: 0; width: 240px;}
+.main {width: 100%;}
+.closed, .finished {color: #38B03F;}
+#ajaxModal .actions .self{display: none;}
+#ajaxModal{z-index:10050}
+.fixed-left .table-bordered, .fixed-left .table tr th:last-child, .fixed-left .table tr td:last-child{border-right: none;}
+</style><!--[if lt IE 9]>
+<script src='/ranzhi/www/js/html5shiv/min.js?v=3.4' type='text/javascript'></script>
+<script src='/ranzhi/www/js/respond/min.js?v=3.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='/ranzhi/www/js/jquery/placeholder/min.js?v=3.4' type='text/javascript'></script>
+<![endif]-->
+<script language='Javascript'>v.lang = {"confirmDelete":"\u60a8\u786e\u5b9a\u8981\u6267\u884c\u5220\u9664\u64cd\u4f5c\u5417\uff1f","deleteing":"\u5220\u9664\u4e2d","doing":"\u5904\u7406\u4e2d","timeout":"\u7f51\u7edc\u8d85\u65f6,\u8bf7\u91cd\u8bd5","confirmDiscardChanges":"\u8868\u5355\u5df2\u66f4\u6539\uff0c\u786e\u5b9a\u5173\u95ed\uff1f","yes":"\u662f","no":"\u5426"};</script>
+</head>
+<body class='m-my-company'>
+<style>body {padding-top: 58px}</style>
+<nav class='navbar navbar-inverse navbar-fixed-top' id='mainNavbar'>
+  <div class='collapse navbar-collapse'>
+    <ul class='nav navbar-nav'>
+      <li><a href='/ranzhi/www/sys/user-profile.html' data-toggle='modal' data-id='profile'><i class='icon-user'></i> admin</a>
+</li>
+    </ul>
+    <ul class='nav navbar-nav'>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/todo-calendar.html'>待办</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-task.html'>任务</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-project.html'>项目</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-order.html'>订单</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-contract.html'>合同</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-review-attend.html'>审批</a></li>
+<li class='active'><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-company.html'>组织</a></li>
+<li ><a class='app-btn open' data-id='dashboard' href='/ranzhi/www/sys/my-dynamic.html'>动态</a></li>
+</ul>
+  </div>
+</nav>
+<div class='row page-content'><link rel='stylesheet' href='/ranzhi/www/js/jquery/chosen/min.css?v=3.4' type='text/css' media='screen' />
+<script src='/ranzhi/www/js/jquery/chosen/min.js?v=3.4' type='text/javascript'></script>
+
+<script>
+window.chosenDefaultOptions = {no_results_text: '没有匹配的选项', disable_search_threshold: 1, search_contains: true, width: '100%', allow_single_deselect: true};
+$(document).ready(function()
+{
+    $(".chosen").chosen(chosenDefaultOptions);
+});
+</script>
+<link rel='stylesheet' href='/ranzhi/www/js/datetimepicker/css/min.css?v=3.4' type='text/css' media='screen' />
+<script src='/ranzhi/www/js/datetimepicker/js/min.js?v=3.4' type='text/javascript'></script>
+<script language='javascript'>
+/**
+ * Format date to a string
+ *
+ * @param  string   format
+ * @return string
+ */
+Date.prototype.format = function(format)
+{
+    var date =
+    {
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "m+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        "S+": this.getMilliseconds()
+    };
+    if (/(y+)/i.test(format))
+    {
+        format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+    }
+    for (var k in date)
+    {
+        if (new RegExp("(" + k + ")").test(format))
+        {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+        }
+    }
+    return format;
+}
+
+$(function()
+{
+    $.fn.fixedDate = function()
+    {
+        return $(this).each(function()
+        {
+            var $this = $(this);
+            if($this.hasClass('date-picker-up') || (!$this.hasClass('date-picker-down') && $this.offset().top + 200 > $(document.body).height()))
+            {
+                $this.attr('data-picker-position', 'top-right');
+            }
+
+            if($this.val() != '' && !$this.hasClass('form-time'))
+            {
+                var date = new Date(Date.parse($this.val().replace(/-/g, '/')));
+                if(!date.valueOf()) date = new Date();
+
+                if($this.hasClass('form-datetime')) $this.val(date.format('yyyy-MM-dd hh:mm:ss'));
+                else $this.val(date.format('yyyy-MM-dd'));
+            }
+            return $this;
+        });
+    };
+    var options = 
+    {
+        language: 'zh-cn',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        format: 'yyyy-mm-dd hh:ii'
+    }
+    window.datetimepickerDefaultOptions = options;
+
+    $('.form-datetime').fixedDate().datetimepicker(options);
+    $('.form-date').fixedDate().datetimepicker($.extend(options, {minView: 2, format: 'yyyy-mm-dd'}));
+    $('.form-time').fixedDate().datetimepicker($.extend(options, {startView: 1, minView: 0, maxView: 1, format: 'hh:ii'}));
+    $('.form-month').fixedDate().datetimepicker($.extend(options, {startView: 3, minView: 3, format: 'yyyy-mm'}));
+});
+</script>
+<script language='Javascript'>v.type = "todo";</script>
+<div class='with-side'>
+  <div class='panel side'>
+    <div class='panel-heading'>组织待办</div>
+    <div class='panel-body'>
+      <div class='form-group'>
+        <div class='input-group'>
+          <span class='input-group-addon'>部门</span>
+          <select name='dept' id='dept' class='form-control chosen'>
+<option value='' selected='selected'>所有</option>
+</select>
+        </div>
+      </div>
+      <div class='form-group'>
+        <div class='input-group'>
+          <span class='input-group-addon'>用户</span>
+          <select name='account' id='account' class='form-control chosen'>
+<option value='' selected='selected'></option>
+<option value='admin'>admin</option>
+</select>
+        </div>
+      </div>
+      <div class='form-group'>
+        <div class='input-group'>
+          <span class='input-group-addon'>开始</span>
+          <input type='text' name='begin' id='begin' value='2017-12-19' class='form-control form-date' />
+        </div>
+      </div>
+      <div class='form-group'>
+        <div class='input-group'>
+          <span class='input-group-addon'>结束</span>
+          <input type='text' name='end' id='end' value='2017-12-26' class='form-control form-date' />
+        </div>
+      </div>
+      <div class='form-group'>
+          <a href='javascript:void(0)' class='btn btn-primary submit'>查看</a>
+      </div>
+    </div>
+  </div>
+  <div class='main'>
+    <table class='table table-bordered datatable' data-fixed-Left-Width='200'>
+      <thead>
+        <tr class='text-center'>
+          <th data-width='80' data-flex='false' class='text-center'>部门</th>
+          <th data-width='80' data-flex='false' class='text-center'>用户</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-19</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-20</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-21</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-22</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-23</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-24</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-25</th>
+                    <th data-width='200' data-flex='true' class='text-center'>2017-12-26</th>
+                  </tr>
+      </thead>
+            <tr>
+        <td class='text-center text-middle'> </td>
+        <td class='text-center text-middle'>admin</td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+                <td>
+                  </td>
+              </tr>
+          </table>
+  </div>
+</div>
+<script language='Javascript'>$(document).ready(function()
+{
+    $('#menu .nav > li').removeClass('active').find('a[href*=' + v.type + ']').parent('li').addClass('active');
+
+    /* process actions. */
+    $('.actions a').click(function()
+    {
+        var skip = false;
+        if($(this).data('toggle') == 'modal') skip = true;
+        if($(this).hasClass('deleter')) skip = true;
+        if($(this).hasClass('reloadDeleter')) skip = true;
+        if($(this).hasClass('switcher')) skip = true;
+
+        var href = $(this).prop('href');
+        var app  = '';
+        if(href.indexOf('/crm/') != -1)  app = 'crm';
+        if(href.indexOf('/oa/') != -1)   app = 'oa';
+        if(href.indexOf('/cash/') != -1) app = 'cash';
+        if(href.indexOf('/team/') != -1) app = 'team';
+
+        if(!skip && app != '')
+        {
+            $.openEntry(app, href);
+            return false;
+        }
+    });
+})
+$(document).ready(function()
+{
+    $('.submit').click(function()
+    {
+        var dept    = $('#dept').val();
+        var account = $('#account').val();
+        var begin   = $('#begin').val();
+        var end     = $('#end').val();
+        begin = begin.replace(/-/g, '');
+        end = end.replace(/-/g, '');
+
+        var url = createLink('my', 'company', "type=" + v.type + "&dept=" + dept + "&account=" + account + "&begin=" + begin + "&end=" + end);
+        location.href = url;
+    });
+    $('table.datatable').datatable();
+
+    $(window).scroll(function()
+    {
+        fixScrollWrapper();
+    }).resize(function()
+    {
+        fixScrollWrapper();
+    });
+    
+    fixScrollWrapper();
+});
+
+function fixScrollWrapper()
+{
+    var tbHeight   = parseFloat($('div.datatable').css('height'));
+    var wHeight    = $(window).height();
+    var wScrollTop = $(window).scrollTop();
+    $('div.datatable>div.scroll-wrapper').css('bottom', tbHeight - wHeight - wScrollTop + 60);
+}
+
+</script>
+</div>
+</body>
+</html>

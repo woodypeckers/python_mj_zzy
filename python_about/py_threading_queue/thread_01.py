@@ -18,7 +18,7 @@ def main():
     # loop0()
     # loop1()
     """loop0,loop1为所以运行时间总和"""
-    thread.start_new_thread(loop0, ())
+    thread.start_new_thread(loop0, ())#创建一个线程，指定的参数，**kwargs可选
     thread.start_new_thread(loop1, ())
     """start_new_thread(),必须要有前2个参数，不带参数加空元祖,()
     --> loop1,loop0并发执行,运行时间为最长循环的运行时间和其他代码的时间总和"""

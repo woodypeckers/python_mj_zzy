@@ -1,55 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# from time import ctime,sleep
-# def music(func):
-#     for i in range(3):
-#         print "I was listening to music.%s, %s" %(func,ctime())
-#         sleep(1)
-#
-# def move(func):
-#     for i in range(2):
-#         print "I was at the movies!%s, %s" %(func,ctime())
-#         sleep(5)
-#
-# if __name__ == '__main__':
-#     music(u'咳咳')
-#     move(u"电影")
-#     print "all over %s" %ctime()
-
-
-# import threading
-# from threading import  Thread
-# from time import ctime,sleep
-# def music(func):
-#     for i in range(2):
-#         print 'I was listening to %s. %s'% (func,ctime())
-#         sleep(1)
-#
-# def move(func):
-#     for i in range(3):
-#         print "I was at the %s! %s" % (func,ctime())
-#
-# if __name__ == '__main__':
-#     threads = []
-#     t1 = threading.Thread(target=music,args=(u'蝴蝶依旧'))
-#     threads.append(t1)
-#     t2 = threading.Thread(target=move,args=(u'电影'))
-#     threads.append(t2)
-#
-#     for t in threads:
-#         t.setDameon(True)
-#         t.start()
-#
-#         print "all over %s" %ctime()
-
-
 """递归删除文件夹"""
 import shutil
 import os
 # shutil.rmtree('C:\\test_01\\test_02\\')
 
-
+"""删除指定文件夹"""
 import os
 def scanfile(startscan, target) :
     """函数startscan的形参target可以是目录名也可以是文件名"""
