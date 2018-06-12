@@ -7,7 +7,14 @@ def sum(value):
         result += i
         # result = result + i
     return result
-    
+
+def sum_reduce(x,y):
+    return x+y
+
+print reduce(sum_reduce,range(1,101))
+
+
 
 if __name__ == '__main__':
     print sum(100)
+    sum_reduce
