@@ -9,10 +9,9 @@ from pro_sample_mj.config import *
 class BugfreeImport(unittest.TestCase):
     def setUp(self):
         #driver封装
-        self.executable_path = chrome_driver
-        self.driver = webdriver.Chrome(executable_path=self.executable_path)
-        # self.derver = webdriver.Chrome(r"C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chromedriver.exe")
-        self.driver.maximize_window()
+        self.executable_path = ie_driver
+        self.driver = webdriver.Ie(executable_path=self.executable_path)
+        # self.driver.maximize_window()
         self.url = "http://localhost/bugfree"
         #封装url
         open_url(self.driver, self.url)
@@ -37,10 +36,12 @@ class BugfreeImport(unittest.TestCase):
         #浏览按钮，显示输入文件名
         click_element_id_with_sleep(driver,"casefilename",0)#上面写法也正确
         input_filename_click()
-        # import os
-        # cur = os.getcwd()
-        # os.system("%s/tools/upload_filexml.exe" % cur)
+        import os
+        cur = os.getcwd()
+        os.system("%s/tools/upload_filexml.exe" % cur)
+        time.sleep(2)
         get_screenshot_immediately(driver)
         #导入
         click_element_id_with_sleep(driver,"uploadbutton",0)
+        time.sleep(2)
         driver.switch_to.alert.accept()#接受弹框

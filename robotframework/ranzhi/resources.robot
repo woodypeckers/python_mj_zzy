@@ -8,7 +8,7 @@ Library           Screenshot
 *** Variables ***
 ${base_url}       http://localhost/ranzhi/www/
 ${user_name}      admin
-${password}       8888
+${password}       123456
 ${title}          然之协同
 
 *** Keywords ***
@@ -17,7 +17,7 @@ ${title}          然之协同
 
 打开浏览器
     [Arguments]    ${base_url}
-    Open Browser    ${base_url}    chrome
+    Open Browser    ${base_url}
     Maximize Browser Window
 
 输入用户名

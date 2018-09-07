@@ -9,5 +9,5 @@
 
 
 """myself"""
-chrome_driver = r"C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chromedriver.exe"
-# driver = webdriver.Ie(r"C:\Program Files (x86)\Internet Explorer\iexplore.exe\IEDriverServer.exe")
+chrome_driver = r"C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
+ie_driver = r"C:\Program Files\Internet Explorer\IEDriverServer.exe"

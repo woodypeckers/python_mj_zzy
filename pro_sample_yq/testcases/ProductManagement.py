@@ -8,15 +8,15 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import random
-from testcases.bussiness_common_steps.bussiness_common_steps import *
-from config import *
+from pro_sample_mj.config import *
+from pro_sample_mj.testcases.bussiness_common_steps.bussiness_common_steps import *
 
 
 class ProductManagement(unittest.TestCase):
     def setUp(self):
         #driver封装
-        self.executable_path = chrome_driver
-        self.driver = webdriver.Chrome(executable_path=self.executable_path)
+        self.executable_path = ie_driver
+        self.driver = webdriver.Ie(executable_path=self.executable_path)
         # self.derver = webdriver.Chrome(r"C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chromedriver.exe")
         self.driver.maximize_window()
         self.url = "http://localhost/bugfree"
@@ -35,7 +35,7 @@ class ProductManagement(unittest.TestCase):
         # Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"自定义字段")
         Select(driver.find_element_by_id("target_table")).select_by_visible_text(u"产品管理")
         driver.find_element_by_id("name").clear()
-        driver.find_element_by_id("name").send_keys("123")
+        driver.find_element_by_id("name").send_keys("abcd_%s",random.randint(1,21))
         driver.find_element_by_css_selector("input.btn").click()
         time.sleep(1)
         Select(driver.find_element_by_id("pageSize")).select_by_visible_text("35")
